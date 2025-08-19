@@ -1,0 +1,257 @@
+
+	.offcanvas .btn {
+		font-size: 0.95rem;
+		padding: 10px 14px;
+		border-radius: 6px;
+	}
+
+	.offcanvas .btn + .btn {
+		margin-top: 8px;
+	}
+
+	.offcanvas .fw-semibold {
+		color: var(--cor1);
+		letter-spacing: 0.5px;
+	}
+	.offcanvalogout{
+		align-items: flex-end;
+	}
+
+
+	
+	.user-menu-wrapper {
+		position: relative;
+		display: flex;
+		align-items: center;
+	}
+
+	.user-avatar {
+		width: 62px;
+		height: 62px;
+		border-radius: 50%;
+		overflow: hidden;
+		cursor: pointer;
+		border: 2px solid var(--cor1);
+		transition: transform 0.2s ease;
+	}
+
+	.user-avatar:hover {
+		transform: scale(1.05);
+	}
+
+	.user-avatar img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		background-color: transparent;
+	}
+
+	.custom-dropdown {
+		position: absolute;
+		top: 60px;
+		right: 0;
+		background-color: var(--cor4);
+		color: white;
+		border-radius: 8px;
+		box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+		display: none;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 12px 16px;
+		z-index: 1000;
+		animation: fadeIn 0.3s ease;
+		min-width: 160px;
+	}
+
+	.custom-dropdown::before {
+		content: '';
+		position: absolute;
+		top: -8px;
+		right: 16px;
+		border-width: 8px;
+		border-style: solid;
+		border-color: transparent transparent var(--cor3) transparent;
+	}
+
+	.custom-dropdown .username {
+		margin: 0 0 8px 0;
+		font-weight: bold;
+	}
+
+	.custom-dropdown .dropdown-link {
+		color: red;
+		text-decoration: none;
+		padding: 5px 0;
+		transition: color 0.2s;
+	}
+
+	.custom-dropdown .dropdown-link:hover {
+		
+		color: cyan;
+	}
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(-10px); }
+		to   { opacity: 1; transform: translateY(0); }
+	}
+    .navbar-colored {
+		background-color: var(--cor2) !important;
+		transition: background-color 0.3s ease;
+    }
+
+    .navbar-colored.scrolled {
+      	background-color: var(--cor1) !important;
+		
+    }
+
+    .nav-link {
+		color: var(--cor1);
+		position: relative;
+		transition: 0.3s ease;
+    }
+
+    .navbar-colored.scrolled .nav-link {
+      	color: var(--cor2);
+    }
+
+    .nav-link::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		bottom: -1px;
+		width: 0;
+		height: 2px;
+		background-color: var(--cor1);
+		transition: width 0.3s ease, background-color 0.3s ease;
+	}
+
+	.navbar-colored.scrolled .nav-link::after {
+  		background-color: var(--cor2);
+	}
+
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      	width: 100%;
+    }
+
+    .navbar-brand {
+		padding: 0;
+		margin: 0;
+    }
+
+    .navbar-logo {
+		width: 13vw;
+		height: auto;
+		display: block;
+    }
+
+    .navbar-nav {
+		display: flex;
+		justify-content: center;
+		width: 100%;
+    }
+
+    .custom-login-btn {
+		border: 1.5px solid var(--cor1);
+		color: var(--cor1);
+		transition: all 0.3s ease;
+    }
+	.custom-login-btn:hover {
+		background-color: var(--cor1);
+		color: var(--cor2);
+	}
+
+    .navbar-colored.scrolled .custom-login-btn {
+		color: var(--cor2);
+		border-color: var(--cor2);
+    }
+	.navbar-colored.scrolled .custom-login-btn:hover {
+		background-color: var(--cor2);
+		color: var(--cor1);
+	}
+
+	@media screen and (max-width: 768px){
+	/*media da logo*/
+		.navbar-logo{
+			width: 40vw;
+		}
+	}
+	
+	
+	@media screen and (min-width: 769px) and (max-width: 990px){
+		.navbar-logo{
+			width: 30vw;
+		}
+	}
+	
+/*-------footer-------*/
+
+.custom-footer {
+	background-color: var(--cor5);
+	color: #fff;
+	font-size: 16px;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+.custom-footer.scrolled{
+	background-color: var(--cor5);
+	color: #fff;
+	font-size: 16px;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+
+.custom-footer h5 {
+	color: #000;
+}
+
+.custom-footer p {
+	margin: 0.3rem 0;
+	font-size: 15px;
+}
+
+.footer-link {
+	text-decoration: none;
+	color: #fff;
+	transition: color 0.3s;
+}
+
+.footer-link:hover {
+	color: var(--cor6);
+	text-decoration: underline;
+}
+
+.map-responsive {
+	position: relative;
+	width: 100%;
+	padding-bottom: 56.25%;
+	height: 0;
+	overflow: hidden;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.map-responsive iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+.social-icons {
+	margin-top: 10px;
+}
+
+.social-icon {
+	display: inline-block;
+	margin-right: 10px;
+	color: var(--cor3);
+	font-size: 20px;
+	transition: color 0.3s ease;
+}
+
+.social-icon:hover {
+	color: var(--cor6);
+}

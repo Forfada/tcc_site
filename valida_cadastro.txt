@@ -1,0 +1,38 @@
+<?php
+session_start();
+
+include('../config.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nome = trim($_POST['nome'] ?? '');
+    $numero = trim($_POST['numero'] ?? '');
+    $senha = trim($_POST['senha'] ?? '');
+
+    if (!empty($nome) && !empty($numero) && !empty($senha)) {
+        // Gera código de verificação
+        $codigo_verificacao = rand(100000, 999999);
+
+        // Salva os dados e o código em sessão temporária
+        $_SESSION['cadastro'] = [
+            'nome' => $nome,
+            'numero' => $numero,
+            'senha' => $senha,
+            'codigo' => $codigo_verificacao
+        ];
+
+        // Aqui você chamaria a função da API de SMS
+        // envia_sms($numero, "Seu código de verificação é: $codigo_verificacao");
+
+        // SIMULA O ENVIO
+        $_SESSION['message'] = "Código enviado para o número $numero (simulado: $codigo_verificacao)";
+        $_SESSION['type'] = 'info';
+
+        header("Location: verificar_cadastro.php");
+        exit;
+    } else {
+        $_SESSION['message'] = "Preencha todos os campos!";
+        $_SESSION['type'] = "warning";
+        header("Location: cadastro.php");
+        exit;
+    }
+}

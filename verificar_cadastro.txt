@@ -1,0 +1,66 @@
+<?php
+session_start();
+include('../config.php');
+include(DATABASE);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $codigo_digitado = trim($_POST['codigo'] ?? '');
+
+    if ($codigo_digitado == $_SESSION['cadastro']['codigo']) {
+        $nome = $_SESSION['cadastro']['nome'];
+        $numero = $_SESSION['cadastro']['numero'];
+        $senha = $_SESSION['cadastro']['senha'];
+        $senha_criptografada = cri($senha);
+
+        $conn = open_database();
+
+        $stmt = $conn->prepare("INSERT INTO usuarios (u_num, u_user, u_senha) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $numero, $nome, $senha_criptografada);
+
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "Cadastro realizado com sucesso!";
+            $_SESSION['type'] = "success";
+        } else {
+            $_SESSION['message'] = "Erro ao cadastrar.";
+            $_SESSION['type'] = "danger";
+        }
+
+        $stmt->close();
+        $conn->close();
+        unset($_SESSION['cadastro']);
+        header("Location: login.php");
+        exit;
+    } else {
+        $_SESSION['message'] = "Código incorreto. Tente novamente.";
+        $_SESSION['type'] = "danger";
+    }
+}
+?>
+
+<!-- Formulário simples -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificação de Cadastro</title>
+    <link rel="stylesheet" href="caminho-do-seu-css.css">
+</head>
+<body>
+    <div class="cadastro-card">
+        <h2>Digite o código enviado</h2>
+
+        <?php if (!empty($_SESSION['message'])) : ?>
+            <div class="alert alert-<?php echo $_SESSION['type']; ?>">
+                <?php echo $_SESSION['message']; ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="codigo" placeholder="Código recebido" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Verificar</button>
+        </form>
+    </div>
+</body>
+</html>

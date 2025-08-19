@@ -1,0 +1,148 @@
+
+	@media (max-width: 550px){
+
+		.img-sobre{
+			max-width: 320px;
+		}
+	}
+
+	@media (min-width: 576px) and (max-width: 767px){
+
+	}
+
+	@media (min-width: 768px) and (max-width: 991px){
+
+	}
+
+	@media(min-width:380px) and (max-width: 580px)  {
+		.card-content{
+			height: 280px;
+		}
+		.buttonc{
+			margin-top: 5px;
+		}
+	}
+
+	
+
+
+
+	@media (min-width: 580px) and (max-width: 768px){
+
+	/*media carouseal*/
+		.slide-content{
+			margin: 0 10px;
+		}
+		.swiper-navbtn{
+			display: none;
+		}
+		.img-sobre{
+			max-width: 90%;
+		}
+		swiper-button-next{
+			display: hidden;
+		}
+		swiper-button-next{
+			display: hidden;
+		}
+
+	}
+
+	
+	@media (max-width: 1050px){
+		.sobre .itens-container{
+			flex-direction: column;
+		}
+	}
+	
+
+	@media screen and (max-width: 885px){
+	/*media do home2*/
+
+		.txt3{
+			margin-top: 4vh;
+			margin-bottom: 0.2vh;
+		}
+		.txt1-2{
+			margin-bottom: 0;
+		}
+		.txt2{
+			line-height: 125%;
+		}
+		.sobre .itens-container .img-itens{
+			width: 90%;
+		}
+
+
+		
+		.sobre .itens-container {
+			margin-bottom: 20px;
+		}
+		
+		.buttonS{
+			font-size: 2.2vh;
+			padding: 8px 16px;
+			border-radius: 12px;
+			margin: 14px;
+		}
+
+	/*media do footer*/
+		.custom-footer {
+			text-align: center;
+		}
+		.social-icon {
+			margin: 0 8px;
+		}
+	}
+
+	@media screen and (max-width: 420px){
+
+	}
+
+	@media screen and (max-width: 480px){
+
+		.slide-container{
+			padding: 10px;
+			padding-top: 0;
+		}
+	}
+
+
+
+	@media screen and (max-height: 885px){
+		
+		.img-sobre{
+			max-width: 260px;
+			align-items: center;
+		}
+
+
+	}
+
+
+	@media screen and (max-height: 765px){
+		.txt1{
+			margin-top: 6vh;
+			margin-bottom: 15px;
+		}
+		.txt4{
+			margin-bottom: 1vh;
+		}
+
+	/*---------login/cadastro*/
+        .login-container {
+            flex-direction: column;
+        }
+        .login-right {
+            visibility: hidden;
+        }
+
+		.cadastro-container {
+            flex-direction: column;
+        }
+        .cadastro-right {
+            visibility: hidden;
+        }
+
+	}
+

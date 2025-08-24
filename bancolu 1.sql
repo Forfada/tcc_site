@@ -87,7 +87,7 @@ INSERT INTO `usuarios` (`id_u`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
  ALTER TABLE `agendamento` ADD CONSTRAINT `fk_agendamento_id_est` FOREIGN KEY (id_est) REFERENCES `esteticista` (id_est);
  
  
- --criando tabela: anamnese
+ --criando tabela: anamnese 1
  CREATE TABLE anamnese (
      id_an INT(11) UNSIGNED PRIMARY KEY NOT NULL,
      an_hipertensao VARCHAR(100) NOT NULL,

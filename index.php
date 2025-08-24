@@ -5,27 +5,26 @@
 
 
 <section id="home" class="section-parallax section-cor3-mode">
-	<div class="row overlayy align-items-center">
-		<div class="col-lg-7 col-md-7 col-12 mb-3 mb-md-0">
-			<div>
-				<h1>Assim como a Lua, você tem fases.</h1>
-				<h2>
-					E em cada uma delas, nós estamos aqui para fazer você <i>brilhar</i> ainda mais.
-				</h2>
-				<p>Conheça <i>Lunaris</i>, a Clínica de AutoCuidado e 
-					Embelezamento perfeita para <b><i>você</i></b>.
-				</p>
-			</div>
-		</div>	
+  <div class="row overlayy align-items-center">
+    <div class="col-lg-7 col-md-7 col-12">
+      <div>
+        <h1>Assim como a Lua, você tem fases.</h1>
+        <h2>
+          E em cada uma delas, nós estamos aqui para fazer você <i>brilhar</i> ainda mais.
+        </h2>
+        <p>Conheça <i>Lunaris</i>, a Clínica de AutoCuidado e 
+          Embelezamento perfeita para <b><i>você</i></b>.
+        </p>
+      </div>
+    </div>  
 
-		<div class="col-lg-5 col-md-5 col-12">
-			<div class="img-bo">
-				<img src="img/laravel.png" alt="Lunaris" class="img-fluid">
-			</div>
-		</div>
-	</div>
+    <div class="col-lg-5 col-md-5 col-12">
+      <div class="img-bo">
+        <img src="img/laravel.png" alt="Lunaris" class="img-fluid">
+      </div>
+    </div>
+  </div>
 </section>
-
 
 
 

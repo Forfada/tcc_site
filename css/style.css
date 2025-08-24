@@ -214,7 +214,7 @@
 }
 
 .img-bo img {
-    max-width: 98%;
+    width: auto;
     height: auto;
     display: block;
     margin-top: 19vh;
@@ -547,3 +547,5 @@ section.sobre{
         background: url('https://img.freepik.com/fotos-gratis/vista-de-cima-do-rejuvenescimento-de-mulher-bonita-apreciando-procedimentos-de-cosmetologia-no-salao-de-beleza-dermatologia-maos-em-brilhos-azuis-saude-terapia-botox_197531-2783.jpg?semt=ais_hybrid&w=740') no-repeat center center;
         background-size: cover;
     }
+
+ 

@@ -1,44 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <?php include(INIT); ?>
-<body>
+
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="80" tabindex="0">
 
 <?php if (!isset($_SESSION)) session_start(); ?>
 
 <nav class="navbar fixed-top navbar-expand-lg p-3 navbar-colored" data-bs-theme="dark" id="mainNavbar">
     <div class="container-fluid">
+        <!-- LOGO -->
         <a class="navbar-brand ms-4" href="<?php echo BASEURL; ?>">
             <img src="<?php echo BASEURL; ?>img/logoc.png" alt="Logo" class="navbar-logo" id="logo">
         </a>
 
+        <!-- BOTÃO HAMBÚRGUER -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        <!-- LINKS -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4 <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>" href="<?php echo BASEURL; ?>">Home</a>
+                    <a class="nav-link ms-4 me-4 <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>" href="#home">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="#sobre">Sobre nós</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#">Procedimentos</a>
+                    <a class="nav-link ms-4 me-4" href="#procedimentos">Procedimentos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#">Agendamento</a>
+                    <a class="nav-link ms-4 me-4" href="#agendamento">Agendamento</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="#contato">Contato</a>
                 </li>
             </ul>
 
+            <!-- LOGIN OU AVATAR -->
             <div class="ms-auto me-5">
                 <?php if (isset($_SESSION['nome'])): ?>
-                    <!-- Avatar que abre o offcanvas -->
-                    <div class="user-avatar" id="userAvatar" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="cursor:pointer;">
+                    <div class="user-avatar" id="userAvatar" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style="cursor:pointer;">
                         <img src="<?= BASEURL ?>img/avatars/<?= $_SESSION['foto'] ?>" alt="Avatar do usuário" width="40" height="40" class="rounded-circle">
                     </div>
                 <?php else: ?>
@@ -63,7 +68,6 @@
         </div>
         <div class="offcanvas-body d-flex flex-column gap-3">
 
-            <!-- Seção Conta -->
             <div>
                 <p class="mb-1 fw-semibold text-uppercase small">Conta</p>
                 <a href="<?= BASEURL ?>inc/alterar_senha.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-lock"></i> Alterar senha</a>
@@ -73,7 +77,6 @@
 
             <hr class="border-light">
 
-            <!-- Seção Sessão -->
             <div>
                 <p class="mb-1 fw-semibold text-uppercase small">Sessão</p>
                 <button class="btn btn-outline-danger w-100 text-start" data-bs-toggle="modal" data-bs-target="#confirmLogoutModal"><i class="fa-solid fa-person-walking-arrow-right"></i>  Sair</button>
@@ -120,7 +123,6 @@
         </div>
     </div>
 <?php endif; ?>
-
 
 
 <!-- Scripts -->
@@ -197,32 +199,27 @@
         }
     });
 
-    // Fecha navbar collapse ao clicar em link
+    // Forçar fechamento do navbar collapse ao clicar em links ou botão
     document.addEventListener("DOMContentLoaded", function () {
-        const navbarToggler = document.querySelector('.navbar-toggler');
         const navbarCollapse = document.querySelector('.navbar-collapse');
+        const navbarToggler = document.querySelector('.navbar-toggler');
         const navLinks = document.querySelectorAll('.nav-link');
 
-        navLinks.forEach(function (link) {
-            link.addEventListener('click', function () {
-                const bsCollapse = bootstrap.Collapse.getInstance(navbarCollapse);
-                if (bsCollapse && navbarCollapse.classList.contains('show')) {
-                    bsCollapse.hide();
+        // Fechar ao clicar em link
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                const collapseInstance = bootstrap.Collapse.getInstance(navbarCollapse) || new bootstrap.Collapse(navbarCollapse);
+                if (navbarCollapse.classList.contains('show')) {
+                    collapseInstance.hide();
                 }
             });
         });
 
-        if (navbarToggler) {
-            navbarToggler.addEventListener('click', function () {
-                const bsCollapse = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
-                const isExpanded = navbarToggler.getAttribute('aria-expanded') === 'true';
-
-                if (isExpanded) {
-                    bsCollapse.hide();
-                } else {
-                    bsCollapse.show();
-                }
-            });
-        }
+        // Alternar ao clicar no botão
+        navbarToggler.addEventListener('click', () => {
+            const collapseInstance = bootstrap.Collapse.getOrCreateInstance(navbarCollapse);
+            collapseInstance.toggle();
+        });
     });
 </script>
+

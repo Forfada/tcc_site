@@ -18,12 +18,11 @@
       </div>
     </div>  
 
-    <div class="col-lg-5 col-md-5 col-12">
-      <div class="img-bo">
-        <img src="img/laravel.png" alt="Lunaris" class="img-fluid">
-      </div>
-    </div>
-  </div>
+	<div class="col-lg-5 col-md-5 col-12">
+		<div class="img-bo" id="img-bo-container">
+			<img src="img/laravel.png" alt="Lunaris" class="img-fluid" id="laravel-img">
+		</div>
+	</div>
 </section>
 
 
@@ -301,5 +300,32 @@
 </script>
 <script src="<?php echo BASEURL; ?>js/swiper-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // guarda a referência do elemento original
+  const imgBoContainer = document.getElementById('img-bo-container');
+  const imgHtml = imgBoContainer.innerHTML;
+
+  function toggleImage() {
+    const screenWidth = window.innerWidth;
+
+    if (screenWidth < 769) {
+      // remove a imagem se existir
+      const img = document.getElementById('laravel-img');
+      if (img) img.remove();
+    } else {
+      // se a imagem não existir, recria
+      if (!document.getElementById('laravel-img')) {
+        imgBoContainer.innerHTML = imgHtml;
+      }
+    }
+  }
+
+  // roda na inicialização
+  toggleImage();
+
+  // roda quando a janela é redimensionada
+  window.addEventListener('resize', toggleImage);
+</script>
 
 <?php include(FOOTER_TEMPLATE); ?>

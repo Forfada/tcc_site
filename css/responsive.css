@@ -1,152 +1,176 @@
-
-	@media (max-width: 550px){
-
-		.img-sobre{
-			max-width: 320px;
-		}
+@media (max-width: 550px){
+	.img-sobre{
+		max-width: 320px;
 	}
+}
 
-	@media (max-width: 768px){
-		
-	}
-
-	@media (min-width: 576px) and (max-width: 767px){
-
-	}
-
-	@media (min-width: 768px) and (max-width: 991px){
-
-	}
-
-	@media(min-width:380px) and (max-width: 580px)  {
-		.card-content{
-			height: 280px;
-		}
-		.buttonc{
-			margin-top: 5px;
-		}
-	}
-
+@media (max-width: 768px){
 	
+}
 
+@media (min-width: 576px) and (max-width: 767px){
 
+}
 
-	@media (min-width: 580px) and (max-width: 769px){
+@media (min-width: 768px) and (max-width: 991px){
 
+}
+
+@media(min-width:380px) and (max-width:580px)  {
+	.card-content{
+		height: 280px;
+	}
+	.buttonc{
+		margin-top: 5px;
+	}
+}
+
+@media (min-width: 580px) and (max-width: 769px){
 	/*media carouseal*/
-		.slide-content{
-			margin: 0 10px;
-		}
-		.swiper-navbtn{
-			display: none;
-		}
-		.img-sobre{
-			max-width: 90%;
-		}
-		swiper-button-next{
-			display: hidden;
-		}
-		swiper-button-next{
-			display: hidden;
-		}
-
+	.slide-content{
+		margin: 0 10px;
 	}
-
-	
-	@media (max-width: 1050px){
-		.sobre .itens-container{
-			flex-direction: column;
-		}
+	.swiper-navbtn{
+		display: none;
 	}
-	
+	.img-sobre{
+		max-width: 90%;
+	}
+	swiper-button-next{
+		display: hidden;
+	}
+	swiper-button-next{
+		display: hidden;
+	}
+}
 
-	@media screen and (max-width: 885px){
+@media (max-width: 1050px){
+	.sobre .itens-container{
+		flex-direction: column;
+	}
+}
+
+@media screen and (max-width: 885px){
 	/*media do home2*/
-
-		.txt3{
-			margin-top: 4vh;
-			margin-bottom: 0.2vh;
-		}
-		.txt1-2{
-			margin-bottom: 0;
-		}
-		.txt2{
-			line-height: 125%;
-		}
-		.sobre .itens-container .img-itens{
-			width: 90%;
-		}
-
-
-		
-		.sobre .itens-container {
-			margin-bottom: 20px;
-		}
-		
-		.buttonS{
-			font-size: 2.2vh;
-			padding: 8px 16px;
-			border-radius: 12px;
-			margin: 14px;
-		}
-
+	.txt3{
+		margin-top: 4vh;
+		margin-bottom: 0.2vh;
+	}
+	.txt1-2{
+		margin-bottom: 0;
+	}
+	.txt2{
+		line-height: 125%;
+	}
+	.sobre .itens-container .img-itens{
+		width: 90%;
+	}
+	.sobre .itens-container {
+		margin-bottom: 20px;
+	}
 	/*media do footer*/
-		.custom-footer {
-			text-align: center;
-		}
-		.social-icon {
-			margin: 0 8px;
-		}
+	.custom-footer {
+		text-align: center;
 	}
-
-	@media screen and (max-width: 420px){
-
+	.social-icon {
+		margin: 0 8px;
 	}
+}
 
-	@media screen and (max-width: 480px){
+@media screen and (max-width: 420px){
 
-		.slide-container{
-			padding: 10px;
-			padding-top: 0;
-		}
+}
+
+@media screen and (max-width: 480px){
+	.slide-container{
+		padding: 10px;
+		padding-top: 0;
 	}
+}
 
-
-
-	@media screen and (max-height: 885px){
-		
-		.img-sobre{
-			max-width: 260px;
-			align-items: center;
-		}
-
-
+@media screen and (max-height: 885px){
+	.img-sobre{
+		max-width: 260px;
+		align-items: center;
 	}
+}
 
-
-	@media screen and (max-height: 765px){
-		.txt1{
-			margin-top: 6vh;
-			margin-bottom: 15px;
-		}
-		.txt4{
-			margin-bottom: 1vh;
-		}
-
+@media screen and (max-height: 765px){
+	.txt1{
+		margin-top: 6vh;
+		margin-bottom: 15px;
+	}
+	.txt4{
+		margin-bottom: 1vh;
+	}
 	/*---------login/cadastro*/
-        .login-container {
-            flex-direction: column;
-        }
-        .login-right {
-            visibility: hidden;
-        }
-
-		.cadastro-container {
-            flex-direction: column;
-        }
-        .cadastro-right {
-            visibility: hidden;
-        }
-
+	.login-container {
+		flex-direction: column;
 	}
+	.login-right {
+		visibility: hidden;
+	}
+	.cadastro-container {
+		flex-direction: column;
+	}
+	.cadastro-right {
+		visibility: hidden;
+	}
+}
 
+/* =======================================================
+   🔹 Ajustes finais de responsividade para o texto da section "sobre"
+======================================================= */
+
+/* Títulos e parágrafos adaptáveis */
+.txt1 {
+    font-size: clamp(1.6rem, 3vw, 2.2rem); /* mínimo, preferido, máximo */
+    line-height: 1.3;
+    text-align: center;
+}
+
+.txt2 {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    line-height: 1.6rem;
+    text-align: justify;
+}
+
+/* Subtítulo */
+.txt3 {
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    text-align: center;
+}
+
+/* ----------------------------
+   Botão CTA fixo permanente
+----------------------------- */
+.buttonS {
+    font-size: 16px !important;       /* tamanho fixo */
+    padding: 10px 22px !important;    /* espaçamento fixo */
+    border-radius: 12px !important;
+    width: 200px !important;          /* largura fixa */
+    height: 50px !important;          /* altura fixa */
+    flex: 0 0 auto !important;        /* não cresce nem encolhe */
+    text-align: center !important;
+    display: inline-block !important; /* impede alterações por flex */
+    box-sizing: border-box !important;
+}
+
+/* Ajustes extras em telas pequenas */
+@media screen and (max-width: 480px) {
+    .txt2 {
+        line-height: 1.7rem;    /* leitura mais confortável */
+        padding: 0 6%;          /* respiro lateral */
+    }
+
+    .txt2 br {
+        margin-bottom: 12px;    /* espaçamento entre quebras de linha */
+        display: block;
+        content: "";
+    }
+
+    .buttonS {
+        margin: 20px auto;      /* centralizado no mobile */
+        display: block;
+    }
+}

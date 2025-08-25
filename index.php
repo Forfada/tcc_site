@@ -326,6 +326,32 @@
 
   // roda quando a janela é redimensionada
   window.addEventListener('resize', toggleImage);
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Seleciona apenas o botão com a classe .buttonS
+    const btn = document.querySelector(".buttonS");
+
+    // Valores fixos do botão
+    const larguraFixa = 200;  // largura em px
+    const alturaFixa = 50;    // altura em px
+    const tamanhoFonte = 16;  // tamanho da fonte em px
+
+    function fixButtonSize() {
+        btn.style.width = larguraFixa + "px";
+        btn.style.height = alturaFixa + "px";
+        btn.style.fontSize = tamanhoFonte + "px";
+        btn.style.padding = "10px 22px";
+        btn.style.display = "inline-block";
+        btn.style.flex = "0 0 auto";
+    }
+
+    // Aplica imediatamente
+    fixButtonSize();
+
+    // Reaplica ao redimensionar a janela
+    window.addEventListener("resize", fixButtonSize);
+});
+
 </script>
 
 <?php include(FOOTER_TEMPLATE); ?>

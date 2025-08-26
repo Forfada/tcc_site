@@ -95,7 +95,7 @@
 	}
 }
 
-@media screen and (max-height: 765px){
+@media screen and (max-width: 765px){
 	.txt1{
 		margin-top: 6vh;
 		margin-bottom: 15px;

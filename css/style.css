@@ -520,7 +520,7 @@ section.sobre{
     .cadastro-container {
         display: flex;
         min-height: 100vh;
-        background-color: #fff;
+        background-color: var(--cor2);
     }
 
     .cadastro-left, .cadastro-right {
@@ -556,7 +556,7 @@ section.sobre{
 
     .cadastro-card {
         width: 100%;
-        max-width: 400px;
+        max-width: 700px;
     }
 
 

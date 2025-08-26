@@ -207,16 +207,19 @@
     background-repeat: no-repeat;
     height: 100vh;
     display: flex;
-    align-items: center;
     padding-left: 7vw;
     overflow: hidden;
     transition: background-position 0.4s ease-out;
+    
 }
 
 .img-bo img {
-    height: auto;
+    height: 82vh;
     display: block;
-    margin-top: 19vh;
+    margin-top: 18vh;
+    max-width: auto;
+    min-width: 30%;
+    z-index: 0;
 }
 
 .section-parallax::before {
@@ -237,11 +240,12 @@
 }
 
 .section-parallax h1 {
-    font-size: 3.2rem;
-    max-width: 800px;
+    margin-top: 2vh;
+    font-size: 3.1rem;
+    max-width: 900px;
     color: var(--cor2);
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.16;
     position: relative;
     z-index: 1;
     font-family: 'Playfair Display', serif;
@@ -252,7 +256,7 @@
     max-width: 900px;
     color: var(--cor2);
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.15;
     position: relative;
     z-index: 1;
     font-family: 'Playfair Display', serif;
@@ -268,7 +272,53 @@
     margin-top: 20px;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 866px) and (max-width: 1020px) {
+
+    .section-parallax h1 {
+        font-size: 2.5rem;
+        max-width: 600px;
+        color: var(--cor2);
+        font-weight: 500;
+        line-height: 1;
+    }
+    .section-parallax h2 {
+        font-size: 2.2rem;
+        max-width: 500px;
+        color: var(--cor2);
+        font-weight: 600;
+        line-height: 1;
+    }
+    .section-parallax p {
+        font-size: 1.45rem;
+        max-width: 700px;
+    }
+}
+
+@media (max-height: 700px) {
+    .img-bo img {
+        
+    }
+
+    .section-parallax h1 {
+        font-size: 2.5rem;
+        max-width: 600px;
+        color: var(--cor2);
+        font-weight: 500;
+        line-height: 1;
+    }
+    .section-parallax h2 {
+        font-size: 2.2rem;
+        max-width: 500px;
+        color: var(--cor2);
+        font-weight: 600;
+        line-height: 1;
+    }
+    .section-parallax p {
+        font-size: 1.45rem;
+        max-width: 700px;
+    }
+}
+@media (max-width: 865px) {
     .section-parallax {
         flex-direction: column;
         justify-content: center;
@@ -282,6 +332,7 @@
 
     .section-parallax h1 {
         display: none;
+
     }
 
     .section-parallax h2 {

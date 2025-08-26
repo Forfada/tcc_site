@@ -6,7 +6,7 @@
 
 <section id="home" class="section-parallax section-cor3-mode">
   <div class="row overlayy align-items-center">
-    <div class="col-lg-7 col-md-7 col-12">
+    <div class="col-lg-6 col-md-7 col-12">
       <div>
         <h1>Assim como a Lua, você tem fases.</h1>
         <h2>
@@ -18,9 +18,9 @@
       </div>
     </div>  
 
-	<div class="col-lg-5 col-md-5 col-12">
+	<div class="col-lg-6 col-md-5 col-12">
 		<div class="img-bo" id="img-bo-container">
-			<img src="img/laravel.png" alt="Lunaris" class="img-fluid" id="laravel-img">
+			<img src="img/laravel.png" alt="Lunaris" class="" id="laravel-img">
 		</div>
 	</div>
 </section>
@@ -309,7 +309,7 @@
   function toggleImage() {
     const screenWidth = window.innerWidth;
 
-    if (screenWidth < 769) {
+    if (screenWidth < 865) {
       // remove a imagem se existir
       const img = document.getElementById('laravel-img');
       if (img) img.remove();

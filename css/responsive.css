@@ -118,11 +118,7 @@
 	}
 }
 
-/* =======================================================
-   🔹 Ajustes finais de responsividade para o texto da section "sobre"
-======================================================= */
 
-/* Títulos e parágrafos adaptáveis */
 .txt1 {
     font-size: clamp(1.6rem, 3vw, 2.2rem); /* mínimo, preferido, máximo */
     line-height: 1.3;
@@ -141,9 +137,6 @@
     text-align: center;
 }
 
-/* ----------------------------
-   Botão CTA fixo permanente
------------------------------ */
 .buttonS {
     font-size: 16px !important;       /* tamanho fixo */
     padding: 10px 22px !important;    /* espaçamento fixo */
@@ -156,7 +149,7 @@
     box-sizing: border-box !important;
 }
 
-/* Ajustes extras em telas pequenas */
+
 @media screen and (max-width: 480px) {
     .txt2 {
         line-height: 1.7rem;    /* leitura mais confortável */

@@ -123,8 +123,6 @@
         }
 		close_database($database);
 	}
-	
-
 
 
 	//Remove uma linha de uma tabela pelo ID do registro

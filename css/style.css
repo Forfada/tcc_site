@@ -599,4 +599,6 @@ section.sobre{
         background-size: cover;
     }
 
- 
+ .procedimentos{
+    margin: 0;
+ }

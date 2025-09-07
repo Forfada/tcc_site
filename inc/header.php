@@ -29,7 +29,7 @@
                     <a class="nav-link ms-4 me-4" href="#sobre">Sobre nós</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#procedimentos">Procedimentos</a>
+                    <a class="nav-link ms-4 me-4" href="procedimentos/index.php">Procedimentos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="#agendamento">Agendamento</a>

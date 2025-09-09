@@ -4,7 +4,7 @@
 	include(DBAPI);
 
 	$proc = null;
-	$procedimento = null;
+	$procedimentos = null;
 
 	 // Conexão com o banco usando PDO
     try {

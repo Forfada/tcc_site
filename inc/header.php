@@ -19,17 +19,19 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- LINKS -->
+        <!-- LINKS  -->
+        
+       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4 <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>" href="#home">Home</a>
+                    <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#home">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="#sobre">Sobre nós</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="procedimentos/index.php">Procedimentos</a>
+                    <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>procedimentos/index.php">Procedimentos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="#agendamento">Agendamento</a>

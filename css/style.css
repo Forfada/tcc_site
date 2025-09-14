@@ -570,11 +570,6 @@ section.sobre{
         background-size: cover;
     }
 
-
-
-
-
-
 	.senha-container {
         display: flex;
         min-height: 100vh;
@@ -602,3 +597,4 @@ section.sobre{
  .procedimentos{
     margin: 0;
  }
+ 

@@ -9,12 +9,12 @@
         transition: box-shadow 0.2s, transform 0.2s;
         border-radius: 20x;
         border: none;
-        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
         background: #fff;
         width: 100%;
     }
     .proc-card:hover {
-        box-shadow: 0 6px 32px rgba(0,0,0,0.13);
+        box-shadow: 0 6px 32px rgba(0, 0, 0, 0.21);
         transform: translateY(-4px) scale(1.02);
     }
     .proc-img {
@@ -53,12 +53,17 @@
 
 <section class="procedimentos section-light section-cor3 py-5" id="procedimentos">
     <div class="container mt-5" style="margin-top: 6rem !important;">
-        <h2 class="txt1 mb-5 text-center">Conheça nossos procedimentos de Embelezamento e Autocuidado.</h2>
+        <h2 class="txt1 mb-1 text-center">Conheça nossos serviços!</h2>
+        <p class="txt4 text-center mb-2"> Conheça nossos procedimentos de Embelezamento e Autocuidado.</p>
+        <div class="text-end mb-1">
+            <button class="buttonc"><i class="fa fa-plus"></i> Adicionar Procedimento</button>
+        </div>  
+
         <div class="row g-4">
             <?php foreach ($procedimentos as $proc): ?>
-                <div class="col-12">
+                <div class="col-lg-12 mx-auto">
                     <div class="card proc-card flex-row align-items-stretch h-100">
-                        <div class="col-4 d-none d-md-block p-0">
+                        <div class="col-3 d-none d-md-block p-0">
                             <img src="imagens/<?php echo ($proc['p_foto']); ?>"
                                  class="proc-img"
                                  alt="<?php echo ($proc['p_nome']); ?>">
@@ -67,6 +72,8 @@
                             <div class="card-body">
                                 <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
                                 <p class="description"><?php echo ($proc['p_descricao']); ?></p>
+
+                                <button class="buttonc">Agende já!</button>
                             </div>
                         </div>
                     </div>

@@ -39,8 +39,8 @@
 				</div>
 				
 				<div class="social-icons text-center text-md-start">
-					<a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-					<a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+					<a href="https://www.instagram.com/larissamoraes_abe?igsh=ZjE4bGhvNnA5dXJs" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+					<a href="https://www.facebook.com/share/15tbYmLGpw/" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
 					<a href="#" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 					<a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
 				</div>

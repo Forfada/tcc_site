@@ -29,10 +29,10 @@
 
 <section id="home" class="section-dark section-cor4">
 	<div class="swiper">
-		<h2 class="txt1">Conheça <i>nossos serviços</i></h2>
+		<h2 class="txt1 mt-5">Conheça <i>nossos serviços</i></h2>
 		<p class="txt4"> Conheça nossos procedimentos de Embelezamento e Autocuidado.</p>
 	
-		<div class="slide-container ">
+		<div class="slide-container">
 			<div class="slide-content">
 				<div class="card-wrapper swiper-wrapper">
 					<div class="card swiper-slide">
@@ -230,9 +230,6 @@
 		</div>
 	</div>
 </section>
-
-
-
 
 
 <section class="sobre section-light section-cor3" id="sobre">

@@ -6,7 +6,18 @@
 	$proc = null;
 	$procedimentos = null;
 
-	// mostrar todos os procedimentos por id
+// Listagem de procedimentos
+   function index() {
+		global $procedimentos;
+		if (!empty($_POST['proc'])) {
+			$procedimentos = filter("procedimentos","p_nome like '%" . $_POST['proc'] . "%';");
+		}
+		else {
+			$procedimentos = find_all ("procedimentos");
+		}
+	}
+
+	/* mostrar todos os procedimentos por id
     try {
         $pdo = new PDO('mysql:host=localhost;dbname=bancolu;charset=utf8mb4', 'root', '');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -16,13 +27,9 @@
     } catch (PDOException $e) {
         echo "Erro ao conectar ao banco: " . $e->getMessage();
         $procedimentos = [];
-    }
+    }*/
 
-    // Listagem de procedimentos
-    function index() {
-		global $proc;
-		$proc = find_all("procedimentos");
-	}
+    
 
     //  Visualização de um procedimento
 	function view($id_p = null) {

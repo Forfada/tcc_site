@@ -2,7 +2,8 @@
     include 'functions.php';
     include(INIT);
     include(HEADER_TEMPLATE);
-?>
+    index();
+?>  
 
 <style>
     .proc-card {
@@ -54,10 +55,20 @@
 <section class="procedimentos section-light section-cor3 py-5" id="procedimentos">
     <div class="container mt-5" style="margin-top: 6rem !important;">
         <h2 class="txt1 mb-1 text-center">Conheça nossos serviços!</h2>
-        <p class="txt4 text-center mb-2"> Conheça nossos procedimentos de Embelezamento e Autocuidado.</p>
-        <div class="text-end mb-1">
-            <button class="buttonc"><i class="fa fa-plus"></i> Adicionar Procedimento</button>
-        </div>  
+        <p class="txt4 text-center mb-2"> Conheça nossos procedimentos de Embelezamento e Autocuidado.</p> 
+        <form name="filtro" action="index.php" method="post">
+            <div class="row"> 
+                <div class="form-group col-md-4">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" maxlength="50" name="proc" placeholder="Procurar Procedimento..." required>
+                        <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
+                    </div>
+                </div>
+                <div class="col-md-8 text-end mb-1">
+                    <button class="buttonc"><i class="fa fa-plus"></i> Adicionar Procedimento</button>
+                </div> 
+            </div>
+		</form>
 
         <div class="row g-4">
             <?php foreach ($procedimentos as $proc): ?>

@@ -60,12 +60,12 @@
             <div class="row"> 
                 <div class="form-group col-md-4">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" maxlength="50" name="proc" placeholder="Procurar Procedimento..." required>
+                        <input type="text" class="form-control" maxlength="50" name="proc" placeholder="Procurar Procedimento...">
                         <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
                     </div>
                 </div>
                 <div class="col-md-8 text-end mb-1">
-                    <button class="buttonc"><i class="fa fa-plus"></i> Adicionar Procedimento</button>
+                    <a class="btn buttonc" href="add.php"><i class="fa fa-plus"></i> Adicionar Procedimento</a>
                 </div> 
             </div>
 		</form>

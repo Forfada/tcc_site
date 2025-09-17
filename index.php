@@ -5,25 +5,25 @@
 
 
 <section id="home" class="section-parallax section-cor3-mode">
-  <div class="row overlayy align-items-center">
-    <div class="col-lg-6 col-md-7 col-12">
-      <div>
-        <h1>Assim como a Lua, você tem fases.</h1>
-        <h2>
-          E em cada uma delas, nós estamos aqui para fazer você <i>brilhar</i> ainda mais.
-        </h2>
-        <p>Conheça <i>Lunaris</i>, a Clínica de AutoCuidado e 
-          Embelezamento perfeita para <b><i>você</i></b>.
-        </p>
-      </div>
-    </div>  
+  <div class="parallax-wave"> 
+    <svg viewBox="0 0 1440 180" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,80 C320,160 1120,0 1440,80 L1440,180 L0,180 Z" fill="#f6dfc1" opacity="0.74"/>
+      <path d="M0,100 C400,200 1040,40 1440,100 L1440,180 L0,180 Z" fill="#541f33" opacity="0.92"/>
+      <path d="M0,130 C500,210 940,90 1440,130 L1440,180 L0,180 Z" fill="#541f33" opacity="0.96"/>
+      <path d="M0,150 C600,190 900,110 1440,150 L1440,180 L0,180 Z" fill="#541f33" opacity="0.95"/>
+    </svg>
+  </div>
 
-	<div class="col-lg-6 col-md-5 col-12">
-		<div class="img-bo" id="img-bo-container">
-			<img src="img/laravel.png" alt="Lunaris" class="" id="laravel-img">
-		</div>
-	</div>
+  <div class="overlayy">
+    <h1>Autocuidado em todas as fases</h1>
+    <h2>Confiança, bem-estar e valorização</h2>
+    <p>
+      Na Lunaris, cada momento é uma oportunidade de se sentir bem.  
+      Oferecemos estética avançada com olhar humano, realçando sua beleza natural e promovendo seu bem-estar.
+    </p>
+  </div>
 </section>
+
 
 
 

@@ -1,4 +1,3 @@
-
 :root {
     --cor1: #f6dfc1;
     --cor2: #732C47;
@@ -7,594 +6,490 @@
     --cor5: #752342;
     --cor6: #30121d;
 
-    
     --texto-claro: #ffffff;
     --fundo-mobile: #3a1d2b;
 }
 
-
-    body {
-		margin: 0;
-    }
-	.section-cor3-mode{
-		background-color: var(--cor3);
-		height: 100vh;
-		margin: 0;
-	}
-	.section-cor4-mode{
-		background-color: var(--cor4);
-		height: 100vh;
-		margin: 0;
-	}
-	.section-cor3 {
-		background-color: var(--cor3);
-		height: flex;
-		min-height: 100vh;
-		margin: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		font-size: 0;
-	}
-
-	.section-cor4 {
-		background-color: var(--cor4);
-		height: flex;
-		min-height: 100vh;
-		margin: 0;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		font-size: 0;
-	}
+body {
+    margin: 0;
+}
+.section-cor3-mode{
+    background-color: var(--cor3);
+    height: 100vh;
+    margin: 0;
+}
+.section-cor4-mode{
+    background-color: var(--cor4);
+    height: 100vh;
+    margin: 0;
+}
+.section-cor3 {
+    background-color: var(--cor3);
+    height: flex;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0;
+}
+.section-cor4 {
+    background-color: var(--cor4);
+    height: flex;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 0;
+}
 
 /*-------troca de cor do index-------*/
-    .section {
-		height: 140vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-		font-size: 2rem;
-    }
-
-    .section-light {
-    	color: var(--cor2);
-    }
-
-    .section-dark {
-    	color: var(--cor1);
-    }
+.section {
+    height: 140vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2rem;
+}
+.section-light {
+    color: var(--cor2);
+}
+.section-dark {
+    color: var(--cor1);
+}
 
 /*-------carouseal-------*/
-/* esse faz a parte cinza o container cm td*/
 .slide-container{
-	max-width: 1238px;
-	width: 100%;
-	padding: 15px 0;
-	background-color:0;
-	display: flex;
+    max-width: 1238px;
+    width: 100%;
+    padding: 15px 0;
+    background-color:0;
+    display: flex;
 }
-/* esse faz a parte vermelha espaçamento*/
 .slide-content{
-	margin: 0 35px;
-	padding: 30px 0px;
-	padding-left: 6px;
-	padding-right: 6px;
-	background-color: 0;
-	overflow: hidden;
-	
-	border-radius: 25px;
-	
+    margin: 0 35px;
+    padding: 30px 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+    background-color: 0;
+    overflow: hidden;
+    border-radius: 25px;
 }
 .card{
-	border-radius: 25px;
-	background-color: var(--cor1);
-	box-shadow: 0 5px 9px 0 rgba(0, 0, 0, 0.35), 0 6px 20px 0 rgba(0, 0, 0, 0.25);
+    border-radius: 25px;
+    background-color: var(--cor1);
+    box-shadow: 0 5px 9px 0 rgba(0, 0, 0, 0.35), 0 6px 20px 0 rgba(0, 0, 0, 0.25);
 }
 .image-content,.card-content{
-	display: absolute;
-	flex-direction: column;
-	align-items: center;
-	padding: 10px 14px;
+    display: absolute;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 14px;
 }
 .card-content{
-	height: 250px;
+    height: 250px;
 }
 .image-content{
-	position: relative;
-	row-gap: 5px;
-	padding: 5px 0;
+    position: relative;
+    row-gap: 5px;
+    padding: 5px 0;
 }
 .overlay{
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
-	width:100%;
-	background-color: var(--cor3);
-	border-radius: 25px 25px 0 25px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width:100%;
+    background-color: var(--cor3);
+    border-radius: 25px 25px 0 25px;
 }
 .overlay::before,
 .overlay::after{
-	content: '';
-	position: absolute;
-	right: 0;
-	bottom: -40px;
-	height: 40px;
-	width: 40px;
-	background-color: var(--cor3);
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -40px;
+    height: 40px;
+    width: 40px;
+    background-color: var(--cor3);
 }
 .overlay::after{
-	border-radius: 0 25px 0 0;
-	background-color: var(--cor1);
+    border-radius: 0 25px 0 0;
+    background-color: var(--cor1);
 }
 .card-image{
-	position: relative;
-	height: 280px;
-	width: 100%;
-	padding: 3px;
-	border-radius: 2%;
+    position: relative;
+    height: 280px;
+    width: 100%;
+    padding: 3px;
+    border-radius: 2%;
 }
-
 .card-image .card-img{
-	height: 100%;
-	width: 100%;
-	border-radius: 25px;
-
+    height: 100%;
+    width: 100%;
+    border-radius: 25px;
 }
-
 .name{
-	font-size: 1.3rem;
-	font-weight: 500;
-	color:#333;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color:#333;
 }
 .description{
-	font-size: 1.1rem;
-	color: #541f33;
-	text-align: center;
-	
+    font-size: 1.1rem;
+    color: #541f33;
+    text-align: center;
 }
 .buttonc{
-	border: none;
-	font-size: 16px;
-	color: var(--cor3);
-	padding: 8px 16px;
-	background-color: var(--cor2);
-	border-radius: 6px;
-	margin: 14px;
-	cursor: pointer;
-	transition: all 0.3s ease;
+    border: none;
+    font-size: 16px;
+    color: var(--cor3);
+    padding: 8px 16px;
+    background-color: var(--cor2);
+    border-radius: 6px;
+    margin: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 .buttonc:hover{
-	background: var(--cor4);
-
+    background: var(--cor4);
 }
-
 .swiper-navbtn{
-	color: var(--cor1);
-	transition: color 0.3 ease;
+    color: var(--cor1);
+    transition: color 0.3 ease;
 }
 .swiper-navbtn:hover{
-	color: var(--cor6);
+    color: var(--cor6);
 }
 .swiper-navbtn::before, 
 .swiper-navbtn::after{
-	color: var(--cor3);
-	font-size: 40px;
+    color: var(--cor3);
+    font-size: 40px;
 }
 .swiper-button-next{
-	right: 0;
+    right: 0;
 }
 .swiper-button-prev{
-	left: 0;
+    left: 0;
 }
 .swiper-pagination .bullet{
-	background-color: var(--cor3);
-	opacity: 1;
+    background-color: var(--cor3);
+    opacity: 1;
 }
 .swiper-pagination .bullet-active{
-	background-color: var(--cor3);
+    background-color: var(--cor3);
 }
 
-/*------------parallax---------------*/
+/*------------ PARALLAX REVISADO ---------------*/
 .section-parallax {
-    position: relative;
-    background-image: url('../img/fundo1.png');
-    background-position: center 0;
-    background-size: cover;
-    background-repeat: no-repeat;
-    height: 100vh;
-    display: flex;
-    padding-left: 7vw;
-    overflow: hidden;
-    transition: background-position 0.4s ease-out;
-    
+  position: relative;
+  background-image: linear-gradient(to bottom, rgba(20, 10, 20, 0.325), rgba(0, 0, 0, 0.75)), url('../img/ter.jpeg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 5%;
+  text-align: center;
+  overflow: hidden;
+}
+.parallax-wave {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  max-height: 180px;
+  z-index: 1;
+  pointer-events: none;
+  object-fit: cover;
 }
 
-.img-bo img {
-    height: 82vh;
-    display: block;
-    margin-top: 18vh;
-    max-width: auto;
-    min-width: 30%;
-    z-index: 0;
+/* Responsividade das ondas */
+@media (max-width: 1024px) {
+  .parallax-wave {
+    max-height: 140px;
+  }
 }
-
-.section-parallax::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: 0;
-	opacity: 0;
-    z-index: 0;
+@media (max-width: 768px) {
+  .parallax-wave {
+    max-height: 100px;
+  }
 }
-
+@media (max-width: 480px) {
+  .parallax-wave {
+    max-height: 70px;
+  }
+}
 .section-parallax .overlayy {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
 }
-
 .section-parallax h1 {
-    margin-top: 2vh;
-    font-size: 3.1rem;
-    max-width: 900px;
-    color: var(--cor2);
-    font-weight: 600;
-    line-height: 1.16;
-    position: relative;
-    z-index: 1;
-    font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--cor1);
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 12px rgba(84,31,51,0.18);
 }
-
 .section-parallax h2 {
-    font-size: 2.95rem;
-    max-width: 900px;
-    color: var(--cor2);
-    font-weight: 600;
-    line-height: 1.15;
-    position: relative;
-    z-index: 1;
-    font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--cor3);
+  margin-bottom: 1.2rem;
+  text-shadow: 0 2px 8px rgba(84,31,51,0.13);
 }
-
 .section-parallax p {
-    font-family: 'Verdana', sans-serif;
-    color: var(--cor4);
-    font-size: 1.8rem;
-    max-width: 800px;
-    z-index: 1;
-    position: relative;
-    margin-top: 20px;
+  font-family: 'Verdana', sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  color: var(--cor1);
+  text-shadow: 0 2px 10px rgba(84,31,51,0.13);
 }
-
-@media (min-width: 866px) and (max-width: 1020px) {
-
-    .section-parallax h1 {
-        font-size: 2.5rem;
-        max-width: 600px;
-        color: var(--cor2);
-        font-weight: 500;
-        line-height: 1;
-    }
-    .section-parallax h2 {
-        font-size: 2.2rem;
-        max-width: 500px;
-        color: var(--cor2);
-        font-weight: 600;
-        line-height: 1;
-    }
-    .section-parallax p {
-        font-size: 1.45rem;
-        max-width: 700px;
-    }
+/* ---------- Responsividade ---------- */
+@media (max-width: 1024px) {
+  .section-parallax h1 { font-size: 2.2rem; }
+  .section-parallax h2 { font-size: 1.5rem; }
+  .section-parallax p  { font-size: 1rem; max-width: 500px; }
 }
-
-@media (max-height: 700px) {
-    .img-bo img {
-        
-    }
-
-    .section-parallax h1 {
-        font-size: 2.5rem;
-        max-width: 600px;
-        color: var(--cor2);
-        font-weight: 500;
-        line-height: 1;
-    }
-    .section-parallax h2 {
-        font-size: 2.2rem;
-        max-width: 500px;
-        color: var(--cor2);
-        font-weight: 600;
-        line-height: 1;
-    }
-    .section-parallax p {
-        font-size: 1.45rem;
-        max-width: 700px;
-    }
+@media (max-width: 768px) {
+  .section-parallax {
+    padding: 20px;
+    background-color: var(--fundo-mobile);
+  }
+  .section-parallax h1 { font-size: 1.9rem; }
+  .section-parallax h2 { font-size: 1.3rem; }
+  .section-parallax p  { font-size: 0.95rem; }
 }
-@media (max-width: 865px) {
-    .section-parallax {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background-image: linear-gradient(to bottom, rgba(20, 10, 20, 0.325), rgba(0, 0, 0, 0.85)),  url('../img/body1_med.png');
-        background-color: var(--fundo-mobile);
-        background-position: center;
-        padding: 40px 20px;
-    }
-
-    .section-parallax h1 {
-        display: none;
-
-    }
-
-    .section-parallax h2 {
-        display:none;
-    }
-
-    .section-parallax p {
-        font-size: 1.5rem;
-		margin-top: 98%;
-		padding: 2%;
-        color: var(--texto-claro);	
-		background-color: rgba(43, 7, 19, 0.140);
-    }
+@media (max-width: 480px) {
+  .section-parallax {
+    padding: 15px;
+  }
+  .section-parallax h1 { font-size: 1.6rem; }
+  .section-parallax h2 { font-size: 1.1rem; }
+  .section-parallax p  { font-size: 0.9rem; line-height: 1.4; }
 }
-
-
 
 /* textos */
-
 .txt1{
-	font-family: 'Playfair Display', serif;
-	line-height: 2vh;
+    font-family: 'Playfair Display', serif;
+    line-height: 2vh;
     position: relative;
     z-index: 1;
-	margin-bottom: 1.5vh;
+    margin-bottom: 1.5vh;
 }
-
 .txt2{
-	font-size: 2vh;
-	font-family: 'Verdana', sans-serif;
-	line-height: 2rem;
+    font-size: 2vh;
+    font-family: 'Verdana', sans-serif;
+    line-height: 2rem;
     position: relative;
     z-index: 1;
-	text-align: justify;
+    text-align: justify;
 }
-
 .txt3{
-	font-size: 1.30rem;
-	font-family: 'Courier New', monospace;
-	line-height: 10px;
+    font-size: 1.30rem;
+    font-family: 'Courier New', monospace;
+    line-height: 10px;
     position: relative;
     z-index: 1;
-	margin-bottom: 0.7rem;
-	margin-top: 3%;
+    margin-bottom: 0.7rem;
+    margin-top: 3%;
 }
-
 .txt4{
-	font-size: 1.2rem;
-	font-family: 'Verdana', sans-serif;
-	line-height: 25px;
+    font-size: 1.2rem;
+    font-family: 'Verdana', sans-serif;
+    line-height: 25px;
     position: relative;
     z-index: 1;
-	text-align: center;
-	margin-bottom: 1vh;
+    text-align: center;
+    margin-bottom: 1vh;
 }
-
 .txt1-2{
-	font-family: 'Playfair Display', serif;
-	line-height: 50px;
+    font-family: 'Playfair Display', serif;
+    line-height: 50px;
     position: relative;
     z-index: 1;
-	margin-bottom:15px;
+    margin-bottom:15px;
 }
 
 /*home2*/
 .interface{
-	max-width:1200px;
-	margin: 0 auto;
-	padding: 0 4%;
+    max-width:1200px;
+    margin: 0 auto;
+    padding: 0 4%;
 }
-
 section.sobre{
-	padding: 0px 0;
+    padding: 0px 0;
 }
-
 .sobre .itens-container{
-	display:flex;
-	align-items:center;
-	justify-content:space-between;
-	gap: 10%;
-	margin-bottom:2px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10%;
+    margin-bottom:2px;
 }
-
 .sobre .itens-container .img-itens{
-	max-width:450px;
-	border-radius: 20px;
+    max-width:450px;
+    border-radius: 20px;
 } 
 .img-sobre{
-	max-width: 450px;
-	border-radius: 20px;
-	margin-bottom: 2%;
+    max-width: 450px;
+    border-radius: 20px;
+    margin-bottom: 2%;
 }
-
 .buttonS{
-	border: 1px solid var(--cor3);
-	font-size: 1.15vw;
-	color: var(--cor3);
-	padding: 8px 16px;
-	background-color: var(--cor2);
-	border-radius: 12px;
-	margin: 14px;
-	cursor: pointer;
-	transition: all 0.3s ease;
+    border: 1px solid var(--cor3);
+    font-size: 1.15vw;
+    color: var(--cor3);
+    padding: 8px 16px;
+    background-color: var(--cor2);
+    border-radius: 12px;
+    margin: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-
 .buttonS:hover{
-	border: 1px solid var(--cor3);
-	color: var(--cor3);
-	background-color: var(--cor6);
-
+    border: 1px solid var(--cor3);
+    color: var(--cor3);
+    background-color: var(--cor6);
 }
-
 .buttonB{
-	border: 1px solid var(--cor3);
-	font-size: 1.15vw;
-	color: var(--cor3);
-	padding: 8px 16px;
-	background-color: var(--cor2);
-	border-radius: 12px;
-	margin: 14px;
-	cursor: pointer;
-	transition: all 0.3s ease;
+    border: 1px solid var(--cor3);
+    font-size: 1.15vw;
+    color: var(--cor3);
+    padding: 8px 16px;
+    background-color: var(--cor2);
+    border-radius: 12px;
+    margin: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
-
 .buttonB:hover{
-	border: 1px solid var(--cor3);
-	color: var(--cor3);
-	background-color: var(--cor6);
-
+    border: 1px solid var(--cor3);
+    color: var(--cor3);
+    background-color: var(--cor6);
 }
-
 
 /* login */
-    .login-container {
-        display: flex;
-        min-height: 100vh;
-        background-color: var(--cor3);
-    }
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--cor3);
+}
+.login-left, .login-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-left {
+    background-color:var(--cor3);
+    padding: 2rem;
+    flex-direction: column;
+}
+.btn-outline-dark:hover{
+    background-color:#fff;
+    color: black;
+    border-color:#fff;
+}
+.pz{
+    text-align: center;
+}
+.form1{
+    background-color: #faf7f2;
+}
+.btn-conect{
+    background-color: var(--cor2);
+    color: #fff;
+}
+.btn-conect:hover{
+    background-color: var(--cor4);
+    color:#fff;
+}
+.login-card {
+    width: 100%;
+    max-width: 400px;
+}
+.login-right {
+    background: url('https://static.vecteezy.com/ti/fotos-gratis/p1/42601216-ai-gerado-facial-mascarar-inscricao-gratis-foto.jpg') no-repeat center center;
+    background-size: cover;
+}
 
-    .login-left, .login-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .login-left {
-        background-color:var(--cor3);
-        padding: 2rem;
-        flex-direction: column;
-    }
-
-    .btn-outline-dark:hover{
-        background-color:#fff;
-        color: black;
-        border-color:#fff;
-    }
-    .pz{
-        text-align: center;
-    }
-    .form1{
-        background-color: #faf7f2;
-    }
-    .btn-conect{
-        background-color: var(--cor2);
-        color: #fff;
-    }
-    .btn-conect:hover{
-        background-color: var(--cor4);
-        color:#fff;
-    }
-
-    .login-card {
-        width: 100%;
-        max-width: 400px;
-    }
-
-    .login-right {
-        background: url('https://static.vecteezy.com/ti/fotos-gratis/p1/42601216-ai-gerado-facial-mascarar-inscricao-gratis-foto.jpg') no-repeat center center;
-        background-size: cover;
-    }
-
-
-	/* cadastro */
-    .cadastro-container {
-        display: flex;
-        min-height: 100vh;
-        background-color: var(--cor2);
-    }
-
-    .cadastro-left, .cadastro-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .cadastro-left {
-        background-color: var(--cor2);
-        padding: 2rem;
-        flex-direction: column;
-        color: #fff;
-    }
-
-
-    .pc{
-        text-align: center;
-        color: #fff;
-    }
-    .btn-regis{
-        background-color: var(--cor3);
-    }
-    .btn-regis:hover{
-        background-color: var(--cor1);
-        color: black;
-    }
-    .form2{
-        background-color: #faf7f2;
-    }
-
-
-    .cadastro-card {
-        width: 100%;
-        max-width: 700px;
-    }
-
-
-    .cadastro-card  {
-        color: black;
-    }
-
-    .cadastro-right {
-        background: url('https://img.freepik.com/fotos-gratis/jovem-mulher-deitada-na-mesa-do-cosmetologista-durante-o-procedimento-de-rejuvenescimento-cosmetologista-cuida-da-pele-do-pescoco-e-do-rosto-juventude-e-bem-estar-procedimento-de-limpeza-de-face-de-hardware_343596-7877.jpg?semt=ais_hybrid&w=740') no-repeat center center;
-        background-size: cover;
-    }
-
-	.senha-container {
-        display: flex;
-        min-height: 100vh;
-        background-color: #fff;
-    }
-
-    .senha-left, .senha-right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .senha-left {
-        background-color: var(--cor2);
-        padding: 2rem;
-        flex-direction: column;
-        color: #fff;
-    }
-    .senha-right {
-        background: url('https://img.freepik.com/fotos-gratis/vista-de-cima-do-rejuvenescimento-de-mulher-bonita-apreciando-procedimentos-de-cosmetologia-no-salao-de-beleza-dermatologia-maos-em-brilhos-azuis-saude-terapia-botox_197531-2783.jpg?semt=ais_hybrid&w=740') no-repeat center center;
-        background-size: cover;
-    }
-
- .procedimentos{
+/* cadastro */
+.cadastro-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--cor2);
+}
+.cadastro-left, .cadastro-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cadastro-left {
+    background-color: var(--cor2);
+    padding: 2rem;
+    flex-direction: column;
+    color: #fff;
+}
+.pc{
+    text-align: center;
+    color: #fff;
+}
+.btn-regis{
+    background-color: var(--cor3);
+}
+.btn-regis:hover{
+    background-color: var(--cor1);
+    color: black;
+}
+.form2{
+    background-color: #faf7f2;
+}
+.cadastro-card {
+    width: 100%;
+    max-width: 700px;
+}
+.cadastro-card  {
+    color: black;
+}
+.cadastro-right {
+    background: url('https://img.freepik.com/fotos-gratis/jovem-mulher-deitada-na-mesa-do-cosmetologista-durante-o-procedimento-de-rejuvenescimento-cosmetologista-cuida-da-pele-do-pescoco-e-do-rosto-juventude-e-bem-estar-procedimento-de-limpeza-de-face-de-hardware_343596-7877.jpg?semt=ais_hybrid&w=740') no-repeat center center;
+    background-size: cover;
+}
+.senha-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #fff;
+}
+.senha-left, .senha-right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.senha-left {
+    background-color: var(--cor2);
+    padding: 2rem;
+    flex-direction: column;
+    color: #fff;
+}
+.senha-right {
+    background: url('https://img.freepik.com/fotos-gratis/vista-de-cima-do-rejuvenescimento-de-mulher-bonita-apreciando-procedimentos-de-cosmetologia-no-salao-de-beleza-dermatologia-maos-em-brilhos-azuis-saude-terapia-botox_197531-2783.jpg?semt=ais_hybrid&w=740') no-repeat center center;
+    background-size: cover;
+}
+.procedimentos{
     margin: 0;
- }
- 
+}

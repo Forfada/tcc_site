@@ -64,7 +64,7 @@
             if ($uploadOk == 0) {
                 throw new Exception("Desculpe, mas o arquivo não pode ser enviado!");
             } else {
-                if (move_uploaded_file($_FILES["foto"] ["tmp_name"], $arquivo_destino)) {
+                if (move_uploaded_file($_FILES["p_foto"] ["tmp_name"], $arquivo_destino)) {
                     $_SESSION['message'] = "O arquivo " . htmlspecialchars($nomearquivo) . " foi armazenado.";
                     $_SESSION["type"] = "success";
                 } else {
@@ -103,15 +103,12 @@
 					upload($pasta_detino, $arquivo_destino, $tipo_arquivo, $nome_temp, $$tamanho_arquivo);
 					$proc['p_foto'] = $nomearquivo;
 				}
-				$proc['p_foto'] = $nomearquivo;
-				//data de criação e modificação
-				$today = new DateTime("now", new DateTimeZone("America/Sao_Paulo"));
-
-				$proc = $_POST["proc"];
-				$proc["modified"] = $proc["created"] = $today->format("Y-m-d H:i:s");
+				else {
+					$enfermeiro["FOTO"] = "noimg.png";
+				}
 				
 				save('procedimentos', $proc);
-				header('Location: index.php');
+				return header('location: index.php');
 			} catch (Exception $e) {
 				$_SESSION['message'] = "Aconteceu um erro: " . $e->getMessage();
 				$_SESSION['type'] = "danger";

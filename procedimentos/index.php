@@ -13,6 +13,7 @@
         box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
         background: #fff;
         width: 100%;
+        align-items: center;
     }
     .proc-card:hover {
         box-shadow: 0 6px 32px rgba(0, 0, 0, 0.21);
@@ -43,11 +44,25 @@
     }
     @media (max-width: 767px) {
         .proc-img {
-            border-radius: 20px 20px 0 0;
-            max-height: 180px;
+            position: relative;
+            height: 380px;
+            width: 100%;
+            border-radius: 20px;
         }
         .proc-card {
             flex-direction: column !important;
+            display: flex;
+            border-radius: 25px;
+            width: 85%;
+            padding: 10px 14px;
+            align-items: center;
+            margin: 0 auto;
+        }
+         .row.g-4 {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
         }
     }
 </style>
@@ -56,41 +71,50 @@
     <div class="container mt-5" style="margin-top: 6rem !important;">
         <h2 class="txt1 mb-1 text-center">Conheça nossos serviços!</h2>
         <p class="txt4 text-center mb-2"> Conheça nossos procedimentos de Embelezamento e Autocuidado.</p> 
+        
         <form name="filtro" action="index.php" method="post">
-            <div class="row"> 
-                <div class="form-group col-md-4">
-                    <div class="input-group mb-3">
+            <div class="row align-items-center"> 
+                <div class="form-group col-12 col-md-5 mb-2 mb-md-0">
+                    <div class="input-group">
                         <input type="text" class="form-control" maxlength="50" name="proc" placeholder="Procurar Procedimento...">
                         <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
                     </div>
                 </div>
-                <div class="col-md-8 text-end mb-1">
+                <div class="col-12 col-md-7 text-md-end mt-2 mt-md-0">
                     <a class="btn buttonc" href="add.php"><i class="fa fa-plus"></i> Adicionar Procedimento</a>
                 </div> 
             </div>
 		</form>
 
-        <div class="row g-4">
-            <?php foreach ($procedimentos as $proc): ?>
-                <div class="col-lg-12 mx-auto">
-                    <div class="card proc-card flex-row align-items-stretch h-100">
-                        <div class="col-3 d-none d-md-block p-0">
-                            <img src="imagens/<?php echo ($proc['p_foto']); ?>"
-                                 class="proc-img"
-                                 alt="<?php echo ($proc['p_nome']); ?>">
-                        </div>
-                        <div class="col-12 col-md-8">
-                            <div class="card-body">
-                                <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
-                                <p class="description"><?php echo ($proc['p_descricao']); ?></p>
-
-                                <button class="buttonc">Agende já!</button>
+        <hr>
+       
+            <div class="row g-4">
+                <?php if ($procedimentos) : ?>
+                <?php foreach ($procedimentos as $proc): ?>
+                    <div class="col-lg-12 mx-auto">
+                        <a href="view.php?id_p=<?php echo $proc['id_p']; ?>" style="text-decoration: none; color: inherit;">
+                        <div class="card proc-card flex-row align-items-stretch h-100">
+                            <div class="col-md-3 d-md-block p-0">
+                                <img src="imagens/<?php echo ($proc['p_foto']); ?>"
+                                    class="proc-img"
+                                    alt="<?php echo ($proc['p_nome']); ?>">
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <div class="card-body">
+                                    <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
+                                    <p class="description"><?php echo ($proc['p_descricao']); ?></p>
+                                    <button class="buttonc">Agende já!</button>
+                                </div>
                             </div>
                         </div>
+                        </a>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+                <?php else : ?>
+                <h5 colspan="6">Nenhum procedimento encontrado.</h5>
+                <?php endif; ?>
+            </div>
+        
     </div>
 </section>
 

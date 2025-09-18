@@ -27,7 +27,14 @@
 
         try {
             if ($id) {
-                $sql = "SELECT * FROM " . $table . " WHERE id = :id";
+                $pk = 'id';
+                if ($table == 'procedimentos') $pk = 'id_p';
+                if ($table == 'clientes') $pk = 'id_cli';
+                if ($table == 'usuarios') $pk = 'id_u';
+                if ($table == 'agendamento') $pk = 'id_ag';
+                if ($table == 'anamnese') $pk = 'id_an';
+
+                $sql = "SELECT * FROM " . $table . " WHERE $pk = :id";
                 $stmt = $database->prepare($sql);
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();
@@ -108,7 +115,7 @@
 		// remove a ultima virgula
 		$items = rtrim($items, ",");
 
-		$sql = "UPDATE " . $table . " SET $items WHERE id=:id";
+		$sql = "UPDATE " . $table . " SET $items WHERE $pk=:id";
         $stmt = $database->prepare($sql);
 		
         $stmt->bindParam(':id', $id);
@@ -132,7 +139,7 @@
 		
 		try {
 			if ($id) {
-                $sql = "DELETE FROM " . $table . " WHERE id_u = :id";
+                $sql = "DELETE FROM " . $table . " WHERE $pk = :id";
                 $stmt = $database->prepare($sql);
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();

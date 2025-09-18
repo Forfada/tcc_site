@@ -78,10 +78,12 @@
     }
 
     //  Visualização de um procedimento
-	function view($id_p = null) {
-		global $proc;
-		$proc = find("procedimentos", $id_p);
-	}
+	function view($id = null) {
+    global $proc;
+    	$proc = find("procedimentos", $id);
+}
+
+	
 
     //  Cadastro de procedimentos
 	function add() {
@@ -104,7 +106,7 @@
 					$proc['p_foto'] = $nomearquivo;
 				}
 				else {
-					$enfermeiro["FOTO"] = "noimg.png";
+					$proc["p_foto"] = "noimg.jpg";
 				}
 				
 				save('procedimentos', $proc);
@@ -124,9 +126,9 @@
 
 			if (isset($_GET['id_p'])) {
  
-				$id_p = $_GET['id_p'];
+				$id = $_GET['id_p'];
 				
-				$proc = find("procedimentos", $id_p);
+				$proc = find("procedimentos", $id);
 				
 				if (isset($_POST['proc'])) {
 					
@@ -147,11 +149,11 @@
                         $proc['p_foto'] = $nomearquivo;
                     }
  
-					update("procedimentos", $id_p, $proc);
+					update("procedimentos", $id, $proc);
                     header("Location: index.php");
 				} else {
 					global $proc;
-					$proc = find("procedimentos", $id_p);
+					$proc = find("procedimentos", $id);
 				} 
 			} else {
 				header('Location: index.php');
@@ -163,10 +165,10 @@
 	}
 
     // Exclusão de um procedimento
-	function delete($id_p = null) {
+	function delete($id = null) {
 
 		global $proc;
-		$proc = remove("procedimentos", $id_p);
+		$proc = remove("procedimentos", $id);
 
 		header("location: index.php");
 	}

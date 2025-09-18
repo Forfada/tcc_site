@@ -186,7 +186,7 @@ body {
 /*------------ PARALLAX REVISADO ---------------*/
 .section-parallax {
   position: relative;
-  background-image: linear-gradient(to bottom, rgba(20, 10, 20, 0.325), rgba(0, 0, 0, 0.75)), url('../img/ter.jpeg');
+  background-image: linear-gradient(to bottom, rgba(20, 10, 20, 0.325), rgba(0, 0, 0, 0.75)), url('../img/tera.jpeg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

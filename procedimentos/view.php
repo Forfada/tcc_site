@@ -7,5 +7,6 @@
 ?>
 
 <section class="procedimentos section-light section-cor3 py-5" id="view_procedimentos">
-    
+   <h5><?php echo $proc['p_nome']; ?></h5>
 </section>
+<?php include(FOOTER_TEMPLATE); ?>

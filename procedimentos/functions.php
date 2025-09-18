@@ -124,17 +124,14 @@
 			
 			$now = new DateTime("now", new DateTimeZone("America/Sao_Paulo"));
 
-			if (isset($_GET['id_p'])) {
+			if (isset($_GET['id'])) {
  
-				$id = $_GET['id_p'];
+				$id = $_GET['id'];
 				
 				$proc = find("procedimentos", $id);
 				
 				if (isset($_POST['proc'])) {
-					
-					$proc = $_POST['proc'];
-					$proc["modified"] = $now->format("Y-m-d H:i:s");
-					
+			
 					if(!empty($_FILES['p_foto'] ['name'])) {
                         $pasta_destino = "imagens/";
                         $arquivo_destino = $pasta_destino . basename($_FILES["p_foto"]["name"]);
@@ -166,7 +163,6 @@
 
     // Exclusão de um procedimento
 	function delete($id = null) {
-
 		global $proc;
 		$proc = remove("procedimentos", $id);
 

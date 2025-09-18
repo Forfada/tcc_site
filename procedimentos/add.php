@@ -59,7 +59,7 @@
             <form action="add.php" method="post" enctype="multipart/form-data">
                 <!-- area de campos do form -->
                 <div class="row justify-content-center">
-                    <div class="col-md-6">
+                    <div class="col-md-10 d-flex gap-2">
                         <div class="form-group mb-3">
                             <label for="p_nome">Nome</label>
                             <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" required>
@@ -72,19 +72,30 @@
                 </div>
 
                 <div class="row justify-content-center">
-                    <div class="col-md-6 d-flex gap-2">
-                        <div class="form-group mb-3">
-                            <label for="p_valor">Valor</label>
-                            <div class="input-group">
-                                <span class="input-group-text">R$</span>
-                                <input type="number" class="form-control text-center" id="p_valor" name="proc[p_valor]" required>
+                    <div class="col-md-10 d-flex gap-2">
+                        <div class="col-md-5 d-flex gap-2">
+                            <div class="form-group mb-3">
+                                <label for="p_valor">Valor</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">R$</span>
+                                    <input type="number" class="form-control text-center" id="p_valor" name="proc[p_valor]" required>
+                                </div>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label for="p_duracao">Duração</label>
+                                <input type="time" class="form-control text-center" id="p_duracao" name="proc[p_duracao]" required>
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="p_duracao">Duração</label>
-                            <input type="time" class="form-control text-center" id="p_duracao" name="proc[p_duracao]" required>
+                            <label for="p_descricao">Descrição</label>
+                            <textarea type="text" class="form-control" id="p_descricao" name="proc[p_descricao2]" required></textarea>
                         </div>
-                        <div class="form-group  mb-3">
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-5 mt-1">
+                        <div class="form-group mb-3">
                             <label for="p_foto">Foto</label>
                             <div class="input-group">
                                 <input type="file" class="form-control" id="p_foto" name="p_foto">
@@ -92,9 +103,6 @@
                             </div>
                         </div> 
                     </div>
-                </div>
-
-                <div class="row justify-content-center">
                     <div class="col-md-2 mt-1">
                         <label for="imgPreview">Pré-visualização</label>
                         <img class="form-control shadow p-2 mb-2 bg-body rounded" id="imgPreview" src="imagens/noimg.jpg">

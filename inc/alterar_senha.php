@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             $conn = open_database();
 
-            $stmt = $conn->prepare("SELECT id_u FROM usuarios WHERE u_num = :numero");
+            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE u_num = :numero");
             $stmt->bindParam(':numero', $numero);
             $stmt->execute();
 

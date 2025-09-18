@@ -17,7 +17,7 @@
             $senha = cri($_POST['senha']);
 
             // Agora seleciona também o campo 'foto'
-            $sql = "SELECT id_u, u_user, u_num, u_senha, foto FROM usuarios WHERE (u_num = :usuario) AND (u_senha = :senha)";
+            $sql = "SELECT id, u_user, u_num, u_senha, foto FROM usuarios WHERE (u_num = :usuario) AND (u_senha = :senha)";
             $stmt = $bd->prepare($sql);
             $stmt->bindParam(':usuario', $usuario);
             $stmt->bindParam(':senha', $senha);
@@ -25,7 +25,7 @@
 
             if ($stmt->rowCount() > 0) {
                 $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-                $id = $dados["id_u"];
+                $id = $dados["id"];
                 $nome = $dados["u_user"];
                 $user = $dados["u_num"];
                 $password = $dados["u_senha"];
@@ -35,7 +35,7 @@
                     if (!isset($_SESSION)) session_start();
                     $_SESSION['message'] = "Bem vindo " . $nome . "!";
                     $_SESSION['type'] = "info";
-                    $_SESSION['id_u'] = $id;
+                    $_SESSION['id'] = $id;
                     $_SESSION['nome'] = $nome;
                     $_SESSION['user'] = $user;
                     $_SESSION['foto'] = $foto;

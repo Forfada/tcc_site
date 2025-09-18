@@ -12,7 +12,7 @@
         $_SESSION["type"] = "danger";
         header("Location:" . BASEURL . "index.php");
     }*/
-	view($_GET['id_p']);
+	view($_GET['id']);
     include(HEADER_TEMPLATE);
     include(INIT);
 ?>  
@@ -23,10 +23,10 @@
     </div>
 <?php else : ?>
 <?php 
-	if (isset($_GET['id_p'])){
+	if (isset($_GET['id'])){
 		try{
-			$proc = find ("procedimentos", $_GET['id_p']);
-			delete($_GET['id_p']);
+			$proc = find ("procedimentos", $_GET['id']);
+			delete($_GET['id']);
 			
 			if ($proc['p_foto'] !== "noimg.jpg") {
 				unlink("imagens/" . $proc['p_foto']);

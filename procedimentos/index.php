@@ -92,21 +92,21 @@
                 <?php if ($procedimentos) : ?>
                 <?php foreach ($procedimentos as $proc): ?>
                     <div class="col-lg-12 mx-auto">
-                        <a href="view.php?id_p=<?php echo $proc['id_p']; ?>" style="text-decoration: none; color: inherit;">
-                        <div class="card proc-card flex-row align-items-stretch h-100">
-                            <div class="col-md-3 d-md-block p-0">
-                                <img src="imagens/<?php echo ($proc['p_foto']); ?>"
-                                    class="proc-img"
-                                    alt="<?php echo ($proc['p_nome']); ?>">
-                            </div>
-                            <div class="col-12 col-md-8">
-                                <div class="card-body">
-                                    <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
-                                    <p class="description"><?php echo ($proc['p_descricao']); ?></p>
-                                    <button class="buttonc">Agende já!</button>
+                        <a href="view.php?id=<?php echo $proc['id']; ?>" style="text-decoration: none; color: inherit;">
+                            <div class="card proc-card flex-row align-items-stretch h-100">
+                                <div class="col-md-3 d-md-block p-0">
+                                    <img src="imagens/<?php echo ($proc['p_foto']); ?>"
+                                        class="proc-img"
+                                        alt="<?php echo ($proc['p_nome']); ?>">
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
+                                        <p class="description"><?php echo ($proc['p_descricao']); ?></p>
+                                        <button class="buttonc">Agende já!</button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </a>
                     </div>
                 <?php endforeach; ?>

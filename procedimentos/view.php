@@ -1,6 +1,6 @@
 <?php
     include 'functions.php';
-    view($_GET["id_p"]);
+    view($_GET["id"]);
 
     include(INIT);
     include(HEADER_TEMPLATE);

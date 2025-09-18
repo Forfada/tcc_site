@@ -11,10 +11,10 @@
     }
 
     // Obtém o ID do usuário logado
-    $id_u = $_SESSION['id_u'];
+    $id = $_SESSION['id'];
 
     // Remove o usuário
-    remove('usuarios', $id_u);
+    remove('usuarios', $id);
 
     // Destroi sessão e redireciona
     session_destroy();

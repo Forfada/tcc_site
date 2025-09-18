@@ -121,16 +121,13 @@
     //Atualizacao/Edicao de procedimento
 	function edit() {
 		try {
-			
-			$now = new DateTime("now", new DateTimeZone("America/Sao_Paulo"));
 
 			if (isset($_GET['id'])) {
  
 				$id = $_GET['id'];
 				
-				$proc = find("procedimentos", $id);
-				
 				if (isset($_POST['proc'])) {
+					$proc = $_POST["proc"];
 			
 					if(!empty($_FILES['p_foto'] ['name'])) {
                         $pasta_destino = "imagens/";
@@ -163,8 +160,8 @@
 
     // Exclusão de um procedimento
 	function delete($id = null) {
-		global $proc;
-		$proc = remove("procedimentos", $id);
+		global $procedimentos;
+		$procedimentos = remove("procedimentos", $id);
 
 		header("location: index.php");
 	}

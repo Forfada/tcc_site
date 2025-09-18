@@ -12,29 +12,30 @@
         $_SESSION["type"] = "danger";
         header("Location:" . BASEURL . "index.php");
     }*/
-	view($_GET['id']);
-    include(HEADER_TEMPLATE);
-    include(INIT);
 ?>  
-<?php if (!empty($_SESSION['message'])) : ?>
+<?php /*if (!empty($_SESSION['message'])) : ?>
     <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible" role="alert">
         <?php echo $_SESSION['message']; ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php else : ?>
+    </div>*/ 
+//<?php else :?>
 <?php 
-	if (isset($_GET['id'])){
-		try{
-			$proc = find ("procedimentos", $_GET['id']);
+	if (isset($_GET['id'])) {
+		try {
+			$proc = find("procedimentos", $_GET['id']);
 			delete($_GET['id']);
 			
+			// Verifica se o nome do arquivo é semimagem.png | Se for ele não vai excluir a imagem, pq usamos dela em outros lugares!
 			if ($proc['p_foto'] !== "noimg.jpg") {
 				unlink("imagens/" . $proc['p_foto']);
 			}
-		} catch (Exception $e){
-			$_SESSION['message'] = "Não foi possível realizar a operação: " . $e->getMessage();
+
+		} catch (Exception $e) {
+			$_SESSION ['message'] = "Não foi possivel realizar a operação: " . $e->getMessage();
 			$_SESSION['type'] = "danger";
 		}
-	} 	
+	}
+	else {
+		die("ERRO: ID não definido.");
+	}
 ?>
- <?php endif; ?>

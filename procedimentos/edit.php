@@ -56,17 +56,17 @@
             <p class="txt4 text-center mb-2"> Edite um Procedimento e atualize sua Clínica.</p>
             <hr>
 
-            <form action="add.php" method="post" enctype="multipart/form-data">
+            <form action="edit.php?id=<?php echo $proc['id']; ?>" method="post" enctype="multipart/form-data">
                 <!-- area de campos do form -->
                 <div class="row justify-content-center">
                     <div class="col-md-10 d-flex gap-2">
                         <div class="form-group mb-3">
                             <label for="p_nome">Nome</label>
-                            <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" required>
+                            <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" value="<?php echo $proc['p_nome']; ?>">
                         </div>
                         <div class="form-group mb-3">
                             <label for="p_descricao">Descrição</label>
-                            <input type="text" class="form-control" id="p_descricao" name="proc[p_descricao]" required>
+                            <input type="text" class="form-control" id="p_descricao" name="proc[p_descricao]" value="<?php echo $proc['p_descricao']; ?>">
                         </div>
                     </div>
                 </div>
@@ -78,34 +78,42 @@
                                 <label for="p_valor">Valor</label>
                                 <div class="input-group">
                                     <span class="input-group-text">R$</span>
-                                    <input type="number" class="form-control text-center" id="p_valor" name="proc[p_valor]" required>
+                                    <input type="number" class="form-control text-center" id="p_valor" name="proc[p_valor]" value="<?php echo $proc['p_valor']; ?>">
                                 </div>
                             </div>
                             <div class="form-group mb-3">
                                 <label for="p_duracao">Duração</label>
-                                <input type="time" class="form-control text-center" id="p_duracao" name="proc[p_duracao]" required>
+                                <input type="time" class="form-control text-center" id="p_duracao" name="proc[p_duracao]" value="<?php echo $proc['p_duracao']; ?>">
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="p_descricao">Descrição</label>
-                            <textarea type="text" class="form-control" id="p_descricao" name="proc[p_descricao2]" required></textarea>
+                            <label for="p_descricao2">Descrição</label>
+                            <textarea type="text" class="form-control" id="p_descricao2" name="proc[p_descricao2]" ><?php echo $proc['p_descricao2']; ?></textarea>
                         </div>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
                     <div class="col-md-5 mt-1">
+                        <?php 
+                            $foto = "";
+                            if (empty( $proc["p_foto"] )) {
+                                $foto = "noimg.jpg";
+                            } else {
+                                $foto = $proc['p_foto'];
+                            }
+                        ?>
                         <div class="form-group mb-3">
                             <label for="p_foto">Foto</label>
                             <div class="input-group">
-                                <input type="file" class="form-control" id="p_foto" name="p_foto">
+                                <input type="file" class="form-control" id="p_foto" name="p_foto" value="imagens/<?php echo $foto?>">
                                 <button class="btn btn-light text-secondary" type="button" onclick="limparCaminho()"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         </div> 
                     </div>
                     <div class="col-md-2 mt-1">
                         <label for="imgPreview">Pré-visualização</label>
-                        <img class="form-control shadow p-2 mb-2 bg-body rounded" id="imgPreview" src="imagens/noimg.jpg">
+                        <img class="form-control shadow p-2 mb-2 bg-body rounded" id="imgPreview" src="imagens/<?php echo $foto?>">
                     </div>
                 </div>
                 

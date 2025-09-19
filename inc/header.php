@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+    
 <?php include(INIT); ?>
 
 <body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="80" tabindex="0">
@@ -132,6 +133,8 @@
 <script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>
 
 <script>
+
+    
     // Swiper
     var swiper = new Swiper(".slide-content", {
         slidesPerView: 3,

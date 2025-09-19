@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/fontawesome/all.min.css">
 	<link rel="icon" type="image/x-icon" href="<?php echo BASEURL; ?>img/icone.png">
 	<script src="<?php echo BASEURL; ?>js/fontawesome/all.min.js"></script>
+	<script src="<?php echo BASEURL; ?>js/jquery-3.7.1.js"></script>
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/style.css">
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/responsive.css" media="screen">
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/fotnav.css">

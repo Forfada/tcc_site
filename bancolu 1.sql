@@ -77,9 +77,9 @@ INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
      id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
      an_hipertensao VARCHAR(100) NOT NULL,
      an_diabetes VARCHAR(100) NOT NULL,
-	 an_medic VARCHAR(200) NOT NULL,
-     id_cli INT(11) UNSIGNED NOT NULL,
-     id_est INT(11) UNSIGNED NOT NULL
+	   an_medic VARCHAR(200) NOT NULL,
+     an_data DATETIME NOT NULL,
+     id_cli INT(11) UNSIGNED NOT NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
   ALTER TABLE `anamnese` ADD CONSTRAINT `fk_anamnese_id_cli` FOREIGN KEY (id) REFERENCES `clientes` (id);

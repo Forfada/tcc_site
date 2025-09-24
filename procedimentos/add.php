@@ -43,9 +43,25 @@
             font-size: 1rem;
             }
 
-        @media (max-width: 900px) {
+        @media (max-width: 767px) {
+            .form {
+                flex-direction: column;
+                display: flex;
+                gap: 0;
+            }
             .form-group {
-                margin: 0px auto;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            .d-flex {
+                flex-wrap: wrap;
+            }
+            .col-md-5.d-flex {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                width: 100%;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -59,7 +75,7 @@
             <form action="add.php" method="post" enctype="multipart/form-data">
                 <!-- area de campos do form -->
                 <div class="row justify-content-center">
-                    <div class="col-md-10 d-flex gap-2">
+                    <div class="col-md-10 d-flex gap-2 form">
                         <div class="form-group mb-3">
                             <label for="p_nome">Nome</label>
                             <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" required>

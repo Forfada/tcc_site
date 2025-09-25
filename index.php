@@ -1,7 +1,20 @@
+
 <?php
 	include 'config.php';
+	include(DBAPI);
 	include(HEADER_TEMPLATE);
+	if (!isset($_SESSION)) session_start();
 ?>
+
+<?php if (!empty($_SESSION['message'])) : ?>
+	<div class="container mt-3">
+		<div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible fade show" role="alert">
+			<?php echo $_SESSION['message']; ?>
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		<?php clear_messages(); ?>
+	</div>
+<?php endif; ?>
 
 
 <section id="home" class="section-parallax section-cor3-mode">

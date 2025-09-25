@@ -10,9 +10,9 @@
 <nav class="navbar fixed-top navbar-expand-lg p-3 navbar-colored" data-bs-theme="dark" id="mainNavbar">
     <div class="container-fluid">
         <!-- LOGO -->
-        <a class="navbar-brand ms-4" href="<?php echo BASEURL; ?>">
-            <img src="<?php echo BASEURL; ?>img/logoc.png" alt="Logo" class="navbar-logo" id="logo">
-        </a>
+            <a class="navbar-brand ms-4" href="<?php echo BASEURL; ?>">
+                <img src="<?php echo rtrim(BASEURL, '/'); ?>/img/logoc.png" alt="Logo" class="navbar-logo" id="logo">
+            </a>
 
         <!-- BOTÃO HAMBÚRGUER -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -25,21 +25,21 @@
        
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#home">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#sobre">Sobre nós</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>procedimentos/index.php">Procedimentos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#agendamento">Agendamento</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ms-4 me-4" href="#contato">Contato</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#sobre">Sobre nós</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>procedimentos/#procedimentos">Procedimentos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#agendamento">Agendamento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#contato">Contato</a>
+                    </li>
             </ul>
 
             <!-- LOGIN OU AVATAR -->
@@ -132,9 +132,8 @@
 <script src="<?php echo BASEURL; ?>js/swiper-bundle.min.js"></script>
 <script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>
 
-<script>
 
-    
+<script>
     // Swiper
     var swiper = new Swiper(".slide-content", {
         slidesPerView: 3,
@@ -155,14 +154,12 @@
     document.addEventListener("DOMContentLoaded", function () {
         const parallax = document.querySelector('.section-parallax');
         if (!parallax) return;
-
         function parallaxScroll() {
             const scrollY = window.scrollY;
             const offset = scrollY * 0.1;
             parallax.style.backgroundPosition = `center ${offset}px`;
             requestAnimationFrame(parallaxScroll);
         }
-
         requestAnimationFrame(parallaxScroll);
     });
 
@@ -170,19 +167,48 @@
     window.addEventListener('scroll', function () {
         const navbar = document.querySelector('#mainNavbar');
         const logo = document.querySelector('#logo');
-
         const sections = [
-            { selector: '.section-cor3', logo: 'img/logoc.png', navbarClass: '' },
-            { selector: '.section-cor4', logo: 'img/logob.png', navbarClass: 'scrolled' },
-            { selector: '.section-cor5', logo: 'img/logoc.png', navbarClass: 'scrolled' },
-            { selector: '.custom-footer', logo: 'img/logob.png', navbarClass: 'scrolled' }
+            { selector: '.section-cor3', logo: '<?php echo rtrim(BASEURL, '/'); ?>/img/logoc.png', navbarClass: '' },
+            { selector: '.section-cor4', logo: '<?php echo rtrim(BASEURL, '/'); ?>/img/logob.png', navbarClass: 'scrolled' },
         ];
-
         const offset = 100;
         let found = false;
-
         for (let i = 0; i < sections.length; i++) {
             const section = document.querySelector(sections[i].selector);
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top - offset <= 0 && rect.bottom > offset) {
+                    logo.src = sections[i].logo;
+                    if (sections[i].navbarClass) {
+                        navbar.classList.add(sections[i].navbarClass);
+                    } else {
+                        navbar.classList.remove('scrolled');
+                    }
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!found) {
+            logo.src = '<?php echo rtrim(BASEURL, '/'); ?>/img/logoc.png';
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Forçar fechamento do navbar collapse ao clicar em links ou botão
+    document.addEventListener("DOMContentLoaded", function () {
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navbarCollapse.classList.contains('show')) {
+                    navbarToggler.click();
+                }
+            });
+        });
+    });
+
             if (!section) continue;
 
             const rect = section.getBoundingClientRect();

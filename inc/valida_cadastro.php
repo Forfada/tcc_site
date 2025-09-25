@@ -24,7 +24,10 @@ try {
     $stmt->execute();
 
     if ($stmt->fetchColumn() > 0) {
-        throw new Exception("Este número já está cadastrado.");
+        $_SESSION['message'] = "Erro: Este número já está cadastrado.";
+        $_SESSION['type'] = "danger";
+        header("Location: login.php");
+        exit();
     }
 
     // Criptografar senha
@@ -43,18 +46,21 @@ try {
     $stmt->bindParam(':foto', $foto);
 
     if ($stmt->execute()) {
-        $_SESSION['message'] = "Cadastro realizado com sucesso!";
+        $_SESSION['message'] = "Cadastro realizado com sucesso! Faça login.";
         $_SESSION['type'] = "success";
         header("Location: login.php");
         exit();
     } else {
-        throw new Exception("Erro ao inserir usuário.");
+        $_SESSION['message'] = "Erro ao inserir usuário.";
+        $_SESSION['type'] = "danger";
+        header("Location: login.php");
+        exit();
     }
 
 } catch (Exception $e) {
     $_SESSION['message'] = "Erro: " . $e->getMessage();
     $_SESSION['type'] = "danger";
-    header("Location: cadastro.php");
+    header("Location: login.php");
     exit();
 }
 ?>

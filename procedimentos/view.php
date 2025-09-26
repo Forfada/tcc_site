@@ -59,7 +59,7 @@
         color: var(--cor4);
         font-family: 'Verdana', sans-serif;
         margin-bottom: 0.8rem;
-        text-align: left;
+        text-align: center;
         width: 100%;
         max-width: 500px;
     }
@@ -99,7 +99,7 @@
 
     .buttonc, .button-back {
         border: none;
-        font-size: 16px;
+        font-size: 18px;
         color: var(--cor3);
         padding: 8px 18px;
         background-color: var(--cor2);
@@ -121,8 +121,8 @@
         background-color: var(--cor5);
         color: #f5eadc;
         font-weight: 500;
-        font-size: 14px;
-        padding: 6px 12px;
+        font-size: 18px;
+        padding: 8px 18px;
     }
 
 
@@ -159,7 +159,7 @@
             gap: 0.3rem;
         }
         .buttonc, .button-back {
-            font-size: 14px;
+            font-size: 18px;
             padding: 7px 12px;
         }
     }
@@ -177,6 +177,12 @@
         }
         .buttonc, .button-back {
             width: 100%;
+            justify-content: center;
+
+        }
+        .view-proc-btns{
+            padding-left: 5%;
+            padding-right: 5%;
             justify-content: center;
         }
     }

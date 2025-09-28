@@ -43,9 +43,28 @@
             font-size: 1rem;
             }
 
-        @media (max-width: 900px) {
+        @media (max-width: 767px) {
+            .form {
+                flex-direction: column;
+                display: flex;
+                gap: 0;
+            }
             .form-group {
-                margin: 0px auto;
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            .d-flex {
+                flex-wrap: wrap;
+            }
+            .col-md-5.d-flex {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            .img{
+                width: 75%;
             }
         }
     </style>
@@ -111,17 +130,17 @@
                             </div>
                         </div> 
                     </div>
-                    <div class="col-md-2 mt-1">
+                    <div class="col-md-2 mt-1 img">
                         <label for="imgPreview">Pré-visualização</label>
                         <img class="form-control shadow p-2 mb-2 bg-body rounded" id="imgPreview" src="imagens/<?php echo $foto?>">
                     </div>
                 </div>
                 
-                <div class="row justify-content-center">
+                 <div class="row justify-content-center">
                     <div id="actions" class="col-md-6 mt-3">
                         <div class="d-flex justify-content-center gap-2">
-                            <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-file-circle-check"></i> Salvar</button>
-                            <a href="index.php" class="btn btn-light text-dark"><i class="fa-solid fa-eraser"></i> Cancelar</a>
+                            <button type="submit" class="buttonc"><i class="fa-solid fa-check"></i> Salvar</button>
+                            <a href="index.php" class="buttona" style="text-decoration: none;"><i class="fa-solid fa-arrow-rotate-left"></i> Cancelar</a>
                         </div>
                     </div>
                 </div>

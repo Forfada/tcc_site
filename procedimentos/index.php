@@ -77,7 +77,7 @@
                 <div class="form-group col-12 col-md-5 mb-2 mb-md-0">
                     <div class="input-group">
                         <input type="text" class="form-control" maxlength="50" name="proc" placeholder="Procurar Procedimento...">
-                        <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
+                    <button type="submit" class="btn text-white" style="background-color: var(--cor7)"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
                     </div>
                 </div>
                 <div class="col-12 col-md-7 text-md-end mt-2 mt-md-0">

@@ -5,6 +5,7 @@
     --cor4: #541f33;
     --cor5: #752342;
     --cor6: #30121d;
+    --cor7: #883152;
 
     --texto-claro: #ffffff;
     --fundo-mobile: #3a1d2b;
@@ -379,6 +380,21 @@ section.sobre{
     border: 1px solid var(--cor3);
     color: var(--cor3);
     background-color: var(--cor6);
+}
+
+.buttona{
+    font-size: 16px;
+    color: var(--cor3);
+    padding: 8px 16px;
+    background-color: var(--cor7);
+    border-radius: 6px;
+    margin: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.buttona:hover{
+    color: var(--cor3);
+    background-color: var(--cor4);
 }
 
 /* login */

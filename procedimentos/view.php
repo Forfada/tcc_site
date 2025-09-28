@@ -195,6 +195,7 @@
         <div class="view-proc-info">
             <div class="view-proc-title"><?php echo htmlspecialchars($proc['p_nome']); ?></div>
             <div class="view-proc-desc"><?php echo nl2br(htmlspecialchars($proc['p_descricao'])); ?></div>
+            <div class=" txt2"><b>O que é?</b><br><?php echo nl2br(htmlspecialchars($proc['p_descricao2'])); ?></div>
 
             <div class="view-proc-extra">
                 <div><span>Valor:</span> R$ <?php echo htmlspecialchars($proc['p_valor']); ?></div>
@@ -202,12 +203,12 @@
             </div>
 
             <div class="view-proc-btns">
-                <a class="buttonc" href="<?php echo BASEURL; ?>procedimentos/edit.php?id=<?php echo $proc['id']; ?>"><i class="fa fa-pencil"></i> Editar Procedimento</a>
+                <a class="buttonc" href="<?php echo BASEURL; ?>procedimentos/edit.php?id=<?php echo $proc['id']; ?>"><i class="fa-regular fa-pen-to-square"></i> Editar Procedimento</a>
                 <a href="#" class="buttonc"
                     data-bs-toggle="modal" data-bs-target="#delete-proc-modal" data-procedimentos="<?php echo $proc['id']; ?>">
                     <i class="fa fa-trash"></i> Excluir
                 </a>
-                <a href="index.php" class="button-back"><i class="fa fa-arrow-left"></i> Voltar</a>
+                <a href="index.php" class="button-back"><i class="fa-solid fa-arrow-rotate-left"></i> Voltar</a>
             </div>
         </div>
     </div>

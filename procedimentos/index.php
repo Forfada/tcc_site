@@ -24,7 +24,7 @@
         object-fit: cover;
         height: 100%;
         min-height: 180px;
-        max-height: 200px;
+        max-height: 228px;
         width: 100%;
         background: #f8f9fa;
     }

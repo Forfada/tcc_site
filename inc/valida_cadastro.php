@@ -34,7 +34,7 @@ try {
     $senhaCripto = cri($senha);
 
     // Etapa 3: escolher um avatar aleatório
-    $avatares = ['avatar1.jpg', 'avatar2.jpg', 'avatar3.jpg', 'avatar4.jpg', 'avatar5.jpg'];
+    $avatares = ['avatar1.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
     $foto = $avatares[array_rand($avatares)];
 
     // Inserir no banco com foto

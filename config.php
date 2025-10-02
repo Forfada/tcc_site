@@ -1,6 +1,6 @@
 <?php
 	/** O nome do banco de dados*/
-	define("DB_NAME", "bancoLU");
+	define("DB_NAME", "bancolu");
 
 	/** Usuário do banco de dados MySQL */
 	define("DB_USER", "root");
@@ -27,5 +27,5 @@
 	define("HEADER_TEMPLATE", ABSPATH . "inc/header.php");
 	define("FOOTER_TEMPLATE", ABSPATH . "inc/footer.php");
 	define("CSS", ABSPATH . "inc/style.css");
-	define("INIT", ABSPATH . "inc/init.php")
+	define("INIT", ABSPATH . "inc/init.php");
 ?>

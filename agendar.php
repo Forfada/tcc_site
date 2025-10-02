@@ -17,9 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = isset($_POST['data']) ? $_POST['data'] : null;
     $hora = isset($_POST['horario']) ? $_POST['horario'] : null;
     if ($id_p && $data && $hora) {
+        // Garante formato correto para o banco: a_dia = 'Y-m-d', a_hora = 'H:i:00'
+        $a_dia = date('Y-m-d', strtotime($data));
+        $a_hora = date('H:i:00', strtotime($hora));
         $dados = [
-            'a_dia' => $data,
-            'a_hora' => $data . ' ' . $hora,
+            'a_dia' => $a_dia,
+            'a_hora' => $a_hora,
             'id_u' => $id_u,
             'id_p' => $id_p
         ];

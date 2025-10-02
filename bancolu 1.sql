@@ -61,8 +61,8 @@ INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
 -- criando tabela: agendamento
  CREATE TABLE agendamento (
      id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
-     a_hora DATETIME NOT NULL,
-     a_dia DATETIME NOT NULL,
+     a_hora TIME NOT NULL,
+     a_dia DATE NOT NULL,
      id_u INT(11) UNSIGNED NOT NULL,
      id_p INT(11) UNSIGNED NOT NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

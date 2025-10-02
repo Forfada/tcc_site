@@ -11,8 +11,8 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['nome'])) {
 }
 
 
-$id_usuario = $_SESSION['id'];
-$agendamentos = filter('agendamento', "id_usuario = '" . $id_usuario . "' ORDER BY a_dia DESC");
+$id_u = $_SESSION['id'];
+$agendamentos = filter('agendamento', "id_u = '" . $id_u . "' ORDER BY a_dia DESC");
 
 ?>
 <div class="container py-5">
@@ -31,7 +31,7 @@ $agendamentos = filter('agendamento', "id_usuario = '" . $id_usuario . "' ORDER 
             </thead>
             <tbody>
                 <?php foreach ($agendamentos as $ag): ?>
-                    <?php $proc = find('procedimentos', $ag['id_procedimento']); ?>
+                    <?php $proc = find('procedimentos', $ag['id_p']); ?>
                     <tr>
                         <td><?php echo $proc ? $proc['p_nome'] : 'Procedimento'; ?></td>
                         <td><?php echo date('d/m/Y', strtotime($ag['a_dia'])); ?></td>

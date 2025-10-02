@@ -22,7 +22,7 @@ function horarios_ocupados($data) {
     return $horarios;
 }
 
-?>
+?> 
 
 <div class="container py-5" id="agendamento">
     <h2 class="text-center mb-4" style="color:var(--cor2)">Agende seu procedimento</h2>

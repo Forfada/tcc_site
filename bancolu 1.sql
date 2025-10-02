@@ -63,13 +63,12 @@ INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
      id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
      a_hora DATETIME NOT NULL,
      a_dia DATETIME NOT NULL,
-     id_cli INT(11) UNSIGNED NOT NULL,
-     id_p INT(11) UNSIGNED NOT NULL,
-     id_est INT(11) UNSIGNED NOT NULL
+     id_u INT(11) UNSIGNED NOT NULL,
+     id_p INT(11) UNSIGNED NOT NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
- ALTER TABLE `agendamento`ADD CONSTRAINT `fk_agendamento_id_cli` FOREIGN KEY (id) REFERENCES `clientes` (id);
- ALTER TABLE `agendamento` ADD CONSTRAINT `fk_agendamento_id_p` FOREIGN KEY (id) REFERENCES `procedimentos` (id);
+ ALTER TABLE `agendamento`ADD CONSTRAINT `fk_agendamento_id_u` FOREIGN KEY (id_u) REFERENCES `usuarios` (id);
+ ALTER TABLE `agendamento` ADD CONSTRAINT `fk_agendamento_id_p` FOREIGN KEY (id_p) REFERENCES `procedimentos` (id);
  
  
  -- criando tabela: anamnese 1

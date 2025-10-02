@@ -12,16 +12,16 @@ if (!isset($_SESSION['id']) || !isset($_SESSION['nome'])) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_usuario = $_SESSION['id'];
-    $id_procedimento = isset($_POST['procedimento']) ? $_POST['procedimento'] : null;
+    $id_u = $_SESSION['id'];
+    $id_p = isset($_POST['procedimento']) ? $_POST['procedimento'] : null;
     $data = isset($_POST['data']) ? $_POST['data'] : null;
     $hora = isset($_POST['horario']) ? $_POST['horario'] : null;
-    if ($id_procedimento && $data && $hora) {
+    if ($id_p && $data && $hora) {
         $dados = [
             'a_dia' => $data,
             'a_hora' => $data . ' ' . $hora,
-            'id_usuario' => $id_usuario,
-            'id_procedimento' => $id_procedimento
+            'id_u' => $id_u,
+            'id_p' => $id_p
         ];
         save('agendamento', $dados);
         $_SESSION['message'] = 'Agendamento realizado com sucesso!';

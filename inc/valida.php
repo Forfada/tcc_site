@@ -62,6 +62,7 @@
         <?php echo $_SESSION['message']; ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    
 <?php clear_messages(); ?>
 <?php endif; ?>
 

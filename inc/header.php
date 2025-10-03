@@ -75,6 +75,7 @@
                 <p class="mb-1 fw-semibold text-uppercase small">Conta</p>
                 <a href="<?= BASEURL ?>inc/alterar_senha.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-lock"></i> Alterar senha</a>
                 <a href="<?= BASEURL ?>historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
+                 <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Clientes</a>
                 <button class="btn btn-outline-warning w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>
             </div>
 

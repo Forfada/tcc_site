@@ -13,7 +13,7 @@
                 $clientes = filter("clientes","cli_nome like '%" . $_POST['cli'] . "%';");
             }
             else {
-                $procedimentos = find_all ("clientes");
+                $clientes = find_all ("clientes");
             }
         }
 

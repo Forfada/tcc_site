@@ -1,5 +1,5 @@
 <?php
-include 'config.php';
+include '../config.php';
 include(DBAPI);
 if (!isset($_GET['data'])) {
     echo json_encode([]);

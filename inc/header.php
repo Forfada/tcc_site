@@ -35,7 +35,7 @@
                         <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>procedimentos/#procedimentos">Procedimentos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>agendamento.php">Agendamento</a>
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>agendamentos/agendamento.php#agendamento">Agendamento</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#contato">Contato</a>
@@ -74,7 +74,7 @@
             <div>
                 <p class="mb-1 fw-semibold text-uppercase small">Conta</p>
                 <a href="<?= BASEURL ?>inc/alterar_senha.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-lock"></i> Alterar senha</a>
-                <a href="<?= BASEURL ?>historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
+                <a href="<?= BASEURL ?>agendamentos/historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
                  <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Clientes</a>
                 <button class="btn btn-outline-warning w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>
             </div>

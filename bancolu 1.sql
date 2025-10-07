@@ -69,7 +69,13 @@ INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
  
  ALTER TABLE `agendamento`ADD CONSTRAINT `fk_agendamento_id_u` FOREIGN KEY (id_u) REFERENCES `usuarios` (id);
  ALTER TABLE `agendamento` ADD CONSTRAINT `fk_agendamento_id_p` FOREIGN KEY (id_p) REFERENCES `procedimentos` (id);
- 
+ ALTER TABLE agendamento 
+    MODIFY id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+-- (opcional mas recomendável)
+-- adiciona timestamp de criação
+ALTER TABLE agendamento 
+    ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
  
  -- criando tabela: anamnese 1
  CREATE TABLE anamnese (

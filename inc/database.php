@@ -1,199 +1,176 @@
 <?php
+function open_database() {
+    try {
+        $conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASSWORD);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conn;
+    } catch (PDOException $e) {
+        die("Erro ao conectar ao banco: " . $e->getMessage());
+    }
+}
 
-	function open_database() {
-		try {
-			$conn = new PDO("mysql:host=". DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8", DB_USER, DB_PASSWORD);
-			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			return $conn;
-		} catch (Exception $e) {
-			throw $e;
-			return null;
-		}
-	}
+function close_database(&$conn) {
+    $conn = null;
+}
 
+// === Buscar registro(s) ===
+function find($table = null, $id = null) {
+    $db = open_database();
+    $found = null;
 
-	function close_database($conn) {
-        try {
-            $conn = null;
-        } catch (PDOException $e) {
-            throw $e;
+    try {
+        if ($id) {
+            $stmt = $db->prepare("SELECT * FROM {$table} WHERE id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $found = $stmt->fetch(PDO::FETCH_ASSOC);
+        } else {
+            $stmt = $db->query("SELECT * FROM {$table}");
+            $found = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+    } catch (PDOException $e) {
+        $_SESSION['message'] = "Erro ao buscar dados: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
     }
-	
-	//  Pesquisa um Registro pelo ID em uma Tabela
-    function find($table = null, $id = null) {
-        $database = open_database();
-        $found = null;
 
-        try {
-            if ($id) {
-                $sql = "SELECT * FROM " . $table . " WHERE id = :id";
-                $stmt = $database->prepare($sql);
-                $stmt->bindParam(':id', $id);
-                $stmt->execute();
-                $found = $stmt->fetch(PDO::FETCH_ASSOC);
-            } else {
-                $sql = "SELECT * FROM " . $table;
-                $stmt = $database->query($sql);
-                $found = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }
-        } catch (PDOException $e) {
-            $_SESSION['message'] = $e->getMessage();
-            $_SESSION['type'] = 'danger';
-        }
+    close_database($db);
+    return $found;
+}
 
-        close_database($database);
-        return $found;
-    }
-	
-	// criptografia
-	function cri($senha) {
-        $custo = "08";
-        $salt = "Cf1f11ePArKlBJomM0F6aJ";
-        
-        // Gera um hash baseado em bcrypt
-        $hash = crypt($senha, "$2a$" . $custo . "$" . $salt . "$");
+function find_all($table) {
+    return find($table);
+}
 
-        return $hash;
-    }
-	
-	//  Pesquisa Todos os Registros de uma Tabela
-	function find_all( $table ) {
-		return find($table);
-	}
+// === Inserir registro ===
+function save($table = null, $data = null) {
+    $db = open_database();
 
-	
-	// Insere um registro no BD
-	
-	function save($table = null, $data = null) {
-        $database = open_database();
+    try {
+        $fields = array_keys($data);
+        $columns = implode(", ", $fields);
+        $placeholders = ":" . implode(", :", $fields);
 
-        $columns = null;
-        $values = null;
+        $sql = "INSERT INTO {$table} ({$columns}) VALUES ({$placeholders})";
+        $stmt = $db->prepare($sql);
 
         foreach ($data as $key => $value) {
-            $columns .= trim($key, "'") . ",";
-            $values .= "'$value',";
+            $stmt->bindValue(":{$key}", $value);
         }
 
-        $columns = rtrim($columns, ',');
-        $values = rtrim($values, ',');
-
-        $sql = "INSERT INTO " . $table . "($columns)" . "VALUES" . "($values)";
-        $stmt = $database->prepare($sql);
-
-        try {
-            $stmt->execute();
-            $_SESSION['message'] = 'Registro cadastrado com sucesso.';
-            $_SESSION['type'] = 'success';
-        } catch (PDOException $e) {
-            $_SESSION['message'] = 'Não foi possível realizar o cadastro.';
-            $_SESSION['type'] = 'danger';
-        }
-
-        close_database($database);
+        $stmt->execute();
+        $_SESSION['message'] = "Registro cadastrado com sucesso.";
+        $_SESSION['type'] = "success";
+    } catch (PDOException $e) {
+        $_SESSION['message'] = "Erro ao cadastrar: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
     }
-	
-	//  Atualiza um registro em uma tabela, por ID
-	
-	function update($table = null, $id = 0, $data = null) {
-		$database = open_database();
 
-		$items = null;
-	
+    close_database($db);
+}
+
+// === Atualizar registro ===
+function update($table = null, $id = 0, $data = null) {
+    $db = open_database();
+
+    try {
+        $fields = [];
         foreach ($data as $key => $value) {
-            $items .= trim($key, "'") ."='$value',";
+            $fields[] = "{$key} = :{$key}";
         }
+        $fields_str = implode(", ", $fields);
 
-		// remove a ultima virgula
-		$items = rtrim($items, ",");
+        $sql = "UPDATE {$table} SET {$fields_str} WHERE id = :id";
+        $stmt = $db->prepare($sql);
 
-		$sql = "UPDATE " . $table . " SET $items WHERE id=:id";
-        $stmt = $database->prepare($sql);
-		
-        $stmt->bindParam(':id', $id);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":{$key}", $value);
+        }
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
 
-		 try {
+        $stmt->execute();
+        $_SESSION['message'] = "Registro atualizado com sucesso.";
+        $_SESSION['type'] = "success";
+    } catch (PDOException $e) {
+        $_SESSION['message'] = "Erro ao atualizar: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
+    }
+
+    close_database($db);
+}
+
+// === Remover registro ===
+function remove($table = null, $id = null) {
+    $db = open_database();
+
+    try {
+        $stmt = $db->prepare("DELETE FROM {$table} WHERE id = :id");
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $_SESSION['message'] = "Registro removido com sucesso.";
+        $_SESSION['type'] = "success";
+    } catch (PDOException $e) {
+        $_SESSION['message'] = "Erro ao remover: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
+    }
+
+    close_database($db);
+}
+
+// === Filtro (com parâmetros seguros) ===
+function filter($table = null, $where = null, $params = []) {
+    $db = open_database();
+    $found = null;
+
+    try {
+        if ($where) {
+            $sql = "SELECT * FROM {$table} WHERE {$where}";
+            $stmt = $db->prepare($sql);
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":{$key}", $value);
+            }
             $stmt->execute();
-            $_SESSION['message'] = 'Registro atualizado com sucesso.';
-            $_SESSION['type'] = 'success';
-        } catch (PDOException $e) {
-            $_SESSION['message'] = 'Não foi possível realizar a atualização.';
-            $_SESSION['type'] = 'danger';
+            $found = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            throw new Exception("Condição inválida para filtro.");
         }
-		close_database($database);
-	}
-
-
-	//Remove uma linha de uma tabela pelo ID do registro
-
-	function remove( $table = null, $id = null ) {
-		$database = open_database();
-		
-		try {
-			if ($id) {
-                $sql = "DELETE FROM " . $table . " WHERE id = :id";
-                $stmt = $database->prepare($sql);
-                $stmt->bindParam(':id', $id);
-                $stmt->execute();
-
-                $_SESSION['message'] = "Registro removido com Sucesso.";
-                $_SESSION['type'] = 'success';
-            }
-		}catch (PDOException $e) {
-            $_SESSION['message'] = $e->getMessage();
-            $_SESSION['type'] = 'danger';
-        }
-		close_database($database);
-	}
-	
-	// filtrar 
-	function filter( $table = null, $p = null ) {
-        $database = open_database();
-        $found = null;
- 
-        try {
-            if ($p) {
-                $sql = "SELECT * FROM " . $table . " WHERE " . $p;
-                $stmt = $database->query($sql);
-                $found = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            }else {
-                throw new Exception("Não foram encontrados registros de dados!");
-            }
-        } catch (PDOException $e) {
-            $_SESSION['message'] = "Ocorreu um erro: " . $e->getMessage();
-            $_SESSION['type'] = 'danger';
-        }
- 
-        close_database($database);
-        return $found;
+    } catch (Exception $e) {
+        $_SESSION['message'] = "Erro: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
     }
-	
-	
-	//  Funções para formatar dados
 
-	function telefone( $dado ) {
-		$tel = "(" . substr($dado, 0, 2) . ") " . substr($dado, 2, 5) . "-" .  substr($dado, 7, 4);	
-		return $tel; 
-	}
-	
-	function formatadata($date, $formato) {
-        $dt = new DateTime($date, new DateTimeZone("America/Sao_Paulo"));
-        return $dt->format($formato);
-    }
-	
-	function cep($cepdado) {
-        $cp = substr($cepdado, 0, 5) . "-" . substr($cepdado, 5);
-        return $cp;
-    }
-	
-	 function cpf($cpf_cnpj) {
-        $cpf_cnpj = substr($cpf_cnpj, 0, 3) . "." . substr($cpf_cnpj, 3, 3) . "." . substr($cpf_cnpj, 6, 3) . "-" . substr($cpf_cnpj, 9, 2);
-        return $cpf_cnpj;
-    }
-	
-	function clear_messages() {
-        $_SESSION['message'] = null;
-        $_SESSION['type'] = null;
-    }
+    close_database($db);
+    return $found;
+}
+
+// criptografia 
+function cri($senha){ 
+    $custo = "08"; $salt = "Cf1f11ePArKlBJomM0F6aJ"; $hash = crypt($senha, "$2a$" . $custo . "$" . $salt . "$"); return $hash; }
+
+// === Funções auxiliares ===
+function telefone($dado) {
+    $dado = preg_replace('/\D/', '', $dado);
+    return "(" . substr($dado, 0, 2) . ") " . substr($dado, 2, 5) . "-" . substr($dado, 7, 4);
+}
+
+function formatadata($date, $formato = 'd/m/Y') {
+    if (!$date) return '';
+    $dt = new DateTime($date, new DateTimeZone('America/Sao_Paulo'));
+    return $dt->format($formato);
+}
+
+function cep($cepdado) {
+    $cepdado = preg_replace('/\D/', '', $cepdado);
+    return substr($cepdado, 0, 5) . "-" . substr($cepdado, 5);
+}
+
+function cpf($cpf) {
+    $cpf = preg_replace('/\D/', '', $cpf);
+    return substr($cpf, 0, 3) . "." . substr($cpf, 3, 3) . "." . substr($cpf, 6, 3) . "-" . substr($cpf, 9, 2);
+}
+
+function clear_messages() {
+    $_SESSION['message'] = null;
+    $_SESSION['type'] = null;
+}
 ?>

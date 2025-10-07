@@ -2,18 +2,16 @@
     include '../config.php';
     include DBAPI;
     include INIT;
-    include HEADER_TEMPLATE;
-?>
+    if (!isset($_SESSION)) session_start();
 
-<?php
-    session_start();
-
-    // Verifica login
-    $logado = isset($_SESSION['id']);
-    if (!$logado) {
-        header("Location: login.php");
+    // Verifica login antes de qualquer saída
+    if (!isset($_SESSION['id'])) {
+        $_SESSION['message'] = 'Você precisa estar logado para fazer o agendamento.';
+        $_SESSION['type'] = 'warning';
+        header("Location: ../inc/login.php");
         exit();
     }
+    include HEADER_TEMPLATE;
 
     $idUsuario = $_SESSION['id'];
     $message = '';

@@ -81,7 +81,9 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-7 text-md-end mt-2 mt-md-0">
-                    <a class="buttonc" href="add.php" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Procedimento</a>
+                    <?php if (isset($_SESSION['user']) && $_SESSION['user'] === 'admin'): ?>
+                        <a class="buttonc" href="add.php" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Procedimento</a>
+                    <?php endif; ?>
                 </div> 
             </div>
 		</form>

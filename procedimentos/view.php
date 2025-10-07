@@ -203,11 +203,13 @@
             </div>
 
             <div class="view-proc-btns">
-                <a class="buttonc" href="<?php echo BASEURL; ?>procedimentos/edit.php?id=<?php echo $proc['id']; ?>"><i class="fa-regular fa-pen-to-square"></i> Editar Procedimento</a>
-                <a href="#" class="buttonc"
-                    data-bs-toggle="modal" data-bs-target="#delete-proc-modal" data-procedimentos="<?php echo $proc['id']; ?>">
-                    <i class="fa fa-trash"></i> Excluir
-                </a>
+                <?php if (isset($_SESSION['user']) && $_SESSION['user'] === 'admin'): ?>
+                    <a class="buttonc" href="<?php echo BASEURL; ?>procedimentos/edit.php?id=<?php echo $proc['id']; ?>"><i class="fa-regular fa-pen-to-square"></i> Editar Procedimento</a>
+                    <a href="#" class="buttonc"
+                        data-bs-toggle="modal" data-bs-target="#delete-proc-modal" data-procedimentos="<?php echo $proc['id']; ?>">
+                        <i class="fa fa-trash"></i> Excluir
+                    </a>
+                <?php endif; ?>
                 <a href="index.php" class="button-back"><i class="fa-solid fa-arrow-rotate-left"></i> Voltar</a>
             </div>
         </div>

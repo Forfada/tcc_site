@@ -72,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form action="alterar_senha.php" method="POST">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form2" name="numero" id="numero" placeholder="Seu número" required>
+                    <input type="text" class="form-control form2 telefone" name="numero" id="numero" placeholder="Seu número" required>
                     <label for="numero">Número</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control form2" name="nova_senha" id="nova_senha" placeholder="Nova senha" required>
+                    <input type="password" class="form-control form2" name="nova_senha" id="nova_senha" placeholder="Nova senha" minlength="8" required>
                     <label for="nova_senha">Nova Senha</label>
                 </div>
 
@@ -102,3 +102,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="/senha-right"></div>
 </div>
+<script src="../js/formatar.js"></script>

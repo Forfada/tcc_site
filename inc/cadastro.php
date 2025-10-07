@@ -26,17 +26,18 @@
 
             <form action="valida_cadastro.php" method="post">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form2" name="nome" id="nome" placeholder="Nome completo" required>
+                    <input type="text" class="form-control form2 nome" name="nome" id="nome" placeholder="Nome completo" required pattern="[A-Za-zÀ-ÿ\s]+">
                     <label for="nome">Nome completo</label>
                 </div>
 
+
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form2" name="numero" id="numero" placeholder="Telefone" required>
+                    <input type="text" class="form-control form2 telefone" name="numero" id="numero" placeholder="Telefone" required>
                     <label for="numero">Telefone</label>
                 </div>
 
                 <div class="form-floating mb-4">
-                    <input type="password" class="form-control form2" name="senha" id="senha" placeholder="Senha" required>
+                    <input type="password" class="form-control form2" name="senha" id="senha" placeholder="Senha" minlength="8" required>
                     <label for="senha">Senha</label>
                 </div>
 
@@ -60,3 +61,4 @@
 
     <div class="cadastro-right"></div>
 </div>
+<script src="../js/formatar.js"></script>

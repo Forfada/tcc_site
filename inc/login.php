@@ -26,12 +26,12 @@
 
             <form action="valida.php" method="post">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form1" name="login" id="log" placeholder="Telefone">
+                    <input type="text" class="form-control form1 telefone" name="login" id="log" placeholder="Telefone">
                     <label for="log">Telefone</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control form1" name="senha" id="pass" placeholder="Senha">
+                    <input type="password" class="form-control form1" name="password" placeholder="Senha" minlength="8" required>
                     <label for="pass">Senha</label>
                 </div>
 
@@ -59,3 +59,4 @@
 
     <div class="login-right"></div>
 </div>
+<script src="../js/formatar.js"></script>

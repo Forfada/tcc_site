@@ -169,8 +169,26 @@ function cpf($cpf) {
     return substr($cpf, 0, 3) . "." . substr($cpf, 3, 3) . "." . substr($cpf, 6, 3) . "-" . substr($cpf, 9, 2);
 }
 
+// === NOVAS FUNÇÕES CORRIGIDAS ===
+function valor($v) {
+    // força ser float e formata com 2 casas decimais
+    return "R$ " . number_format(floatval($v), 2, ',', '');
+}
+
+function duracao($t) {
+    // assume formato hh:mm:ss e retorna hh:mm
+    $p = explode(':', $t);
+    if(count($p) >= 2){
+        $hora = str_pad($p[0], 2, '0', STR_PAD_LEFT);
+        $min = str_pad($p[1], 2, '0', STR_PAD_LEFT);
+        return $hora . ':' . $min;
+    }
+    return $t;
+}
+
 function clear_messages() {
     $_SESSION['message'] = null;
     $_SESSION['type'] = null;
 }
+
 ?>

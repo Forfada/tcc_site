@@ -198,8 +198,8 @@
             <div class=" txt2"><b>O que é?</b><br><?php echo nl2br(htmlspecialchars($proc['p_descricao2'])); ?></div>
 
             <div class="view-proc-extra">
-                <div><span>Valor:</span> R$ <?php echo htmlspecialchars($proc['p_valor']); ?></div>
-                <div><span>Duração:</span> <?php echo htmlspecialchars($proc['p_duracao']); ?></div>
+                <div><span>Valor:</span> <?php echo valor($proc['p_valor']); ?></div>
+                <div><span>Duração:</span> <?php echo duracao($proc['p_duracao']); ?></div>
             </div>
 
             <div class="view-proc-btns">

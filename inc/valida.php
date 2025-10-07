@@ -1,62 +1,68 @@
 <?php
-    include("../config.php");
+include("../config.php");
 
-    session_start();
-    
-    require_once(DBAPI);
+session_start();
 
-    $bd = open_database();
+require_once(DBAPI);
 
-    try {
-        $bd->exec("USE " . DB_NAME);
+$bd = open_database();
 
-        $usuario = $_POST['login'];
-        $senha = $_POST['senha'];
+try {
+    $bd->exec("USE " . DB_NAME);
 
-        if (!empty($usuario) && !empty($senha)) {
-            $senha = cri($_POST['senha']);
+    // Pega os dados do formulário
+    $usuario = $_POST['login'] ?? '';
+    $senha = $_POST['password'] ?? '';
 
-            // Agora seleciona também o campo 'foto'
-            $sql = "SELECT id, u_user, u_num, u_senha, foto FROM usuarios WHERE (u_num = :usuario) AND (u_senha = :senha)";
-            $stmt = $bd->prepare($sql);
-            $stmt->bindParam(':usuario', $usuario);
-            $stmt->bindParam(':senha', $senha);
-            $stmt->execute();
+    if (!empty($usuario) && !empty($senha)) {
+        // Aplica hash ou função cri() na senha
+        $senha = cri($senha);
 
-            if ($stmt->rowCount() > 0) {
-                $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-                $id = $dados["id"];
-                $nome = $dados["u_user"];
-                $user = $dados["u_num"];
-                $password = $dados["u_senha"];
-                $foto = $dados["foto"];
+        // Seleciona o usuário no banco
+        $sql = "SELECT id, u_user, u_num, u_senha, foto 
+                FROM usuarios 
+                WHERE (u_num = :usuario) AND (u_senha = :senha)";
+        $stmt = $bd->prepare($sql);
+        $stmt->bindParam(':usuario', $usuario);
+        $stmt->bindParam(':senha', $senha);
+        $stmt->execute();
 
-                if (!empty($user)) {
-                    if (!isset($_SESSION)) session_start();
-                    $_SESSION['message'] = "Bem vindo " . $nome . "!";
-                    $_SESSION['type'] = "info";
-                    $_SESSION['id'] = $id;
-                    $_SESSION['nome'] = $nome;
-                    $_SESSION['user'] = $user;
-                    $_SESSION['foto'] = $foto;
-                } else {
-                    throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
-                }
+        if ($stmt->rowCount() > 0) {
+            $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+            $id = $dados["id"];
+            $nome = $dados["u_user"];
+            $user = $dados["u_num"];
+            $password = $dados["u_senha"];
+            $foto = $dados["foto"];
 
-                header("Location:" . BASEURL . "index.php");
+            if (!empty($user)) {
+                if (!isset($_SESSION)) session_start();
+                $_SESSION['message'] = "Bem vindo " . $nome . "!";
+                $_SESSION['type'] = "info";
+                $_SESSION['id'] = $id;
+                $_SESSION['nome'] = $nome;
+                $_SESSION['user'] = $user;
+                $_SESSION['foto'] = $foto;
             } else {
                 throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
             }
+
+            header("Location:" . BASEURL . "index.php");
+            exit;
         } else {
             throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
         }
-
-    } catch (Exception $e) {
-        include(INIT);
-        $_SESSION['message'] = "Ocorreu um erro: " . $e->getMessage();
-        $_SESSION['type'] = "danger";
+    } else {
+        throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
     }
+
+} catch (Exception $e) {
+    include(INIT);
+    $_SESSION['message'] = "Ocorreu um erro: " . $e->getMessage();
+    $_SESSION['type'] = "danger";
+}
 ?>
+
 <?php if (!empty($_SESSION['message'])) : ?>
     <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible" role="alert" id="actions">
         <?php echo $_SESSION['message']; ?>
@@ -67,5 +73,7 @@
 <?php endif; ?>
 
 <header>
-    <a href="<?php echo BASEURL ?>inc/login.php" class="btn btn-light"><i class="fa-solid fa-rotate-left"></i> Voltar</a>
+    <a href="<?php echo BASEURL ?>inc/login.php" class="btn btn-light">
+        <i class="fa-solid fa-rotate-left"></i> Voltar
+    </a>
 </header>

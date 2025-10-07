@@ -25,6 +25,16 @@ function formatarTelefone(input) {
     });
 }
 
+// Remove a formatação antes de enviar o formulário
+function limparTelefoneAntesDeEnviar(form) {
+    form.addEventListener('submit', function(e){
+        const telefoneInput = form.querySelector('.telefone');
+        if(telefoneInput){
+            telefoneInput.value = telefoneInput.value.replace(/\D/g,''); // envia só números
+        }
+    });
+}
+
 // ----------------------
 // Formatação de nome
 // ----------------------
@@ -50,6 +60,14 @@ function inicializarCampos() {
         if(!input.dataset.formatadoNome){
             formatarNome(input);
             input.dataset.formatadoNome = true;
+        }
+    });
+
+    // Configura limpeza de telefone antes do envio
+    document.querySelectorAll('form').forEach(function(form){
+        if(!form.dataset.limpezaTelefone){
+            limparTelefoneAntesDeEnviar(form);
+            form.dataset.limpezaTelefone = true;
         }
     });
 }

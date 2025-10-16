@@ -89,9 +89,9 @@
 		</form>
 
         <hr>
-       
-            <div class="row g-4">
-                <?php if ($procedimentos) : ?>
+
+        <div class="row g-4">
+            <?php if ($procedimentos) : ?>
                 <?php foreach ($procedimentos as $proc): ?>
                     <div class="col-lg-12 mx-auto">
                         <a href="view.php?id=<?php echo $proc['id']; ?>" style="text-decoration: none; color: inherit;">
@@ -112,11 +112,10 @@
                         </a>
                     </div>
                 <?php endforeach; ?>
-                <?php else : ?>
+            <?php else : ?>
                 <h5 colspan="6">Nenhum procedimento encontrado.</h5>
-                <?php endif; ?>
-            </div>
-        
+            <?php endif; ?>
+        </div>
     </div>
 </section>
 

@@ -33,7 +33,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 0;
+    /* font-size:0 esconde o texto */
+    font-size: initial;
 }
 .section-cor4 {
     background-color: var(--cor4);
@@ -44,7 +45,8 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-size: 0;
+    /* font-size:0 esconde o texto */
+    font-size: initial;
 }
 
 /*-------troca de cor do index-------*/

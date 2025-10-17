@@ -1,23 +1,23 @@
-
 <?php
-    session_start();
-    require_once('../config.php');
-    require_once(DBAPI);
+session_start();
+require_once('../config.php');
+require_once(DBAPI);
 
-    // Verifica se está logado
-    if (!isset($_SESSION['nome'])) {
-        header("Location: " . BASEURL . "inc/login.php");
-        exit;
-    }
-
-    // Obtém o ID do usuário logado
-    $id = $_SESSION['id'];
-
-    // Remove o usuário
-    remove('usuarios', $id);
-
-    // Destroi sessão e redireciona
-    session_destroy();
-    header("Location: " . BASEURL . "index.php");
+if (!isset($_SESSION['nome'])) {
+    $_SESSION['message'] = "Faça login para excluir a conta.";
+    $_SESSION['type'] = "warning";
+    header("Location: login.php");
     exit;
+}
+
+$id = $_SESSION['id'];
+remove('usuarios', $id);
+
+session_destroy();
+
+session_start();
+$_SESSION['message'] = "Conta excluída com sucesso!";
+$_SESSION['type'] = "danger";
+header("Location: " . BASEURL . "index.php");
+exit;
 ?>

@@ -7,60 +7,49 @@ try {
     $bd = open_database();
     $bd->exec("USE " . DB_NAME);
 
-    // Coleta e sanitiza os dados
     $nome = trim($_POST['nome'] ?? '');
     $numero = trim($_POST['numero'] ?? '');
     $senha = trim($_POST['senha'] ?? '');
 
-    // Validação segura
     if ($nome === '' || $numero === '' || $senha === '') {
         throw new Exception("Todos os campos são obrigatórios.");
     }
 
-    // Verifica duplicidade do número
-    $sql_verifica = "SELECT COUNT(*) FROM usuarios WHERE u_num = :numero";
-    $stmt = $bd->prepare($sql_verifica);
+    // Verifica duplicidade
+    $stmt = $bd->prepare("SELECT COUNT(*) FROM usuarios WHERE u_num = :numero");
     $stmt->bindParam(':numero', $numero);
     $stmt->execute();
 
     if ($stmt->fetchColumn() > 0) {
         $_SESSION['message'] = "Erro: Este número já está cadastrado.";
         $_SESSION['type'] = "danger";
-        header("Location: login.php");
+        header("Location: cadastro.php");
         exit();
     }
 
-    // Criptografar senha
     $senhaCripto = cri($senha);
-
-    // Etapa 3: escolher um avatar aleatório
-    $avatares = ['avatar1.png', 'avatar2.png', 'avatar3.png', 'avatar4.png', 'avatar5.png'];
+    $avatares = ['avatar1.png','avatar2.png','avatar3.png','avatar4.png','avatar5.png'];
     $foto = $avatares[array_rand($avatares)];
 
-    // Inserir no banco com foto
-    $sql_insert = "INSERT INTO usuarios (u_num, u_user, u_senha, foto) VALUES (:numero, :nome, :senha, :foto)";
-    $stmt = $bd->prepare($sql_insert);
+    $stmt = $bd->prepare("INSERT INTO usuarios (u_num, u_user, u_senha, foto) VALUES (:numero, :nome, :senha, :foto)");
     $stmt->bindParam(':numero', $numero);
     $stmt->bindParam(':nome', $nome);
     $stmt->bindParam(':senha', $senhaCripto);
     $stmt->bindParam(':foto', $foto);
 
     if ($stmt->execute()) {
-        $_SESSION['message'] = "Cadastro realizado com sucesso! Faça login.";
+        $_SESSION['message'] = "Cadastro realizado com sucesso!";
         $_SESSION['type'] = "success";
         header("Location: login.php");
         exit();
     } else {
-        $_SESSION['message'] = "Erro ao inserir usuário.";
-        $_SESSION['type'] = "danger";
-        header("Location: login.php");
-        exit();
+        throw new Exception("Erro ao inserir usuário.");
     }
 
 } catch (Exception $e) {
     $_SESSION['message'] = "Erro: " . $e->getMessage();
     $_SESSION['type'] = "danger";
-    header("Location: login.php");
+    header("Location: cadastro.php");
     exit();
 }
 ?>

@@ -1,13 +1,18 @@
 <?php 
-    // Este é o logout.php
-    include("../config.php");
-    try {
-        session_start(); // Inicia a sessão ou acessa a sessão existente
-        session_destroy(); // Destrói a sessão limpando todos os valores salvos
-        // Direciona para o index do site
-        header("Location: " . BASEURL . "index.php");
-    } catch (Exception $e) {
-        $_SESSION['message'] = "Ocorreu um erro: " . $e->getMessage();
-        $_SESSION['type'] = "danger";
-    }
+include("../config.php");
+session_start();
+
+// Define a mensagem antes de remover os dados do login
+$_SESSION['message'] = "Você saiu da conta!";
+$_SESSION['type'] = "danger";
+
+// Remove apenas os dados do usuário logado
+unset($_SESSION['id']);
+unset($_SESSION['nome']);
+unset($_SESSION['user']);
+unset($_SESSION['foto']);
+
+// Redireciona para o index
+header("Location: " . BASEURL . "index.php");
+exit;
 ?>

@@ -1,6 +1,7 @@
 <?php 
-    include("../config.php");
-    include(INIT);
+include("../config.php");
+include(INIT);
+session_start();
 ?>
 
 <style>
@@ -16,17 +17,12 @@
         <div class="login-card">
             <h2 class="mb-4 pz">Bem-vinda à Lunaris</h2>
 
-            <?php if (!empty($_SESSION['message'])) : ?>
-                <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['message']; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php clear_messages(); ?>
-            <?php endif; ?>
+            <!-- ALERT centralizado -->
+            <?php include("alert.php"); ?>
 
             <form action="valida.php" method="post">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form1 telefone" name="login" id="log" placeholder="Telefone">
+                    <input type="text" class="form-control form1 telefone" name="login" id="log" placeholder="Telefone" required>
                     <label for="log">Telefone</label>
                 </div>
 
@@ -40,6 +36,7 @@
                         <i class="fa-solid fa-user-check me-2"></i> Conectar
                     </button>
                 </div>
+
                 <div class="mt-3 mb-2">
                     <a href="alterar_senha.php" class="text-decoration-none text-blue">
                         Esqueceu sua senha? Redefinir
@@ -59,4 +56,6 @@
 
     <div class="login-right"></div>
 </div>
+
 <script src="../js/formatar.js"></script>
+<script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>

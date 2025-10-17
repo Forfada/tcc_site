@@ -1,6 +1,7 @@
 <?php 
-    include("../config.php");
-    include(INIT);
+include("../config.php");
+include(INIT);
+session_start();
 ?>
 
 <style>
@@ -16,20 +17,14 @@
         <div class="cadastro-card">
             <h2 class="mb-4 pc">Crie sua conta</h2>
 
-            <?php if (!empty($_SESSION['message'])) : ?>
-                <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['message']; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php clear_messages(); ?>
-            <?php endif; ?>
+            <!-- ALERT centralizado -->
+            <?php include("alert.php"); ?>
 
             <form action="valida_cadastro.php" method="post">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control form2 nome" name="nome" id="nome" placeholder="Nome completo" required pattern="[A-Za-zÀ-ÿ\s]+">
                     <label for="nome">Nome completo</label>
                 </div>
-
 
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control form2 telefone" name="numero" id="numero" placeholder="Telefone" required>
@@ -61,4 +56,6 @@
 
     <div class="cadastro-right"></div>
 </div>
+
 <script src="../js/formatar.js"></script>
+<script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>

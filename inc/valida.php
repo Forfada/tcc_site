@@ -1,79 +1,49 @@
 <?php
 include("../config.php");
-
+require_once(DBAPI);
 session_start();
 
-require_once(DBAPI);
-
-$bd = open_database();
-
 try {
+    $bd = open_database();
     $bd->exec("USE " . DB_NAME);
 
-    // Pega os dados do formulário
-    $usuario = $_POST['login'] ?? '';
-    $senha = $_POST['password'] ?? '';
+    $usuario = trim($_POST['login'] ?? '');
+    $senha = trim($_POST['password'] ?? '');
 
-    if (!empty($usuario) && !empty($senha)) {
-        // Aplica hash ou função cri() na senha
-        $senha = cri($senha);
+    if (empty($usuario) || empty($senha)) {
+        throw new Exception("Preencha todos os campos.");
+    }
 
-        // Seleciona o usuário no banco
-        $sql = "SELECT id, u_user, u_num, u_senha, foto 
-                FROM usuarios 
-                WHERE (u_num = :usuario) AND (u_senha = :senha)";
-        $stmt = $bd->prepare($sql);
-        $stmt->bindParam(':usuario', $usuario);
-        $stmt->bindParam(':senha', $senha);
-        $stmt->execute();
+    $senha = cri($senha);
 
-        if ($stmt->rowCount() > 0) {
-            $dados = $stmt->fetch(PDO::FETCH_ASSOC);
-            $id = $dados["id"];
-            $nome = $dados["u_user"];
-            $user = $dados["u_num"];
-            $password = $dados["u_senha"];
-            $foto = $dados["foto"];
+    $stmt = $bd->prepare("SELECT id, u_user, u_num, u_senha, foto FROM usuarios WHERE u_num = :usuario AND u_senha = :senha");
+    $stmt->bindParam(':usuario', $usuario);
+    $stmt->bindParam(':senha', $senha);
+    $stmt->execute();
 
-            if (!empty($user)) {
-                if (!isset($_SESSION)) session_start();
-                $_SESSION['message'] = "Bem vindo " . $nome . "!";
-                $_SESSION['type'] = "info";
-                $_SESSION['id'] = $id;
-                $_SESSION['nome'] = $nome;
-                $_SESSION['user'] = $user;
-                $_SESSION['foto'] = $foto;
-            } else {
-                throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
-            }
+    if ($stmt->rowCount() > 0) {
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['id'] = $dados['id'];
+        $_SESSION['nome'] = $dados['u_user'];
+        $_SESSION['user'] = $dados['u_num'];
+        $_SESSION['foto'] = $dados['foto'];
 
-            header("Location:" . BASEURL . "index.php");
-            exit;
-        } else {
-            throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
-        }
+        $_SESSION['message'] = "Bem-vindo(a) " . $_SESSION['nome'] . "!";
+        $_SESSION['type'] = "info";
+
+        header("Location: " . BASEURL . "index.php");
+        exit;
     } else {
-        throw new Exception("Não foi possível se conectar!<br>Verifique seu usuário e senha.");
+        $_SESSION['message'] = "Usuário ou senha incorretos.";
+        $_SESSION['type'] = "danger";
+        header("Location: login.php");
+        exit;
     }
 
 } catch (Exception $e) {
-    include(INIT);
-    $_SESSION['message'] = "Ocorreu um erro: " . $e->getMessage();
+    $_SESSION['message'] = "Erro: " . $e->getMessage();
     $_SESSION['type'] = "danger";
+    header("Location: login.php");
+    exit;
 }
 ?>
-
-<?php if (!empty($_SESSION['message'])) : ?>
-    <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible" role="alert" id="actions">
-        <?php echo $_SESSION['message']; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    
-<?php clear_messages(); ?>
-<?php endif; ?>
-
-<header>
-    <a href="<?php echo BASEURL ?>inc/login.php" class="btn btn-light">
-        <i class="fa-solid fa-rotate-left"></i> Voltar
-    </a>
-</header>

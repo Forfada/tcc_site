@@ -3,7 +3,6 @@ include("../config.php");
 include(INIT);
 include(DBAPI);
 session_start();
-clear_messages();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $numero = trim($_POST['numero'] ?? '');
@@ -28,12 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['message'] = "Senha alterada com sucesso!";
                 $_SESSION['type'] = "success";
 
-                // Redireciona de acordo com o login
-                if (isset($_SESSION['nome'])) {
-                    header("Location: ../index.php");
-                } else {
-                    header("Location: login.php");
-                }
+                // Redireciona para login
+                header("Location: login.php");
                 exit;
             } else {
                 $_SESSION['message'] = "Número não encontrado.";
@@ -57,18 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-    <div class="senha-container">
-        <div class="senha-left">
-            <div class="cadastro-card">
-                <h2 class="mb-4 pc">Alterar Senha</h2>
+<!-- HTML da página -->
+<div class="senha-container">
+    <div class="senha-left">
+        <div class="cadastro-card">
+            <h2 class="mb-4 pc">Alterar Senha</h2>
 
-            <?php if (!empty($_SESSION['message'])) : ?>
-                <div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible fade show" role="alert">
-                    <?php echo $_SESSION['message']; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <?php clear_messages(); ?>
-            <?php endif; ?>
+            <?php include("alert.php"); ?>
 
             <form action="alterar_senha.php" method="POST">
                 <div class="form-floating mb-3">
@@ -87,12 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </div>
 
-                <?php if (!isset($_SESSION['nome'])): ?>
-                    <a href="login.php" class="btn btn-outline-light w-100 mb-2">
-                        <i class="fa-solid fa-arrow-left me-2"></i> Voltar para o login
-                    </a>
-                <?php endif; ?>
-
+                <a href="login.php" class="btn btn-outline-light w-100 mb-2">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Voltar para o login
+                </a>
                 <a href="<?php echo BASEURL; ?>" class="btn btn-outline-light w-100">
                     <i class="fa-solid fa-house me-2"></i> Voltar para a página principal
                 </a>
@@ -100,6 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <div class="/senha-right"></div>
+    <div class="senha-right"></div>
 </div>
+
 <script src="../js/formatar.js"></script>
+<script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>

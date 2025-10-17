@@ -13,7 +13,7 @@
             <div class="row align-items-center"> 
                 <div class="form-group col-12 col-md-5 mb-2 mb-md-0">
                     <div class="input-group">
-                        <input type="text" class="form-control" maxlength="50" name="cli" placeholder="Procurar Cliente...">
+                        <input type="text" class="form-control" maxlength="50" name="cli" placeholder="Procurar 000.000.000-XX...">
                     <button type="submit" class="btn text-white" style="background-color: var(--cor7)"><i class="fa-solid fa-magnifying-glass"></i> Consultar</button>
                     </div>
                 </div>

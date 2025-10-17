@@ -82,9 +82,15 @@ ALTER TABLE agendamento
      id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
      an_hipertensao VARCHAR(100) NOT NULL,
      an_diabetes VARCHAR(100) NOT NULL,
-	   an_medic VARCHAR(200) NOT NULL,
+	 an_medic VARCHAR(200) NOT NULL,
      an_data DATETIME NOT NULL,
      id_cli INT(11) UNSIGNED NOT NULL
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
-  ALTER TABLE `anamnese` ADD CONSTRAINT `fk_anamnese_id_cli` FOREIGN KEY (id) REFERENCES `clientes` (id);
+  ALTER TABLE `anamnese` ADD CONSTRAINT `fk_anamnese_id_cli` FOREIGN KEY (id_cli) REFERENCES `clientes` (id);
+
+ ALTER TABLE `anamnese`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  INSERT INTO `anamnese` (`id`, `an_hipertensao`, `an_diabetes`, `an_medic`, `an_data`, `id_cli`) VALUES
+ (1, 'Não', 'Não', 'Nenhum', '2023-11-01', 1),
+ (2, 'Sim', 'Não', 'Metformina', '2023-11-05', 2);

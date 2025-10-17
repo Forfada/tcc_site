@@ -1,5 +1,4 @@
 <?php 
-  
     include('functions.php'); 
     add();
     include(HEADER_TEMPLATE);

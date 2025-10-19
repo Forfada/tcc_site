@@ -181,7 +181,7 @@ function duracao($t) {
     if(count($p) >= 2){
         $hora = str_pad($p[0], 2, '0', STR_PAD_LEFT);
         $min = str_pad($p[1], 2, '0', STR_PAD_LEFT);
-        return $hora . ':' . $min;
+        return $hora . 'h' . $min . 'm';
     }
     return $t;
 }

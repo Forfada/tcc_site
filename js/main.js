@@ -8,7 +8,7 @@ $("#delete-proc-modal").on("show.bs.modal", function (event) {
     modal.find("#confirm").attr("href", "delete.php?id=" + id);
 });
 
-//Passa os dados do procedimento para o Modal, e atualiza o link para exclusão
+//Passa os dados do cliente para o Modal, e atualiza o link para exclusão
 $("#delete-cli-modal").on("show.bs.modal", function (event) {
     var button = $(event.relatedTarget);
     var id = button.data("clientes");
@@ -17,4 +17,5 @@ $("#delete-cli-modal").on("show.bs.modal", function (event) {
     modal.find(".modal-title").text("Excluir Cliente: " + id);
     modal.find("#confirm").attr("href", "delete.php?id=" + id);
 });
+
 

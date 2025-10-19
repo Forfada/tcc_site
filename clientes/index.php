@@ -8,7 +8,7 @@
 <section class="clientes section-light section-cor3 py-5" id="clientes">
     <div class="container mt-5" style="margin-top: 6rem !important;">
         <h2 class="txt1 mb-1 text-center">Clientes Cadastrados</h2>
-
+        <p class="txt4 text-center mb-2"> Todos os Clientes cadastrados estão listados abaixo.</p>
         <form name="filtro" action="index.php" method="post">
             <div class="row align-items-center"> 
                 <div class="form-group col-12 col-md-5 mb-2 mb-md-0">
@@ -43,7 +43,7 @@
                         <td><?php echo $cli["id"]; ?></td>
                         <td><?php echo $cli["cli_nome"]; ?></td>
                         <td><?php echo $cli["cli_num"]; ?></td>
-                        <td><?php echo $cli["cli_nasc"]; ?></td>
+                        <td><?php echo formatadata($cli["cli_nasc"]); ?></td>
                         
                         <td class="actions text-center text-md-end d-flex flex-column gap-2">
                             <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto"><i class="fa fa-eye  me-2"></i> Visualizar</a>

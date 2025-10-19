@@ -19,13 +19,43 @@
     }
 
     view($client_id);
-
     include(INIT);
     include(HEADER_TEMPLATE);
 ?>
+<style>
+        .form-group{
+            --bs-gutter-x: 1rem !important;
+            width: 100%;
+        }
 
+        label {
+            font-size: 1rem;
+            }
+
+        @media (max-width: 767px) {
+            .form {
+                flex-direction: column;
+                display: flex;
+                gap: 0;
+            }
+            .form-group {
+                width: 100%;
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+            .d-flex {
+                flex-wrap: wrap;
+            }
+            .col-md-5.d-flex {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                width: 100%;
+                gap: 0.5rem;
+            }
+        }
+    </style>
 <section class="clientes section-light section-cor3 py-5" id="anamnese">
-     <div class="container mt-5" style="margin-top: 6rem !important;">
+        <div class="container mt-5" style="margin-top: 6rem !important;">
             <h2  class="txt1 mb-1 text-center">Nova Anamnese</h2>
             <p class="txt4 text-center mb-2">Adicione uma nova Anamnese para o seu Cliente.</p>
             <hr>
@@ -40,30 +70,37 @@
             <form action="add_an.php" method="post">
                 <!-- area de campos do form -->
                 <div class="row justify-content-center">
-                    <div class="col-md-10 d-flex gap-2 form">
+                    <div class="col-md-6 d-flex justify-content-center gap-2 form">
                         <input type="hidden" name="anamnese[id_cli]" value="<?php echo $client_id; ?>">
                         <div class="form-group mb-3">
-                            <label for="an_hipertensao">Tem histórico de Hipertensão?</label>
-                            <input type="text" class="form-control" id="an_hipertensao" name="anamnese[an_hipertensao]" required>
+                            <label for="an_hipertensao">Possui histórico de Hipertensão?</label>
+                            <input type="text" class="form-control text-center" id="an_hipertensao" name="anamnese[an_hipertensao]" required>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="an_diabetes">Tem histórico de Diabetes</label>
-                            <input type="text" class="form-control" id="an_diabetes" name="anamnese[an_diabetes]" required>
+                            <label for="an_diabetes">Possui histórico de Diabetes?</label>
+                            <input type="text" class="form-control text-center" id="an_diabetes" name="anamnese[an_diabetes]" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="row justify-content-center">
-                    <div class="col-md-10 d-flex gap-2">
-                        <div class="col-md-5 d-flex gap-2">
-                            <div class="form-group mb-3">
-                                <label for="an_medic">Está fazendo uso de alguma Medicação?</label>
-                                <input type="text" class="form-control text-center" id="an_medic" name="anamnese[an_medic]" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="an_data">Data / Hora</label>
-                                <input type="datetime-local" class="form-control text-center" id="an_data" name="anamnese[an_data]" value="<?php echo date('Y-m-d\TH:i'); ?>" required>
-                            </div>
+                    <div class="col-md-6 d-flex justify-content-center gap-2">
+                        <div class="form-group mb-3 mt-4">
+                            <label for="an_cancer">Possui histórico de Câncer?</label>
+                            <input type="text" class="form-control text-center" id="an_cancer" name="anamnese[an_cancer]" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="an_medic">Está fazendo uso de alguma Medicação? Se sim, qual?</label>
+                            <input type="text" class="form-control text-center" id="an_medic" name="anamnese[an_medic]" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-3 d-flex justify-content-center gap-2">
+                        <div class="form-group mb-3">
+                            <label for="an_data">Data de Criação</label>
+                            <input type="date" class="form-control text-center" id="an_data" name="anamnese[an_data]" value="<?php echo date('Y-m-d'); ?>" required>
                         </div>
                     </div>
                 </div>
@@ -72,7 +109,7 @@
                     <div id="actions" class="col-md-6 mt-3">
                         <div class="d-flex justify-content-center gap-2">
                             <button type="submit" class="buttonc"><i class="fa-solid fa-check"></i> Salvar</button>
-                            <a href="index.php" class="buttona" style="text-decoration: none;"><i class="fa-solid fa-arrow-rotate-left"></i> Cancelar</a>
+                            <a href="view.php?id=<?php echo $cli['id']; ?>" class="buttona" style="text-decoration: none;"><i class="fa-solid fa-arrow-rotate-left"></i> Cancelar</a>
                         </div>
                     </div>
                 </div>

@@ -44,7 +44,8 @@
                 </div>
 
                 <div class="info-grid">
-                    <div><span class="info-label">CPF</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_cpf']); ?></div></div>
+                    <div><span class="info-label">Idade</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_idade']); ?></div></div>
+                    <div><span class="info-label">CPF</span><div class="info-value"><?php echo cpf($cli['cli_cpf']); ?></div></div>
                     <div><span class="info-label">Telefone</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_num']); ?></div></div>
                     <div><span class="info-label">Nascimento</span><div class="info-value"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div></div>
                 </div>
@@ -56,7 +57,7 @@
                 <div class="anamnese-panel p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4 class="mb-0">Anamnese</h4>
-                        <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none">Adicionar Anamnese</a>
+                        <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Anamnese</a>
                     </div>
 
                     <?php if (!empty($anamnese) && is_array($anamnese)): ?>
@@ -64,9 +65,9 @@
                             <table class="table table-striped table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>Hipertensão</th>
                                         <th>Diabetes</th>
+                                        <th>Câncer</th>
                                         <th>Medicações</th>
                                         <th>Registrado em</th>
                                         <th>Ações</th>
@@ -75,11 +76,11 @@
                                 <tbody>
                                     <?php foreach ($anamnese as $a): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($a['id']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_hipertensao']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_diabetes']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_cancer']); ?></td>
                                         <td><?php echo nl2br(htmlspecialchars($a['an_medic'])); ?></td>
-                                        <td><?php echo formatadata($a['an_data'], 'd/m/Y H:i'); ?></td>
+                                        <td><?php echo formatadata($a['an_data']); ?></td>
                                         <td>
                                             <a href="edit_an.php?anid=<?php echo $a['id']; ?>" class="btn btn-sm btn-outline-primary">Editar</a>
                                             <a href="delete_an.php?anid=<?php echo $a['id']; ?>&client_id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-outline-danger" onclick="return confirm('Confirma remoção desta anamnese?');">Excluir</a>

@@ -108,9 +108,6 @@ function add_an() {
 				}
 			}
 
-			// Não definimos o campo 'id' aqui: deixamos o banco gerar o id (AUTO_INCREMENT)
-			// Assumimos que a tabela `anamnese` terá `id` AUTO_INCREMENT e `id_cli` será FK para clientes.id
-			// Inserção com prepared statement para maior controle de erros
 			$db = open_database();
 			try {
 				$sql = "INSERT INTO anamnese (an_hipertensao, an_diabetes, an_medic, an_data, id_cli) VALUES (:hip, :dia, :med, :dat, :idcli)";
@@ -165,7 +162,7 @@ function anamnese_delete($id = null) {
 	if ($id) {
 		remove('anamnese', $id);
 	}
-	header('Location: index.php');
+	header('Location: view.php');
 }
 
 ?>

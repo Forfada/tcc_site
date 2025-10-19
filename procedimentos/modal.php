@@ -7,7 +7,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <h5>Deseja realmente excluir este Procedimento?</h5>
+                            <h5>Deseja realmente excluir este Procedimento? Esta ação não pode ser desfeita.</h5>
                         </div>
                         <div class="modal-footer">
                             <a type="button" class="btn btn-dark" id="confirm" href="#">

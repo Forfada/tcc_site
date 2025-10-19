@@ -4,30 +4,7 @@
     add();
     include(HEADER_TEMPLATE);
     include(INIT);
-    
-
-  /*if (!isset($_SESSION)) session_start();
-    if (isset($_SESSION['user'])) { // Verifica se tem um usuário logado
-        if ($_SESSION['user'] != "mazi") {
-            $_SESSION["message"] = "Você precisa ser administrador para acessar esse recurso!";
-            $_SESSION['type'] = "danger";
-            header("Location:" . BASEURL ."index.php");
-        }
-    } else {
-        $_SESSION["message"] = "Você precisa estar logado e ser administrador para acessar esse recurso!";
-        $_SESSION["type"] = "danger";
-    }
-
-
-  include(HEADER_TEMPLATE); */
-  
 ?>
-            <?php// if (!empty($_SESSION['message'])) : ?>
-                <!--<div class="alert alert-<?php// echo $_SESSION['type']; ?> alert-dismissible" role="alert">
-                    <?php //echo $_SESSION['message']; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>-->
-            <?php //else : ?>
 
     <style>
         .form-group{
@@ -81,11 +58,11 @@
                     <div class="col-md-10 d-flex gap-2 form">
                         <div class="form-group mb-3">
                             <label for="p_nome">Nome</label>
-                            <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" required>
+                            <input type="text" class="form-control text-center" id="p_nome" name="proc[p_nome]" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="p_descricao">Descrição</label>
-                            <input type="text" class="form-control" id="p_descricao" name="proc[p_descricao]" required>
+                            <input type="text" class="form-control text-center" id="p_descricao" name="proc[p_descricao]" required>
                         </div>
                     </div>
                 </div>
@@ -106,7 +83,7 @@
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="p_descricao">Descrição</label>
+                            <label for="p_descricao">Explicação do Procedimento</label>
                             <textarea type="text" class="form-control" id="p_descricao" name="proc[p_descricao2]" required></textarea>
                         </div>
                     </div>
@@ -139,7 +116,6 @@
             </form>
         </div>
     </section>
-            <?php// endif;?>
 
 <?php include(FOOTER_TEMPLATE); ?>
 

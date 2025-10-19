@@ -35,12 +35,47 @@
     }
     .proc-price {
         color: var(--cor2);
-        font-weight: 600;
-        font-size: 1.1rem;
+        font-weight: 700;
+        font-size: 1.15rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        width: fit-content;
     }
     .proc-duration {
-        font-size: 0.98rem;
+        font-size: 0.9rem;
         color: #fff;
+        background-color: var(--cor7);
+        padding: 6px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        vertical-align: middle;
+    }
+    .proc-price i, .proc-duration i {
+        font-size: 0.95rem;
+        opacity: 0.95;
+    }
+
+    @media (max-width: 767px) {
+        .proc-price, .proc-duration {
+            display: inline-flex;
+            margin-right: .5rem;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+        .proc-title { margin-bottom: 0.25rem; }
     }
     @media (max-width: 767px) {
         .proc-img {
@@ -105,7 +140,8 @@
                                     <div class="card-body">
                                         <h5 class="proc-title"><?php echo ($proc['p_nome']); ?></h5>
                                         <p class="description"><?php echo ($proc['p_descricao']); ?></p>
-                                        <button class="buttonc">Agende já!</button>
+                                        <p class="proc-price">Valor: <?php echo valor($proc['p_valor']); ?></p>
+                                        <span class="proc-duration badge">Duração: <?php echo duracao($proc['p_duracao']); ?></span>
                                     </div>
                                 </div>
                             </div>

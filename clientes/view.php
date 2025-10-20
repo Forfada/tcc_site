@@ -46,7 +46,7 @@
                 <div class="info-grid">
                     <div><span class="info-label">Idade</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_idade']); ?></div></div>
                     <div><span class="info-label">CPF</span><div class="info-value"><?php echo cpf($cli['cli_cpf']); ?></div></div>
-                    <div><span class="info-label">Telefone</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_num']); ?></div></div>
+                    <div><span class="info-label">Telefone</span><div class="info-value"><?php echo telefone($cli['cli_num']); ?></div></div>
                     <div><span class="info-label">Nascimento</span><div class="info-value"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div></div>
                 </div>
             </div>

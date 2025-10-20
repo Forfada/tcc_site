@@ -20,6 +20,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $a_dia = date('Y-m-d', strtotime($data));
         $a_hora = date('H:i:s', strtotime($hora));
 
+        // proteger no servidor: não permitir agendar para hoje nem datas passadas
+        if ($a_dia <= date('Y-m-d')) {
+            $_SESSION['old_inputs'] = [
+                'procedimento' => $id_p,
+                'data' => $data,
+                'horario' => $hora
+            ];
+            $_SESSION['message'] = 'Não é possível agendar para hoje ou datas passadas. Escolha uma data futura.';
+            $_SESSION['type'] = 'warning';
+            header('Location: agendamento.php');
+            exit;
+        }
+
         // server-side overlap check using procedure durations
         try {
             $db = open_database();
@@ -98,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id_p' => $id_p
                 ];
                 save('agendamento', $dados);
-                $_SESSION['message'] = 'Agendamento realizado com sucesso!';
+                // mensagem padronizada curta
+                $_SESSION['message'] = 'agendamento realizado com sucesso';
                 $_SESSION['type'] = 'success';
             }
 

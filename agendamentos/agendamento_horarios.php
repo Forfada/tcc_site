@@ -14,6 +14,14 @@ $duration_override = isset($_GET['duration']) ? intval($_GET['duration']) : null
 
 $db = open_database();
 
+// bloquear hoje e datas passadas (não retornar horários)
+$today = date('Y-m-d');
+if ($data <= $today) {
+    close_database($db);
+    echo json_encode([]);
+    exit;
+}
+
 // clinic working hours (assumption) - you can change these values
 $work_start = '08:00:00';
 $work_end = '18:00:00';

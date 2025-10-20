@@ -24,6 +24,12 @@ try {
     for ($dt = clone $begin; $dt <= $last; $dt->add($interval)) {
         $date = $dt->format('Y-m-d');
 
+        // não permitir hoje nem datas passadas: marcar como indisponível para consistência no calendário
+        if ($date <= date('Y-m-d')) {
+            $unavailable[] = $date;
+            continue;
+        }
+
         // determine duration to check (minutes)
         $duration_minutes = $default_step;
         if ($duration_override > 0) $duration_minutes = $duration_override;

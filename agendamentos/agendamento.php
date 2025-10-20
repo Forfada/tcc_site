@@ -27,6 +27,8 @@
 ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+<!-- locale PT-BR for flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/pt.js"></script>
 
 <style>
 /* ===== Elegant Flatpickr Theme (custom) ===== */
@@ -197,8 +199,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // init flatpickr no campo de data (impede datas passadas)
   const fp = flatpickr(el, {
-    dateFormat: "Y-m-d",
-    minDate: "today",
+    dateFormat: "Y-m-d",    // internal format kept for server requests
+    altInput: true,
+    altFormat: "d/m/Y",     // presentation format (d-m-y) as requested
+    locale: "pt",           // Portuguese month names and labels
+    // não permitir selecionar o dia atual — só a partir de amanhã
+    minDate: (function(){
+      const t = new Date();
+      return new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
+    })(),
     allowInput: false,
     clickOpens: true,
     appendTo: document.body, // keep calendar above other elements and avoid clipping
@@ -219,7 +228,8 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         const today = new Date();
         const dayOnly = new Date(y, dateObj.getMonth(), dateObj.getDate());
-        if (dayOnly < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+        // considerar hoje como não selecionável também
+        if (dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
           dayElem.classList.add('flatpickr-disabled');
         }
       }
@@ -298,7 +308,8 @@ document.addEventListener('DOMContentLoaded', function () {
           const ymd = `${y}-${m}-${d}`;
           const today = new Date();
           const dayOnly = new Date(y, date.getMonth(), date.getDate());
-          const isPast = dayOnly < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          // tratar hoje como passado para impedir seleção
+          const isPast = dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate());
           return isPast || window.unavailableDates.has(ymd);
         }]);
       } else {
@@ -571,8 +582,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                             $db->commit();
                             if ($inserted > 0) {
-                                $message = 'Agendamento(s) realizado(s) com sucesso! Total: ' . number_format($total_price, 2, ',', '.') . ' — De ' . date('H:i', $start_ts) . ' até ' . date('H:i', $end_ts);
-                                $type = 'success';
+                                // mensagem curta e padronizada
+                                $message = 'agendamento realizado com sucesso';
+                                 $type = 'success';
                             }
                         } catch (Exception $e) {
                             $db->rollBack();
@@ -632,20 +644,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ?>
 <?php
-// robust flash handling: prefer local $message (set during this request), fall back to session flash
-$flash = $message ?? ($_SESSION['message'] ?? null);
-$flash_type = $type ?? ($_SESSION['type'] ?? 'info');
-if (!empty($flash)):
-    // clear session flash if present
-    unset($_SESSION['message'], $_SESSION['type'], $_SESSION['old_inputs']);
+// removed duplicate inline flash; page uses inc/alert.php (included at the end) as standard
 ?>
-  <div class="container">
-    <div class="alert alert-<?php echo htmlspecialchars($flash_type); ?> alert-dismissible fade show mt-3" role="alert">
-      <?php echo htmlspecialchars($flash); ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  </div>
-<?php endif; ?>
 <section id="agendamento" class="section-cor3"> 
   <div class="form-agendamento">
     <h2>Agendar Procedimento</h2>
@@ -1356,8 +1356,7 @@ function escapeHtml(str) {
 .modal-overlay .modal-actions form { margin: 0; }
 </style>
 
-
- 
+<?php include_once __DIR__ . '/../inc/alert.php'; ?>
 <?php include(FOOTER_TEMPLATE); ?>
 
 

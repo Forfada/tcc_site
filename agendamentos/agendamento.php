@@ -1,7 +1,19 @@
 <?php
     include '../config.php';
     include(DBAPI);
-  include(INIT);
+
+    // garante sessão iniciada
+    if (session_status() === PHP_SESSION_NONE) session_start();
+
+    // se não estiver logado, salva mensagem e redireciona para a página de login
+    if (empty($_SESSION['id'])) {
+        $_SESSION['message'] = 'Você precisa estar logado para agendar.';
+        $_SESSION['type'] = 'warning';
+        header('Location: ../inc/login.php');
+        exit;
+    }
+
+    include(INIT);
 
   // ensure session is started and capture flash messages before header prints them
   if (session_status() === PHP_SESSION_NONE) session_start();
@@ -13,6 +25,302 @@
 
   include(HEADER_TEMPLATE);
 ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+
+<style>
+/* ===== Elegant Flatpickr Theme (custom) ===== */
+#agendamento input#a_dia {
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="%2373213d" d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 14H5V9h14v9Z"/></svg>') no-repeat 12px center;
+  padding-left: 40px;
+  padding-right: 14px;
+  border-radius: 12px;
+  border: 1px solid #e6cfd2;
+  box-shadow: 0 6px 18px rgba(115,33,61,0.06);
+  height: 44px;
+  font-size: 1rem;
+  background-color: #fffaf9;
+}
+
+/* Calendar container */
+.flatpickr-calendar {
+  border: none;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(50,20,30,0.12);
+  background: linear-gradient(180deg,#fff,#fff);
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #2d2d2d;
+  padding: 10px;
+  width: 320px;
+  z-index: 3000;
+}
+
+/* header / month bar */
+.flatpickr-months {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.flatpickr-month {
+  background: linear-gradient(90deg,#f9eef0,#fffdfd);
+  padding: 10px 12px;
+  border-radius: 10px;
+  display:flex;
+  gap:8px;
+  align-items:center;
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,0.02);
+}
+.flatpickr-current-month .cur-month {
+  font-weight:700;
+  color:#73213d;
+  font-size:1rem;
+}
+.flatpickr-prev-month, .flatpickr-next-month {
+  color:#73213d;
+  background: transparent;
+  border-radius: 8px;
+  padding:6px;
+}
+.flatpickr-prev-month:hover, .flatpickr-next-month:hover {
+  background: rgba(115,33,61,0.06);
+}
+
+/* weekdays */
+.flatpickr-weekdays {
+  margin-top:8px;
+  margin-bottom:6px;
+}
+.flatpickr-weekday {
+  color:#8a6a75;
+  font-weight:600;
+  font-size:0.85rem;
+}
+
+/* day cells layout */
+.flatpickr-days .dayContainer {
+  display:grid;
+  grid-template-columns: repeat(7,1fr);
+  gap:6px;
+}
+.flatpickr-day {
+  border-radius:10px;
+  height:40px;
+  line-height:40px;
+  width:40px;
+  margin:0;
+  display:inline-block;
+  text-align:center;
+  transition: all .16s ease;
+  color: #3a3a3a;
+  background: transparent;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  font-weight:600;
+}
+
+/* hover and focus */
+.flatpickr-day:hover {
+  transform: translateY(-4px);
+  background: linear-gradient(180deg,#fff4f6,#fff);
+  box-shadow: 0 6px 18px rgba(115,33,61,0.06);
+  color:#73213d;
+}
+
+/* selected day */
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange {
+  background: linear-gradient(180deg,#73213d,#a05a6f) !important;
+  color: #fff !important;
+  box-shadow: 0 8px 22px rgba(115,33,61,0.18);
+}
+
+/* today indicator */
+.flatpickr-day.today {
+  box-shadow: 0 0 0 2px rgba(115,33,61,0.08);
+  border: 1px dashed rgba(115,33,61,0.12);
+}
+
+/* disabled (past) */
+.flatpickr-day.flatpickr-disabled {
+  opacity: 0.45;
+  color: #999;
+  pointer-events: none;
+  transform: none;
+  background: transparent;
+  border: 1px dashed #eee;
+}
+
+/* days with no slots */
+.flatpickr-day.no-slots {
+  background: linear-gradient(180deg,#fdecea,#fff1f1) !important;
+  color: #7a1721 !important;
+  border: 1px solid #f5c6cb !important;
+  position: relative;
+}
+.flatpickr-day.no-slots::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #c82333;
+  box-shadow: 0 0 6px rgba(200,40,50,0.35);
+}
+
+/* compact / responsive */
+@media (max-width:420px) {
+  .flatpickr-calendar { width: 92vw; padding:8px; }
+  .flatpickr-day { height:36px; width:36px; }
+  #agendamento input#a_dia { height:42px; }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // inicializa conjunto de datas indisponíveis
+  window.unavailableDates = new Set();
+
+  // helper para obter minutos a partir do resumo (JS já existente)
+  const getDurationMinutes = () => (typeof computeSummary === 'function' ? computeSummary().minutes : 30);
+
+  // referencia ao input
+  const el = document.querySelector("#a_dia");
+  if (!el) return;
+
+  // garante flatpickr disponível (CDN fixado para versão UMD)
+  if (typeof flatpickr !== 'function') {
+    console.error('flatpickr não está disponível. Verifique o script include.');
+    return;
+  }
+
+  // init flatpickr no campo de data (impede datas passadas)
+  const fp = flatpickr(el, {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    allowInput: false,
+    clickOpens: true,
+    appendTo: document.body, // keep calendar above other elements and avoid clipping
+    monthSelectorType: 'static',
+    static: false,
+    // onDayCreate: fecha após params (dateObj, dateStr, instance, dayElem)
+    onDayCreate: function(dateObj, dateStr, instance, dayElem) {
+      if (!dateObj || !dayElem) return;
+      // dateObj é Date — só usa métodos se for Date
+      if (Object.prototype.toString.call(dateObj) !== '[object Date]') return;
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const ymd = `${y}-${m}-${d}`;
+      if (window.unavailableDates && window.unavailableDates.has(ymd)) {
+        dayElem.classList.add('no-slots');
+        dayElem.title = 'Sem horários disponíveis';
+      } else {
+        const today = new Date();
+        const dayOnly = new Date(y, dateObj.getMonth(), dateObj.getDate());
+        if (dayOnly < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+          dayElem.classList.add('flatpickr-disabled');
+        }
+      }
+    },
+    onChange: function(selectedDates, dateStr) {
+      // protege caso seletor permita selecionar data indisponível (fallback)
+      if (selectedDates && selectedDates[0]) {
+        const dt = selectedDates[0];
+        const y = dt.getFullYear();
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const d = String(dt.getDate()).padStart(2, '0');
+        const ymd = `${y}-${m}-${d}`;
+        if (window.unavailableDates.has(ymd)) {
+          // limpa input e avisa
+          el.value = '';
+          if (typeof alert === 'function') alert('Data sem horários disponíveis. Escolha outra data.');
+          return;
+        }
+      }
+      if (typeof fetchHorarios === 'function') fetchHorarios();
+    },
+    onReady: function(selectedDates, dateStr, instance) {
+      loadUnavailable(instance);
+    },
+    onMonthChange: function(selectedDates, dateStr, instance) {
+      loadUnavailable(instance);
+    },
+    onYearChange: function(selectedDates, dateStr, instance) {
+      loadUnavailable(instance);
+    }
+  });
+
+  // DEBUG: confirmar inicialização
+  console.debug('flatpickr loaded:', typeof flatpickr !== 'undefined', 'instance:', fp);
+
+  // garantir abertura ao clicar/focar (fallback se algo bloquear click automático)
+  try {
+    if (fp && typeof fp.open === 'function') {
+      el.addEventListener('click', function (ev) { ev.preventDefault(); fp.open(); });
+      el.addEventListener('focus', function () { fp.open(); });
+    } else {
+      // fallback: abre o calendário padrão do navegador como último recurso
+      el.addEventListener('click', function () { el.showPicker && el.showPicker(); });
+      el.addEventListener('focus', function () { el.showPicker && el.showPicker(); });
+      console.warn('fp.open não disponível; usando fallback showPicker se suportado.');
+    }
+  } catch (e) {
+    console.warn('Não foi possível anexar handlers de abertura do calendário:', e);
+  }
+
+  // função que carrega datas indisponíveis do servidor e define a função de disable dinamicamente
+  async function loadUnavailable(fpInstance) {
+    const year = fpInstance.currentYear;
+    const month = fpInstance.currentMonth; // 0-indexed
+    const start = `${year}-${String(month+1).padStart(2,'0')}-01`;
+    const lastDay = new Date(year, month+1, 0).getDate();
+    const end = `${year}-${String(month+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+    const duration = getDurationMinutes();
+
+    try {
+      const url = '<?= BASEURL ?>agendamentos/unavailable_dates.php'
+                + '?start=' + encodeURIComponent(start)
+                + '&end=' + encodeURIComponent(end)
+                + '&duration=' + encodeURIComponent(duration);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const arr = await res.json();
+      window.unavailableDates = new Set(Array.isArray(arr) ? arr : []);
+
+      // define função de disable que usa o Set (retorna true para desabilitar) — só se método disponível
+      if (fpInstance && typeof fpInstance.set === 'function') {
+        fpInstance.set('disable', [function(date) {
+          const y = date.getFullYear();
+          const m = String(date.getMonth() + 1).padStart(2, '0');
+          const d = String(date.getDate()).padStart(2, '0');
+          const ymd = `${y}-${m}-${d}`;
+          const today = new Date();
+          const dayOnly = new Date(y, date.getMonth(), date.getDate());
+          const isPast = dayOnly < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          return isPast || window.unavailableDates.has(ymd);
+        }]);
+      } else {
+        console.warn('fpInstance.set não disponível; seleção será controlada por onChange/onDayCreate.');
+      }
+
+      // redesenhar para aplicar classes e estado
+      fpInstance.redraw && fpInstance.redraw();
+    } catch (err) {
+      console.error('Erro ao carregar datas indisponíveis:', err);
+    }
+  }
+
+  // quando procedimentos mudarem, recarregar indisponíveis (para considerar duration)
+  const procContainers = document.querySelectorAll('#procedimentos-list, #dropdownContent');
+  procContainers.forEach(c => c && c.addEventListener('change', function() {
+    // recalc duration then reload month
+    loadUnavailable(fp);
+    if (typeof computeSummary === 'function') computeSummary();
+  }));
+});
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const dataInput = document.getElementById('a_dia');
@@ -367,7 +675,8 @@ if (!empty($flash)):
       <div class="form-row">
         <div class="form-group">
           <label for="a_dia">Data:</label>
-          <input type="date" name="a_dia" id="a_dia" required value="<?= $old['data'] ?? '' ?>">
+          <!-- readonly removido para garantir que clique/focus funcionem; flatpickr controla input -->
+          <input type="text" name="a_dia" id="a_dia" required value="<?= $old['data'] ?? '' ?>" autocomplete="off">
         </div>
         <div class="form-group">
           <label for="a_hora">Hora:</label>

@@ -177,6 +177,107 @@
   .flatpickr-day { height:36px; width:36px; }
   #agendamento input#a_dia { height:42px; }
 }
+
+/* ======= Dropdown: correções de alinhamento e estilo ======= */
+.dropdown-group {
+  align-items: flex-start; /* sobrescreve align-items:center de .form-group */
+  text-align: left;
+  width: 100%;
+  max-width: 700px;
+}
+
+.dropdown-group > label {
+  align-self: flex-start;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* wrapper e botão */
+.dropdown-wrapper {
+  position: relative;
+  width: 100%;
+}
+.dropdown-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: #fffaf9;
+  border: 1px solid #d1b2b7;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #73213d;
+  cursor: pointer;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* painel do dropdown */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  z-index: 1200;
+  background: #fff;
+  border: 1px solid #eed3d7;
+  border-radius: 10px;
+  width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(35,20,30,0.08);
+  padding: 8px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+/* exibir */
+.dropdown-content.show { display: block; }
+
+/* item: checkbox à esquerda, texto à esquerda */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  justify-content: flex-start;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #444;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.dropdown-item:hover { background: #fff4f6; }
+
+.dropdown-item input[type="checkbox"] {
+  margin: 0;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  transform: scale(1.06);
+  accent-color: #c76d8b;
+}
+
+/* texto ocupa o restante */
+.dropdown-item span {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1 1 auto;
+  text-align: left;
+  color: #73213d;
+}
+
+/* small screens */
+@media (max-width: 480px) {
+  .dropdown-content { max-height: 48vh; }
+  .dropdown-item { padding: 10px; gap: 12px; }
+  .dropdown-item input[type="checkbox"] { width: 20px; height: 20px; }
+}
 </style>
 
 <script>
@@ -499,98 +600,146 @@ document.addEventListener('DOMContentLoaded', function() {
                 $stmt->execute();
                 $procs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                $total_minutes = 0;
-                $total_price = 0.0;
-                foreach ($procs as $p) {
-                    if (!empty($p['p_duracao'])) {
-                        list($hh, $mm) = array_pad(explode(':', $p['p_duracao']), 2, '00');
-                        $m = intval($hh)*60 + intval($mm);
-                        if ($m <= 0) $m = 30;
-                    } else {
-                        $m = 30;
+                // ---------- Server-side business rules validation ----------
+                // normalize names to lowercase for checks
+                $names = array_map(function($p){ return mb_strtolower($p['p_nome'] ?? '', 'UTF-8'); }, $procs);
+                $has = function($keywords) use ($names) {
+                    foreach ($names as $n) {
+                        foreach ((array)$keywords as $kw) {
+                            if (mb_strpos($n, mb_strtolower($kw,'UTF-8')) !== false) return true;
+                        }
                     }
-                    $total_minutes += $m;
-                    $pp = str_replace(',', '.', preg_replace('/[^0-9,\.]/','', $p['p_valor']));
-                    $total_price += (float)$pp;
-                }
+                    return false;
+                };
 
-                // check user doesn't already have any of these procedures on the date
-                $stmt = $db->prepare("SELECT COUNT(*) FROM agendamento WHERE id_u = ? AND a_dia = ? AND id_p IN ($placeholders)");
-                $params = array_merge([$idUsuario, $data], $ids);
-                $stmt->execute($params);
-                $same = (int)$stmt->fetchColumn();
-                if ($same > 0) {
-                    $message = 'Você já possui um dos procedimentos selecionados nessa data.';
+                $has_micro = $has(['micropig','micropigment']);
+                $has_desp  = $has(['despig','despigment']);
+                // tratamento dos fios: require both 'tratamento' and 'fio' present in name OR explicit 'tratamento dos fios'
+                $has_trat_fios = false;
+                foreach ($names as $n) {
+                    if ((mb_strpos($n,'tratamento') !== false && (mb_strpos($n,'fio') !== false || mb_strpos($n,'fios') !== false)) || mb_strpos($n,'tratamento dos fios') !== false) {
+                        $has_trat_fios = true; break;
+                    }
+                }
+                $has_avaliacao = $has(['avaliacao','avaliaç','avalia']);
+
+                // rule: micropig + despig not together
+                if ($has_micro && $has_desp) {
+                    $message = 'Micropigmentação e Despigmentação não podem ser agendadas no mesmo dia.';
                     $type = 'warning';
                     close_database($db);
+                }
+                // rule: tratamento dos fios cannot be with micropig OR despig
+                elseif ($has_trat_fios && ($has_micro || $has_desp)) {
+                    $message = 'Tratamento dos fios não pode ser agendado junto com Micropigmentação ou Despigmentação.';
+                    $type = 'warning';
+                    close_database($db);
+                }
+                // rule: avaliação de crescimento only with tratamento dos fios
+                elseif ($has_avaliacao && !$has_trat_fios) {
+                    $message = 'Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.';
+                    $type = 'warning';
+                    close_database($db);
+                }
+                // if any rule set $message, abort further processing for this request
+                if (!empty($message) && isset($type) && $type === 'warning') {
+                    // do not proceed with insertion
+                    // close db already called above in each branch
+                    // fall through to render page with $message
                 } else {
-                    // check availability for entire block
-                    $start_ts = strtotime($data . ' ' . $hora);
-                    $end_ts = $start_ts + $total_minutes*60;
-
-                    $sql = "SELECT a.a_hora, p.p_duracao FROM agendamento a JOIN procedimentos p ON a.id_p = p.id WHERE a.a_dia = :a_dia";
-                    $stmt = $db->prepare($sql);
-                    $stmt->bindParam(':a_dia', $data);
-                    $stmt->execute();
-                    $existing = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                    $conflict = false;
-                    foreach ($existing as $e) {
-                        $s_ts = strtotime($data . ' ' . $e['a_hora']);
-                        $d_minutes = 30;
-                        if (!empty($e['p_duracao'])) {
-                            list($eh, $em) = array_pad(explode(':', $e['p_duracao']), 2, '00');
-                            $d_minutes = intval($eh) * 60 + intval($em);
+                    $total_minutes = 0;
+                    $total_price = 0.0;
+                    foreach ($procs as $p) {
+                        if (!empty($p['p_duracao'])) {
+                            list($hh, $mm) = array_pad(explode(':', $p['p_duracao']), 2, '00');
+                            $m = intval($hh)*60 + intval($mm);
+                            if ($m <= 0) $m = 30;
+                        } else {
+                            $m = 30;
                         }
-                        $e_end = $s_ts + $d_minutes * 60;
-                        if ($s_ts < $end_ts && $e_end > $start_ts) {
-                            $conflict = true;
-                            break;
-                        }
+                        $total_minutes += $m;
+                        $pp = str_replace(',', '.', preg_replace('/[^0-9,\.]/','', $p['p_valor']));
+                        $total_price += (float)$pp;
                     }
 
-                    if ($conflict) {
-                        $message = 'O bloco de horários selecionado conflita com outros agendamentos.';
-                        $type = 'danger';
+                    // check user doesn't already have any of these procedures on the date
+                    $stmt = $db->prepare("SELECT COUNT(*) FROM agendamento WHERE id_u = ? AND a_dia = ? AND id_p IN ($placeholders)");
+                    $params = array_merge([$idUsuario, $data], $ids);
+                    $stmt->execute($params);
+                    $same = (int)$stmt->fetchColumn();
+                    if ($same > 0) {
+                        $message = 'Você já possui um dos procedimentos selecionados nessa data.';
+                        $type = 'warning';
                         close_database($db);
                     } else {
-                        // insert sequential appointments in a transaction
-                        $db->beginTransaction();
-                        try {
-                            // build map of durations keyed by id
-                            $dur_map = [];
-                            foreach ($procs as $p) {
-                                list($hh, $mm) = array_pad(explode(':', $p['p_duracao'] ?? ''), 2, '00');
-                                $m = (!empty($p['p_duracao'])) ? intval($hh)*60 + intval($mm) : 30;
-                                if ($m <= 0) $m = 30;
-                                $dur_map[$p['id']] = $m;
-                            }
+                        // check availability for entire block
+                        $start_ts = strtotime($data . ' ' . $hora);
+                        $end_ts = $start_ts + $total_minutes*60;
 
-                            $cursor = $start_ts;
-                            $inserted = 0;
-                            $sql = "INSERT INTO agendamento (a_dia, a_hora, id_u, id_p, created_at) VALUES (:a_dia, :a_hora, :id_u, :id_p, NOW())";
-                            $ins = $db->prepare($sql);
-                            foreach ($ids as $pid) {
-                                $hora_ins = date('H:i:s', $cursor);
-                                $ins->bindParam(':a_dia', $data);
-                                $ins->bindParam(':a_hora', $hora_ins);
-                                $ins->bindParam(':id_u', $idUsuario);
-                                $ins->bindParam(':id_p', $pid);
-                                $ins->execute();
-                                $inserted++;
-                                $cursor += ($dur_map[$pid] ?? 30) * 60;
+                        $sql = "SELECT a.a_hora, p.p_duracao FROM agendamento a JOIN procedimentos p ON a.id_p = p.id WHERE a.a_dia = :a_dia";
+                        $stmt = $db->prepare($sql);
+                        $stmt->bindParam(':a_dia', $data);
+                        $stmt->execute();
+                        $existing = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                        $conflict = false;
+                        foreach ($existing as $e) {
+                            $s_ts = strtotime($data . ' ' . $e['a_hora']);
+                            $d_minutes = 30;
+                            if (!empty($e['p_duracao'])) {
+                                list($eh, $em) = array_pad(explode(':', $e['p_duracao']), 2, '00');
+                                $d_minutes = intval($eh) * 60 + intval($em);
                             }
-                            $db->commit();
-                            if ($inserted > 0) {
-                                // mensagem curta e padronizada
-                                $message = 'agendamento realizado com sucesso';
-                                 $type = 'success';
+                            $e_end = $s_ts + $d_minutes * 60;
+                            if ($s_ts < $end_ts && $e_end > $start_ts) {
+                                $conflict = true;
+                                break;
                             }
-                        } catch (Exception $e) {
-                            $db->rollBack();
-                            throw $e;
                         }
-                        close_database($db);
+
+                        if ($conflict) {
+                            $message = 'O bloco de horários selecionado conflita com outros agendamentos.';
+                            $type = 'danger';
+                            close_database($db);
+                        } else {
+                            // insert sequential appointments in a transaction
+                            $db->beginTransaction();
+                            try {
+                                // build map of durations keyed by id
+                                $dur_map = [];
+                                foreach ($procs as $p) {
+                                    list($hh, $mm) = array_pad(explode(':', $p['p_duracao'] ?? ''), 2, '00');
+                                    $m = (!empty($p['p_duracao'])) ? intval($hh)*60 + intval($mm) : 30;
+                                    if ($m <= 0) $m = 30;
+                                    $dur_map[$p['id']] = $m;
+                                }
+
+                                $cursor = $start_ts;
+                                $inserted = 0;
+                                $sql = "INSERT INTO agendamento (a_dia, a_hora, id_u, id_p, created_at) VALUES (:a_dia, :a_hora, :id_u, :id_p, NOW())";
+                                $ins = $db->prepare($sql);
+                                foreach ($ids as $pid) {
+                                    $hora_ins = date('H:i:s', $cursor);
+                                    $ins->bindParam(':a_dia', $data);
+                                    $ins->bindParam(':a_hora', $hora_ins);
+                                    $ins->bindParam(':id_u', $idUsuario);
+                                    $ins->bindParam(':id_p', $pid);
+                                    $ins->execute();
+                                    $inserted++;
+                                    $cursor += ($dur_map[$pid] ?? 30) * 60;
+                                }
+                                $db->commit();
+                                if ($inserted > 0) {
+                                    // mensagem curta e padronizada
+                                    $message = 'agendamento realizado com sucesso';
+                                     $type = 'success';
+                                }
+                            } catch (Exception $e) {
+                                $db->rollBack();
+                                throw $e;
+                            }
+                            close_database($db);
+                        }
                     }
                 }
             } catch (PDOException $e) {
@@ -663,7 +812,9 @@ document.addEventListener('DOMContentLoaded', function() {
               $checked = (isset($old['id_p']) && in_array($p['id'], (array)$old['id_p'])) ? 'checked' : '';
             ?>
             <label class="dropdown-item">
-              <input type="checkbox" name="id_p[]" value="<?= $p['id'] ?>" data-dur="<?= $d ?>" data-valor="<?= $p['p_valor'] ?>" <?= $checked ?>>
+              <input type="checkbox" name="id_p[]" value="<?= $p['id'] ?>"
+                     data-name="<?= htmlspecialchars($p['p_nome'], ENT_QUOTES, 'UTF-8') ?>"
+                     data-dur="<?= $d ?>" data-valor="<?= $p['p_valor'] ?>" <?= $checked ?>>
               <?= htmlspecialchars($p['p_nome']) ?> — R$ <?= htmlspecialchars($p['p_valor']) ?> (<?= $d ?>)
             </label>
             <?php endforeach; ?>
@@ -704,23 +855,21 @@ document.addEventListener('DOMContentLoaded', function() {
       <table class="tabela-lunaris">
         <thead>
           <tr>
-            <th>ID</th>
             <th>Procedimento</th>
-            <th>Data</th>
-            <th>Hora</th>
+             <th>Data</th>
+             <th>Hora</th>
             <th>Agendado em</th>
-            <th>Ações</th>
+             <th>Ações</th>
           </tr>
         </thead>
         <tbody>
           <?php foreach ($agendamentos as $ag): ?>
             <tr>
-              <td><?= htmlspecialchars($ag['id']) ?></td>
-              <td><?= htmlspecialchars($ag['procedimento']) ?></td>
-              <td><?= formatadata($ag['a_dia'], 'd/m/Y') ?></td>
-              <td><?= htmlspecialchars($ag['a_hora']) ?></td>
-              <td><?= formatadata($ag['created_at'], 'd/m/Y H:i') ?></td>
-              <td><button class="buttonc btn-delete-ag open-delete-modal" data-id="<?= htmlspecialchars($ag['id']) ?>">Excluir</button></td>
+               <td><?= htmlspecialchars($ag['procedimento']) ?></td>
+               <td><?= formatadata($ag['a_dia'], 'd/m/Y') ?></td>
+               <td><?= htmlspecialchars($ag['a_hora']) ?></td>
+              <td><?= formatadata($ag['created_at'], 'd/m/Y') ?></td>
+               <td><button class="buttonc btn-delete-ag open-delete-modal" data-id="<?= htmlspecialchars($ag['id']) ?>">Excluir</button></td>
             </tr>
           <?php endforeach; ?>
         </tbody>
@@ -941,145 +1090,80 @@ document.addEventListener('DOMContentLoaded', function() {
   transform: translateY(-2px);
 }
 
-/* ======= Tabela ======= */
+/* ======= Tabela (novo visual elegante) ======= */
 .tabela-wrapper {
   width: 100%;
-  max-width: 900px;
-  background: #73213d;
-  border-radius: 20px;
-  padding: 25px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  max-width: 920px;
+  background: linear-gradient(180deg, #fff, #fffaf9);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 28px rgba(35,20,30,0.08);
   overflow-x: auto;
+  border: 1px solid rgba(115,33,61,0.06);
 }
 
 .tabela-lunaris {
   width: 100%;
   border-collapse: collapse;
-  color: #fff;
+  color: #2d2d2d;
+  font-family: "Inter", "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: transparent;
 }
 
-.tabela-lunaris th {
-  background: #f8d9c4;
+.tabela-lunaris thead th {
+  background: linear-gradient(90deg, #fff8f7, #fff);
   color: #73213d;
-  padding: 10px;
+  padding: 12px 14px;
   text-align: left;
-  font-weight: 600;
-  border-radius: 6px 6px 0 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 2px solid rgba(115,33,61,0.06);
 }
 
-.tabela-lunaris td {
-  padding: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.tabela-lunaris tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(115,33,61,0.04);
+  vertical-align: middle;
+  color: #444;
+  font-size: 0.95rem;
 }
 
-.tabela-lunaris tr:hover {
-  background: rgba(255, 255, 255, 0.05);
+.tabela-lunaris tbody tr {
+  background: transparent;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.tabela-lunaris tbody tr:hover {
+  background: linear-gradient(90deg, rgba(115,33,61,0.03), rgba(160,90,111,0.02));
+  transform: translateY(-2px);
+}
+
+.tabela-lunaris tbody tr:nth-child(even) {
+  background: rgba(115,33,61,0.02);
 }
 
 .tabela-lunaris button {
-  background: #a05a6f;
+  background: linear-gradient(180deg, #a05a6f, #73213d);
   border: none;
   color: #fff;
   border-radius: 8px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   cursor: pointer;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .tabela-lunaris button:hover {
-  background: #d17d96;
+  filter: brightness(1.05);
+  transform: translateY(-1px);
 }
 
-/* ======= Responsividade ======= */
+/* ensure header cells don't look cramped on small screens */
 @media (max-width: 768px) {
-  #agendamento {
-    padding: 30px 4%;
-  }
-
-  .form-agendamento,
-  .proc-panel,
-  .summary-box {
-    padding: 25px 20px;
-  }
-
-  .btn-agendar {
-    width: 100%;
-  }
-
-  .tabela-lunaris th,
-  .tabela-lunaris td {
-    font-size: 0.9rem;
-  }
+  .tabela-lunaris thead th, .tabela-lunaris tbody td { padding: 10px 8px; font-size: 0.9rem; }
+  .tabela-wrapper { padding: 12px; }
 }
-/* ======= Dropdown customizado ======= */
-.dropdown-group {
-  width: 100%;
-  max-width: 700px;
-  text-align: left;
-}
-
-.dropdown-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.dropdown-btn {
-  width: 100%;
-  padding: 12px 16px;
-  background: #fffaf9;
-  border: 1px solid #d1b2b7;
-  border-radius: 10px;
-  font-size: 1rem;
-  color: #73213d;
-  cursor: pointer;
-  text-align: left;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  z-index: 100;
-  background: #fff;
-  border: 1px solid #d1b2b7;
-  border-radius: 10px;
-  margin-top: 4px;
-  width: 100%;
-  max-height: 250px;
-  overflow-y: auto;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  text-align: left; /* garante alinhamento à esquerda */
-  padding: 6px 0;
-}
-
-.dropdown-content.show {
-  display: block;
-}
-
-.dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  cursor: pointer;
-  justify-content: flex-start; /* conteúdo à esquerda */
-  text-align: left;
-  font-size: 0.95rem;
-  color: #73213d;
-}
-
-.dropdown-item:hover {
-  background: #fff4f6;
-}
-
-
-.form-row {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-
+/* ...existing code... */
 </style>
 
 <script>
@@ -1178,6 +1262,67 @@ document.addEventListener('DOMContentLoaded', function() {
       showToast('Você pode selecionar no máximo ' + maxSelect + ' procedimentos.');
       return;
     }
+
+    // collect normalized names of selected procedures
+    const names = getCheckedInputs().map(cb => (cb.dataset.name || (cb.parentNode && cb.parentNode.textContent) || '').toLowerCase());
+
+    // helper to check if any name contains a keyword
+    const has = kw => names.some(n => n.indexOf(kw) !== -1);
+    const hasMicro = has('micropig');      // micropigmentação
+    const hasDespig = has('despig');       // despigmentação
+    const hasTratFios = names.some(n => (n.indexOf('tratamento') !== -1 && (n.indexOf('fio') !== -1 || n.indexOf('fios') !== -1)) || n.indexOf('tratamento dos fios') !== -1);
+    const hasAvaliacao = has('avalia') || has('avaliacao'); // avaliação de crescimento
+
+    // RULE: micropigmentação e despigmentação não podem juntas
+    if (hasMicro && hasDespig) {
+      // undo the last action
+      e.target.checked = false;
+      showToast('Micropigmentação e Despigmentação não podem ser agendadas no mesmo dia.');
+      // update visuals then exit
+      if (procGrid) {
+        procGrid.querySelectorAll('.proc-card').forEach(function(card) {
+          const cb = card.querySelector('input[type="checkbox"]');
+          if (cb && cb.checked) card.classList.add('selected'); else card.classList.remove('selected');
+        });
+      }
+      updateCounter();
+      if (document.getElementById('a_dia') && document.getElementById('a_dia').value && typeof fetchHorarios === 'function') fetchHorarios();
+      if (typeof renderSummary === 'function') renderSummary();
+      return;
+    }
+
+    // RULE: tratamento dos fios NÃO pode ser agendado com micropig OR despig
+    if (hasTratFios && (hasMicro || hasDespig)) {
+      e.target.checked = false;
+      showToast('Tratamento dos fios não pode ser agendado junto com Micropigmentação ou Despigmentação.');
+      if (procGrid) {
+        procGrid.querySelectorAll('.proc-card').forEach(function(card) {
+          const cb = card.querySelector('input[type="checkbox"]');
+          if (cb && cb.checked) card.classList.add('selected'); else card.classList.remove('selected');
+        });
+      }
+      updateCounter();
+      if (document.getElementById('a_dia') && document.getElementById('a_dia').value && typeof fetchHorarios === 'function') fetchHorarios();
+      if (typeof renderSummary === 'function') renderSummary();
+      return;
+    }
+
+    // RULE: avaliação de crescimento só com tratamento dos fios
+    if (hasAvaliacao && !hasTratFios) {
+      e.target.checked = false;
+      showToast('Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.');
+      if (procGrid) {
+        procGrid.querySelectorAll('.proc-card').forEach(function(card) {
+          const cb = card.querySelector('input[type="checkbox"]');
+          if (cb && cb.checked) card.classList.add('selected'); else card.classList.remove('selected');
+        });
+      }
+      updateCounter();
+      if (document.getElementById('a_dia') && document.getElementById('a_dia').value && typeof fetchHorarios === 'function') fetchHorarios();
+      if (typeof renderSummary === 'function') renderSummary();
+      return;
+    }
+
     // update selected class for grid cards if present
     if (procGrid) {
       procGrid.querySelectorAll('.proc-card').forEach(function(card) {

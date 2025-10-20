@@ -54,7 +54,7 @@
                 <div class="col-md-3 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
-                        <input type="datetime" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" value="<?php echo formatadata($cli['cli_nasc']); ?>">
+                        <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" value="<?php echo date('Y-m-d', strtotime($cli['cli_nasc'])); ?>">
                     </div>
                 </div>
             </div>

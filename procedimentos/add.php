@@ -58,11 +58,11 @@
                     <div class="col-md-10 d-flex gap-2 form">
                         <div class="form-group mb-3">
                             <label for="p_nome">Nome</label>
-                            <input type="text" class="form-control text-center" id="p_nome" name="proc[p_nome]" required>
+                            <input type="text" class="form-control" id="p_nome" name="proc[p_nome]" required>
                         </div>
                         <div class="form-group mb-3">
                             <label for="p_descricao">Descrição</label>
-                            <input type="text" class="form-control text-center" id="p_descricao" name="proc[p_descricao]" required>
+                            <input type="text" class="form-control" id="p_descricao" name="proc[p_descricao]" required>
                         </div>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="p_descricao">Explicação do Procedimento</label>
-                            <textarea type="text" class="form-control" id="p_descricao" name="proc[p_descricao2]" required></textarea>
+                            <textarea type="text" class="form-control" id="p_descricao" name="proc[p_descricao2]" rows=1 required></textarea>
                         </div>
                     </div>
                 </div>

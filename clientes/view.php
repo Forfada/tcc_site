@@ -23,7 +23,7 @@
      <div class="container mt-5" style="margin-top: 6rem !important;">
         <div class="row mb-4">
             <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="txt1">Visualizar Cliente: <?php echo $cli['cli_nome']; ?></h2>
+                <h2 class="txt1"><?php echo $cli['cli_nome']; ?></h2>
                 <div class="d-flex gap-2">
                     <a href="index.php" class="btn btn-dark btn-sm">&larr; Voltar</a>
                     <a href="edit.php?id=<?php echo $cli['id']; ?>" class="btn btn-secondary btn-sm">Editar</a>
@@ -35,19 +35,26 @@
             <div class="col-md-3 text-center mb-3 mb-md-0">
                 <!-- Avatar estilizado -->
                 <div class="avatar-placeholder mx-auto mb-1"><?php echo strtoupper(substr($cli['cli_nome'],0,1)); ?></div>
-                <div class="txt5">ID: <?php echo $cli['id']; ?></div>
+                <h3 class="txt4"><?php echo htmlspecialchars($cli['cli_nome']); ?></h3>
             </div>
 
             <div class="col-md-9">
                 <div class="d-flex flex-wrap gap-2 mb-3">
-                    <h3 class="txt2"><?php echo htmlspecialchars($cli['cli_nome']); ?></h3>
+                    
                 </div>
 
                 <div class="info-grid">
-                    <div><span class="info-label">Idade</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_idade']); ?></div></div>
-                    <div><span class="info-label">CPF</span><div class="info-value"><?php echo cpf($cli['cli_cpf']); ?></div></div>
-                    <div><span class="info-label">Telefone</span><div class="info-value"><?php echo telefone($cli['cli_num']); ?></div></div>
-                    <div><span class="info-label">Nascimento</span><div class="info-value"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div></div>
+                    <div>
+                        <span class="info-label">Idade</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_idade']); ?></div>
+                        <span class="info-label">CPF</span><div class="info-value"><?php echo cpf($cli['cli_cpf']); ?></div>
+                    </div>
+                    <div>
+                        <span class="info-label">Telefone</span><div class="info-value"><?php echo telefone($cli['cli_num']); ?></div>
+                        <span class="info-label">Nascimento</span><div class="info-value"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div>
+                    </div>
+                    <div>
+                        <span class="info-label">Observação</span><div class="info-value"><?php echo $cli['cli_obs']; ?></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -160,6 +167,8 @@
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 0.75rem 1.5rem;
         margin-top: .5rem;
+        justify-items: start;
+        justify-content: start;
     }
 
     .info-label {

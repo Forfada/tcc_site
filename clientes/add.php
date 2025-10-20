@@ -29,7 +29,7 @@
                 <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nome">Nome</label>
-                        <input type="text" class="form-control text-center nome" id="cli_nome" name="cli[cli_nome]" required>
+                        <input type="text" class="form-control nome" id="cli_nome" name="cli[cli_nome]" required>
                     </div>
                 </div>
             </div>
@@ -54,10 +54,14 @@
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-md-3 d-flex justify-content-center gap-2 form">
+                <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
                         <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cli_obs">Observação</label>
+                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1 required></textarea>
                     </div>
                 </div>
             </div>

@@ -6,8 +6,8 @@ CREATE TABLE clientes (
     id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
     cli_nome VARCHAR(120) NOT NULL,
     cli_idade INT(3) NOT NULL,
-    cli_cpf VARCHAR(15) NOT NULL,
-    cli_num VARCHAR(15) NOT NULL,
+    cli_cpf VARCHAR(11) NOT NULL,
+    cli_num VARCHAR(11) NOT NULL,
     cli_nasc DATETIME NOT NULL,
     cli_obs VARCHAR(250) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -46,7 +46,7 @@ INSERT INTO `procedimentos` (`id`, `p_nome`, `p_descricao`, `p_descricao2`, `p_d
   -- criando tabela: usuarios
 CREATE TABLE usuarios (
   id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  u_num varchar(15) NOT NULL,
+  u_num varchar(11) NOT NULL,
   u_user varchar(120) NOT NULL,
   u_senha varchar(120) NOT NULL,
   foto varchar(255) DEFAULT NULL

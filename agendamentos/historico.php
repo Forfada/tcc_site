@@ -1,15 +1,17 @@
 <?php
 include '../config.php';
 include DBAPI;
+session_start(); // garantir sessão antes do HEADER
 include (HEADER_TEMPLATE);
-session_start();
 
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
-$agendamentos = [];
+$rows = [];
+$realizados = [];
+$sera_realizado = [];
 
 try {
     $db = open_database();
@@ -29,42 +31,77 @@ try {
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':id_u', $_SESSION['id'], PDO::PARAM_INT);
     $stmt->execute();
-    $agendamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     close_database($db);
+
+    // separar realizados (passado) e será realizado (futuro)
+    $now = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+    $now_ts = $now->getTimestamp();
+    foreach ($rows as $r) {
+        $ts = strtotime($r['a_dia'] . ' ' . $r['a_hora']);
+        if ($ts <= $now_ts) {
+            $realizados[] = $r;
+        } else {
+            $sera_realizado[] = $r;
+        }
+    }
 } catch (PDOException $e) {
     $_SESSION['message'] = "Erro ao carregar histórico: " . $e->getMessage();
     $_SESSION['type'] = "danger";
 }
 ?>
 
-
 <main class="container-historico">
     <h1 class="titulo-historico">🕓 Histórico de Agendamentos</h1>
 
-    <?php if (!empty($agendamentos)): ?>
-        <div class="cards-container">
-            <?php foreach ($agendamentos as $ag): ?>
-                <div class="card-agendamento">
-                    <div class="card-header">
-                        <h2><?= htmlspecialchars($ag['procedimento']) ?></h2>
+    <section style="width:100%; max-width:1000px; margin-bottom:2.5rem;">
+        <h2 style="color:var(--cor2); margin-bottom:1rem;">Será realizado</h2>
+        <?php if (!empty($sera_realizado)): ?>
+            <div class="cards-container">
+                <?php foreach ($sera_realizado as $ag): ?>
+                    <div class="card-agendamento">
+                        <div class="card-header">
+                            <h2><?= htmlspecialchars($ag['procedimento']) ?></h2>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Data:</strong> <?= date('d/m/Y', strtotime($ag['a_dia'])) ?></p>
+                            <p><strong>Hora:</strong> <?= htmlspecialchars($ag['a_hora']) ?></p>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p><strong>Data:</strong> <?= date('d/m/Y', strtotime($ag['a_dia'])) ?></p>
-                        <p><strong>Hora:</strong> <?= htmlspecialchars($ag['a_hora']) ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="mensagem-vazia">Nenhum agendamento futuro encontrado.</p>
+        <?php endif; ?>
+    </section>
+
+    <section style="width:100%; max-width:1000px;">
+        <h2 style="color:var(--cor2); margin-bottom:1rem;">Realizados</h2>
+        <?php if (!empty($realizados)): ?>
+            <div class="cards-container">
+                <?php foreach ($realizados as $ag): ?>
+                    <div class="card-agendamento">
+                        <div class="card-header" style="background: #e9ecef; color: var(--cor1);">
+                            <h2><?= htmlspecialchars($ag['procedimento']) ?></h2>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Data:</strong> <?= date('d/m/Y', strtotime($ag['a_dia'])) ?></p>
+                            <p><strong>Hora:</strong> <?= htmlspecialchars($ag['a_hora']) ?></p>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p class="mensagem-vazia">Nenhum agendamento encontrado 😢</p>
-    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="mensagem-vazia">Nenhum agendamento realizado ainda.</p>
+        <?php endif; ?>
+    </section>
 </main>
 
 <?php include(FOOTER_TEMPLATE); ?>
 
 <style>
-/* ====== Estilo Histórico (Lunaris) ====== */
+/* ====== Estilo Histórico (mantido) ====== */
 .container-historico {
     padding: 4rem 2rem;
     background: var(--cor3);
@@ -73,65 +110,27 @@ try {
     flex-direction: column;
     align-items: center;
 }
-
 .titulo-historico {
     font-family: 'Playfair Display', serif;
     color: var(--cor2);
     font-size: 2.4rem;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     text-align: center;
 }
-
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     width: 100%;
-    max-width: 1000px;
 }
-
 .card-agendamento {
     background: #fff;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-agendamento:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.card-header {
-    background: var(--cor2);
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-}
-
-.card-header h2 {
-    font-size: 1.4rem;
-    margin: 0;
-}
-
-.card-body {
-    padding: 1.2rem 1.5rem;
-    color: var(--cor1);
-    font-family: 'Open Sans', sans-serif;
-}
-
-.card-body p {
-    margin: 0.4rem 0;
-    font-size: 1rem;
-}
-
-.mensagem-vazia {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 1.5rem 2rem;
     border-radius: 1rem;
-    color: var(--cor2);
-    font-size: 1.2rem;
-    text-align: center;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
 }
+.card-header { padding: 0.9rem; text-align:center; background: var(--cor2); color:#fff; }
+.card-body { padding: 1rem; color: var(--cor1); }
+.mensagem-vazia { background: rgba(255,255,255,0.15); padding: 1rem 1.2rem; border-radius: 10px; text-align:center; color:var(--cor2); }
 </style>

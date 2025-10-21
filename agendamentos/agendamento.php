@@ -272,12 +272,36 @@
   color: #73213d;
 }
 
-/* small screens */
-@media (max-width: 480px) {
-  .dropdown-content { max-height: 48vh; }
-  .dropdown-item { padding: 10px; gap: 12px; }
-  .dropdown-item input[type="checkbox"] { width: 20px; height: 20px; }
+/* preço do procedimento no dropdown - separação visual */
+.dropdown-item .proc-price {
+  margin-left: 12px;
+  color: #6b2b3b;
+  font-weight: 700;
+  flex: 0 0 auto;
 }
+
+/* nome do procedimento no dropdown */
+.dropdown-item .proc-name {
+  flex: 1 1 auto;
+  padding-right: 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* ===== Summary spacing ===== */
+#summary-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 6px;
+  border-bottom: 1px dashed rgba(0,0,0,0.04);
+  align-items: center;
+}
+#summary-list li span:first-child { color: #73213d; text-align:left; flex:1; }
+#summary-list li span:last-child { color: #333; font-weight:700; white-space:nowrap; margin-left:8px; }
+#summary-total { color: #73213d; }
+#summary-range { color: #666; font-size:0.95rem; }
+/* ...existing code... */
 </style>
 
 <script>
@@ -759,7 +783,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // include duration and value so the form and JS can use them
         $stmt = $db->query("SELECT id, p_nome, p_duracao, p_valor FROM procedimentos ORDER BY p_nome ASC");
         $procedimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        close_database($db);
     } catch (PDOException $e) {
         $message = "Erro ao carregar procedimentos: " . $e->getMessage();
         $type = "danger";
@@ -769,6 +792,11 @@ document.addEventListener('DOMContentLoaded', function() {
     $agendamentos = [];
     try {
         $db = open_database();
+        // include duration and value so the form and JS can use them
+        $stmt = $db->query("SELECT id, p_nome, p_duracao, p_valor FROM procedimentos ORDER BY p_nome ASC");
+        $procedimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // buscar apenas agendamentos futuros do usuário (data+hora posterior ao momento atual)
         $sql = "
             SELECT
                 a.id,
@@ -779,17 +807,19 @@ document.addEventListener('DOMContentLoaded', function() {
             FROM agendamento a
             JOIN procedimentos p ON a.id_p = p.id
             WHERE a.id_u = :id_u
-            ORDER BY a.a_dia DESC, a.a_hora DESC
+              AND CONCAT(a.a_dia, ' ', a.a_hora) > NOW()
+            ORDER BY a.a_dia ASC, a.a_hora ASC
         ";
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id_u', $_SESSION['id'], PDO::PARAM_INT);
         $stmt->execute();
         $agendamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         close_database($db);
-    } catch (PDOException $e) {
-        $message = "Erro ao carregar agendamentos: " . $e->getMessage();
-        $type = "danger";
-    }
+     } catch (PDOException $e) {
+         $message = "Erro ao carregar agendamentos: " . $e->getMessage();
+         $type = "danger";
+     }
 
 ?>
 <?php
@@ -802,24 +832,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <!-- Dropdown de Procedimentos -->
       <div class="form-group dropdown-group">
-        <label for="procedimentosDropdown">Procedimentos (máx. 3):</label>
-        <div class="dropdown-wrapper">
+        <label for="procedimentos">Procedimentos</label>
+        <div class="dropdown-wrapper" id="procPanel">
           <button type="button" id="dropdownButton" class="dropdown-btn">Selecionar procedimentos ▼</button>
-          <div id="dropdownContent" class="dropdown-content">
-            <?php foreach ($procedimentos as $p): 
-              $d = $p['p_duracao'] ?? '00:30';
-              $val = $p['p_valor'] ?? '0';
-              $checked = (isset($old['id_p']) && in_array($p['id'], (array)$old['id_p'])) ? 'checked' : '';
-            ?>
-            <label class="dropdown-item">
-              <input type="checkbox" name="id_p[]" value="<?= $p['id'] ?>"
-                     data-name="<?= htmlspecialchars($p['p_nome'], ENT_QUOTES, 'UTF-8') ?>"
-                     data-dur="<?= $d ?>" data-valor="<?= $p['p_valor'] ?>" <?= $checked ?>>
-              <?= htmlspecialchars($p['p_nome']) ?> — R$ <?= htmlspecialchars($p['p_valor']) ?> (<?= $d ?>)
-            </label>
+          <div id="dropdownContent" class="dropdown-content" aria-hidden="true">
+            <?php foreach ($procedimentos as $p): ?>
+              <?php
+                $p_id = (int) $p['id'];
+                $p_nome = htmlspecialchars($p['p_nome'], ENT_QUOTES);
+                $p_valor = number_format(floatval($p['p_valor']), 2, ',', '.');
+                $p_dur = $p['p_duracao'] ?? '00:30';
+              ?>
+              <label class="dropdown-item">
+                <input type="checkbox" name="id_p[]" value="<?= $p_id ?>"
+                      
+                       data-valor="<?= htmlspecialchars($p['p_valor'], ENT_QUOTES) ?>"
+                       data-name="<?= $p_nome ?>">
+                <span class="proc-name"><?= $p_nome ?></span>
+                <span class="proc-price">R$ <?= $p_valor ?></span>
+              </label>
             <?php endforeach; ?>
           </div>
         </div>
+        <small id="proc-counter-text" class="form-text text-muted">Selecionados 0/3</small>
       </div>
 
       <!-- Data e Hora -->
@@ -839,10 +874,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <!-- Resumo -->
       <div class="summary-box" id="summary">
-        <h4>Resumo</h4>
-        <ul class="summary-list" id="summary-list"><li>Nenhum procedimento selecionado.</li></ul>
-        <div class="summary-total" id="summary-total"></div>
-        <div class="summary-range" id="summary-range"></div>
+        <h3 style="margin:0 0 8px 0; color:var(--cor2); font-size:1rem;">Resumo</h3>
+        <ul id="summary-list" style="margin:0; padding:0; list-style:none;"></ul>
+        <div id="summary-total" style="margin-top:10px; font-weight:700;"></div>
+        <div id="summary-range" style="color:#666; font-size:0.95rem; margin-top:6px;"></div>
       </div>
 
       <button type="submit" class="btn-agendar">Agendar</button>
@@ -901,6 +936,7 @@ document.addEventListener('DOMContentLoaded', function() {
 #agendamento {
   background: #faefe7;
   padding: 50px 5%;
+  padding-top: 110px; /* aumento para não ficar colado no header fixo */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -923,13 +959,6 @@ document.addEventListener('DOMContentLoaded', function() {
   text-align: center;
 }
 
-.form-agendamento h2 {
-  font-family: "Playfair Display", serif;
-  font-size: 2rem;
-  color: #73213d;
-  margin-bottom: 10px;
-}
-
 /* ======= Campos ======= */
 .form-group {
   display: flex;
@@ -939,33 +968,9 @@ document.addEventListener('DOMContentLoaded', function() {
   gap: 8px;
 }
 
-.form-group label {
-  font-weight: 600;
-  color: #73213d;
-}
-
-.form-group input,
-.form-group select {
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: 1px solid #d1b2b7;
-  font-size: 1rem;
-  width: 100%;
-  max-width: 400px;
-  background-color: #fffaf9;
-  transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #a05a6f;
-  box-shadow: 0 0 5px rgba(160, 90, 111, 0.3);
-  outline: none;
-}
-
 /* ======= Painel de Procedimentos ======= */
 .proc-panel {
-  display: block; /* Corrige o erro de não aparecer */
+  display: block;
   background: #fff9f8;
   border: 1px solid #f1d7db;
   border-radius: 14px;
@@ -973,59 +978,6 @@ document.addEventListener('DOMContentLoaded', function() {
   width: 100%;
   max-width: 700px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.proc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-top: 10px;
-}
-
-.proc-card {
-  background: #fff;
-  border: 1px solid #eed3d7;
-  border-radius: 12px;
-  padding: 12px;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.proc-card:hover {
-  background: #fff2f4;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
-}
-
-.proc-card.selected {
-  border-color: #c76d8b;
-  background: #ffe9ef;
-}
-
-.proc-card label {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-}
-
-.proc-card input[type="checkbox"] {
-  accent-color: #c76d8b;
-  transform: scale(1.2);
-}
-
-.proc-name {
-  font-weight: 600;
-  color: #73213d;
-}
-
-.proc-meta {
-  font-size: 0.85rem;
-  color: #666;
 }
 
 /* ======= Resumo ======= */
@@ -1037,39 +989,6 @@ document.addEventListener('DOMContentLoaded', function() {
   text-align: left;
   width: 100%;
   max-width: 700px;
-}
-
-.summary-box h4 {
-  color: #73213d;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.summary-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.summary-list li {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px dashed #eee;
-  color: #444;
-}
-
-.summary-total {
-  font-weight: 600;
-  margin-top: 8px;
-  color: #73213d;
-  text-align: right;
-}
-
-.summary-range {
-  font-size: 0.85rem;
-  color: #777;
 }
 
 /* ======= Botão ======= */
@@ -1110,11 +1029,16 @@ document.addEventListener('DOMContentLoaded', function() {
   background: transparent;
 }
 
+/* CENTRALIZA os nomes/células da tabela (header e corpo) */
+.tabela-lunaris thead th,
+.tabela-lunaris tbody td {
+  text-align: center;
+}
+
 .tabela-lunaris thead th {
   background: linear-gradient(90deg, #fff8f7, #fff);
   color: #73213d;
   padding: 12px 14px;
-  text-align: left;
   font-weight: 700;
   font-size: 0.95rem;
   border-bottom: 2px solid rgba(115,33,61,0.06);
@@ -1153,9 +1077,21 @@ document.addEventListener('DOMContentLoaded', function() {
   font-size: 0.9rem;
 }
 
-.tabela-lunaris button:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
+/* ====== Remover exibição do tempo dentro do dropdown ======
+   - oculta elementos que contenham atributo data-dur dentro do painel dropdown
+   - oculta elementos com classe .proc-duration dentro do dropdown
+   (se necessário, ajuste a classe conforme template de saída dos procedimentos)
+*/
+#dropdownContent [data-dur],
+#dropdownContent .proc-duration,
+.dropdown-item [data-dur] {
+  display: none !important;
+}
+
+/* fallback: pequenos spans/elem de duração dentro do dropdown */
+#dropdownContent .proc-meta small,
+#dropdownContent .proc-meta .duracao {
+  display: none !important;
 }
 
 /* ensure header cells don't look cramped on small screens */

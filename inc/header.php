@@ -47,6 +47,14 @@
                 <li class="nav-item">
                     <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>#contato">Contato</a>
                 </li>
+
+                <?php
+                // mostra opção "Clientes" no header apenas para administrador
+                if (function_exists('is_admin') && is_admin()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link ms-4 me-4" href="<?php echo BASEURL; ?>clientes/index.php">Clientes</a>
+                    </li>
+                <?php endif; ?>
             </ul>
 
             <!-- LOGIN OU AVATAR -->
@@ -82,7 +90,11 @@
                 <p class="mb-1 fw-semibold text-uppercase small">Conta</p>
                 <a href="<?= BASEURL ?>inc/alterar_senha.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-lock"></i> Alterar senha</a>
                 <a href="<?= BASEURL ?>agendamentos/historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
-                <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Clientes</a>
+
+                <?php if (function_exists('is_admin') && is_admin()): ?>
+                    <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Clientes</a>
+                <?php endif; ?>
+
                 <button class="btn btn-outline-warning w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>
             </div>
 

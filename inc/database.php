@@ -191,4 +191,10 @@ function clear_messages() {
     $_SESSION['type'] = null;
 }
 
+/* Função helper para verificar se o usuário atual é o administrador
+   (telefone cadastrado: 15998009620). Garante sessão iniciada. */
+function is_admin() {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    return isset($_SESSION['user']) && $_SESSION['user'] === '15998009620';
+}
 ?>

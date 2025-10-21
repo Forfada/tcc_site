@@ -1,6 +1,15 @@
 <?php 
-  
     include('functions.php'); 
+
+    // somente administrador pode acessar esta página
+    if (!function_exists('is_admin') || !is_admin()) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+        $_SESSION['type'] = "danger";
+        header("Location: " . BASEURL . "index.php");
+        exit;
+    }
+
     add();
     include(HEADER_TEMPLATE);
     include(INIT);

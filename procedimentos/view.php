@@ -203,7 +203,7 @@
             </div>
 
             <div class="view-proc-btns">
-                <?php if (isset($_SESSION['user']) && $_SESSION['user'] === 'admin'): ?>
+                <?php if (function_exists('is_admin') && is_admin()): ?>
                     <a class="buttonc" href="<?php echo BASEURL; ?>procedimentos/edit.php?id=<?php echo $proc['id']; ?>"><i class="fa-regular fa-pen-to-square"></i> Editar Procedimento</a>
                     <a href="#" class="buttonc"
                         data-bs-toggle="modal" data-bs-target="#delete-proc-modal" data-procedimentos="<?php echo $proc['id']; ?>">

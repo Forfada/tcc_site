@@ -1,33 +1,19 @@
 <?php 
-  
     include('functions.php'); 
+
+    // somente administrador pode acessar esta página
+    if (!function_exists('is_admin') || !is_admin()) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+        $_SESSION['type'] = "danger";
+        header("Location: " . BASEURL . "index.php");
+        exit;
+    }
+
     edit($_GET["id"]);
     include(HEADER_TEMPLATE);
     include(INIT);
-    
-
-  /*if (!isset($_SESSION)) session_start();
-    if (isset($_SESSION['user'])) { // Verifica se tem um usuário logado
-        if ($_SESSION['user'] != "mazi") {
-            $_SESSION["message"] = "Você precisa ser administrador para acessar esse recurso!";
-            $_SESSION['type'] = "danger";
-            header("Location:" . BASEURL ."index.php");
-        }
-    } else {
-        $_SESSION["message"] = "Você precisa estar logado e ser administrador para acessar esse recurso!";
-        $_SESSION["type"] = "danger";
-    }
-
-
-  include(HEADER_TEMPLATE); */
-  
 ?>
-            <?php// if (!empty($_SESSION['message'])) : ?>
-                <!--<div class="alert alert-<?php// echo $_SESSION['type']; ?> alert-dismissible" role="alert">
-                    <?php //echo $_SESSION['message']; ?>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>-->
-            <?php //else : ?>
 
     <style>
         .form-group{

@@ -1,6 +1,15 @@
 <?php
     include('functions.php');
 
+    // somente administrador pode acessar a área de clientes
+    if (!function_exists('is_admin') || !is_admin()) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+        $_SESSION['type'] = "danger";
+        header("Location: " . BASEURL . "index.php");
+        exit;
+    }
+    
     // valida client_id vindo via GET ou POST
     $client_id = null;
     if (!empty($_GET['client_id'])) $client_id = intval($_GET['client_id']);

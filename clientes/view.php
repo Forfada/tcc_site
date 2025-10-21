@@ -30,15 +30,8 @@
 
 <section class="clientes section-light section-cor3 py-5" id="clientes">
      <div class="container mt-5" style="margin-top: 6rem !important;">
-        <div class="row mb-4">
-            <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                <h2 class="txt1"><?php echo $cli['cli_nome']; ?></h2>
-                <div class="d-flex gap-2">
-                    <a href="index.php" class="btn btn-dark btn-sm">&larr; Voltar</a>
-                    <a href="edit.php?id=<?php echo $cli['id']; ?>" class="btn btn-secondary btn-sm">Editar</a>
-                </div>
-            </div>
-        </div>
+        <h2 class="txt1 mb-1 text-center">aaaaaaaaaaaaaa</h2>
+        <p class="txt4 text-center mb-2">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
 
         <div class="container my-5">
 				<div class="row my-5">
@@ -48,7 +41,17 @@
                             <table class="tabela-lunaris">
                                 <thead>
                                     <tr>
-                                    
+                                    <th scope="col" colspan="4" class="mb-0 text-start"><h5>Cliente: <?php echo $cli['cli_nome']; ?></h5></th>
+                                    <th scope="col" colspan="1" class="mb-0">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="index.php" class="btn btn-dark btn-sm">&larr; Voltar</a>
+                                            <a href="edit.php?id=<?php echo $cli['id']; ?>" class="btn btn-secondary btn-sm">Editar</a>
+                                        </div>
+                                    </th>
+                                    </tr>
+                                </thead>
+                                <thead>
+                                    <tr>
                                     <th style="width:7%">Idade</th>
                                     <th style="width:17%">CPF</th>
                                     <th style="width:17%">Telefone</th>

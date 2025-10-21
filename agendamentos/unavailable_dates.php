@@ -2,6 +2,16 @@
 include '../config.php';
 include(DBAPI);
 
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// proteção: só usuários logados podem consultar indisponibilidades
+if (empty($_SESSION['id'])) {
+    http_response_code(401);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([]);
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 
 $start = $_GET['start'] ?? date('Y-m-d');

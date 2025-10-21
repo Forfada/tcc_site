@@ -89,10 +89,17 @@
             <div>
                 <p class="mb-1 fw-semibold text-uppercase small">Conta</p>
                 <a href="<?= BASEURL ?>inc/alterar_senha.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-lock"></i> Alterar senha</a>
-                <a href="<?= BASEURL ?>agendamentos/historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
 
-                <?php if (function_exists('is_admin') && is_admin()): ?>
-                    <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Clientes</a>
+                <?php
+                // Mostrar links diferentes quando o usuário for administrador:
+                // - se for admin: exibir os dois links administrativos (futuros + histórico admin) e Clientes
+                // - se não for admin: exibir somente o histórico do próprio usuário
+                if (function_exists('is_admin') && is_admin()): ?>
+                    <a href="<?= BASEURL ?>agendamentos/admin_upcoming.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-calendar-days"></i> Agendamentos (Futuros)</a>
+                    <a href="<?= BASEURL ?>agendamentos/admin_historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-file-lines"></i> Histórico (Admin)</a>
+                    <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-users"></i>  Clientes</a>
+                <?php else: ?>
+                    <a href="<?= BASEURL ?>agendamentos/historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
                 <?php endif; ?>
 
                 <button class="btn btn-outline-warning w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>

@@ -2,6 +2,13 @@
 include '../config.php';
 include DBAPI;
 session_start(); // garantir sessão antes do HEADER
+
+// se for administrador, redireciona para o histórico admin (não usar o histórico de usuário)
+if (function_exists('is_admin') && is_admin()) {
+    header('Location: ' . BASEURL . 'agendamentos/admin_historico.php');
+    exit();
+}
+
 include (HEADER_TEMPLATE);
 
 if (!isset($_SESSION['id'])) {

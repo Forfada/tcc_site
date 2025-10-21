@@ -1,7 +1,16 @@
 <?php
 include '../config.php';
 include(DBAPI);
-// always return JSON
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// proteção: só usuários logados podem consultar horários
+if (empty($_SESSION['id'])) {
+    http_response_code(401);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([]);
+    exit;
+}
+
 header('Content-Type: application/json; charset=utf-8');
 if (!isset($_GET['data'])) {
     echo json_encode([]);

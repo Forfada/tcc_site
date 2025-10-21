@@ -40,29 +40,39 @@
             </div>
         </div>
 
-        <div class="row justify-content-start mb-4">
-            <div class="col-md-3 text-center mb-3 mb-md-0">
-                <!-- Avatar estilizado -->
-                <div class="avatar-placeholder mx-auto mb-1"><?php echo strtoupper(substr($cli['cli_nome'],0,1)); ?></div>
-                <h3 class="txt4"><?php echo htmlspecialchars($cli['cli_nome']); ?></h3>
-            </div>
+        <div class="container my-5">
+				<div class="row my-5">
+					<div class="col-12">
+						
+                        <div class="tabela-wrapper">
+                            <table class="tabela-lunaris">
+                                <thead>
+                                    <tr>
+                                    
+                                    <th style="width:7%">Idade</th>
+                                    <th style="width:17%">CPF</th>
+                                    <th style="width:17%">Telefone</th>
+                                    <th style="width:14%">Nascimento</th>
+                                    <th style="width:45%">Observação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        
+                                        <td><?php echo htmlspecialchars($cli['cli_idade']); ?></td>
+                                        <td><?php echo cpf($cli['cli_cpf']); ?></td>
+                                        <td><?php echo telefone($cli['cli_num']); ?></td>
+                                        <td><?php echo formatadata($cli['cli_nasc']); ?></td>
+                                        <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($cli['cli_obs']); ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-            <div class="col-md-7">
-                <div class="info-grid">
-                    <div>
-                        <span class="info-label text-start">Idade</span><div class="info-value text-start"><?php echo htmlspecialchars($cli['cli_idade']); ?></div>
-                        <span class="info-label text-start">CPF</span><div class="info-value text-start"><?php echo cpf($cli['cli_cpf']); ?></div>
-                    </div>
-                    <div>
-                        <span class="info-label text-start">Telefone</span><div class="info-value text-start"><?php echo telefone($cli['cli_num']); ?></div>
-                        <span class="info-label text-start">Nascimento</span><div class="info-value text-start"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div>
-                    </div>
-                    <div>
-                        <span class="info-label text-start">Observação</span><div class="info-value text-start" style="word-wrap: break-word; word-break: break-word;"><?php echo $cli['cli_obs']; ?></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+					</div>	
+				</div>
+			</div>
+
 
         <div class="row">
             <div class="col-12">
@@ -200,6 +210,101 @@
         padding: 1rem;
         
     }
+
+.card{
+    border: none;
+}
+
+/* ======= Tabela (novo visual elegante) ======= */
+.tabela-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  background: linear-gradient(180deg, #fff, #fffaf9);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 28px rgba(35,20,30,0.08);
+  overflow-x: auto;
+  border: 1px solid rgba(115,33,61,0.06);
+}
+
+.tabela-lunaris {
+  width: 100%;
+  border-collapse: collapse;
+  color: #2d2d2d;
+  font-family: "Inter", "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: transparent;
+}
+
+/* CENTRALIZA os nomes/células da tabela (header e corpo) */
+.tabela-lunaris thead th,
+.tabela-lunaris tbody td {
+  text-align: center;
+}
+
+.tabela-lunaris thead th {
+  background: linear-gradient(90deg, #fff8f7, #fff);
+  color: #73213d;
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 2px solid rgba(115,33,61,0.06);
+}
+
+.tabela-lunaris tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(115,33,61,0.04);
+  vertical-align: middle;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.tabela-lunaris tbody tr {
+  background: transparent;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.tabela-lunaris tbody tr:hover {
+  background: linear-gradient(90deg, rgba(115,33,61,0.03), rgba(160,90,111,0.02));
+  transform: translateY(-2px);
+}
+
+.tabela-lunaris tbody tr:nth-child(even) {
+  background: rgba(115,33,61,0.02);
+}
+
+.tabela-lunaris button {
+  background: linear-gradient(180deg, #a05a6f, #73213d);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ====== Remover exibição do tempo dentro do dropdown ======
+   - oculta elementos que contenham atributo data-dur dentro do painel dropdown
+   - oculta elementos com classe .proc-duration dentro do dropdown
+   (se necessário, ajuste a classe conforme template de saída dos procedimentos)
+*/
+#dropdownContent [data-dur],
+#dropdownContent .proc-duration,
+.dropdown-item [data-dur] {
+  display: none !important;
+}
+
+/* fallback: pequenos spans/elem de duração dentro do dropdown */
+#dropdownContent .proc-meta small,
+#dropdownContent .proc-meta .duracao {
+  display: none !important;
+}
+
+/* ensure header cells don't look cramped on small screens */
+@media (max-width: 768px) {
+  .tabela-lunaris thead th, .tabela-lunaris tbody td { padding: 10px 8px; font-size: 0.9rem; }
+  .tabela-wrapper { padding: 12px; }
+} 
 </style>
 
 <?php include(FOOTER_TEMPLATE); ?>

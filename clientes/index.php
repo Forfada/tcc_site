@@ -50,6 +50,7 @@ index();
                     <?php if ($clientes) : ?>
                         <?php foreach ($clientes as $cli) : ?>
                             <tr>
+                                
                                 <td><?php echo $cli["id"]; ?></td>
                                 <td><?php echo $cli["cli_nome"]; ?></td>
                                 <td><?php echo telefone($cli["cli_num"]); ?></td>

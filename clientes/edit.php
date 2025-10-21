@@ -51,10 +51,14 @@
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-md-3 d-flex justify-content-center gap-2 form">
+                <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
                         <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" value="<?php echo date('Y-m-d', strtotime($cli['cli_nasc'])); ?>">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cli_obs">Observação</label>
+                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1 value="<?php echo $cli['cli_obs']; ?>"></textarea>
                     </div>
                 </div>
             </div>

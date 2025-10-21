@@ -31,29 +31,25 @@
             </div>
         </div>
 
-        <div class="row align-items-center mb-4">
+        <div class="row justify-content-start mb-4">
             <div class="col-md-3 text-center mb-3 mb-md-0">
                 <!-- Avatar estilizado -->
                 <div class="avatar-placeholder mx-auto mb-1"><?php echo strtoupper(substr($cli['cli_nome'],0,1)); ?></div>
                 <h3 class="txt4"><?php echo htmlspecialchars($cli['cli_nome']); ?></h3>
             </div>
 
-            <div class="col-md-9">
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    
-                </div>
-
+            <div class="col-md-7">
                 <div class="info-grid">
                     <div>
-                        <span class="info-label">Idade</span><div class="info-value"><?php echo htmlspecialchars($cli['cli_idade']); ?></div>
-                        <span class="info-label">CPF</span><div class="info-value"><?php echo cpf($cli['cli_cpf']); ?></div>
+                        <span class="info-label text-start">Idade</span><div class="info-value text-start"><?php echo htmlspecialchars($cli['cli_idade']); ?></div>
+                        <span class="info-label text-start">CPF</span><div class="info-value text-start"><?php echo cpf($cli['cli_cpf']); ?></div>
                     </div>
                     <div>
-                        <span class="info-label">Telefone</span><div class="info-value"><?php echo telefone($cli['cli_num']); ?></div>
-                        <span class="info-label">Nascimento</span><div class="info-value"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div>
+                        <span class="info-label text-start">Telefone</span><div class="info-value text-start"><?php echo telefone($cli['cli_num']); ?></div>
+                        <span class="info-label text-start">Nascimento</span><div class="info-value text-start"><?php echo formatadata($cli['cli_nasc'], 'd/m/Y'); ?></div>
                     </div>
                     <div>
-                        <span class="info-label">Observação</span><div class="info-value"><?php echo $cli['cli_obs']; ?></div>
+                        <span class="info-label text-start">Observação</span><div class="info-value text-start" style="word-wrap: break-word; word-break: break-word;"><?php echo $cli['cli_obs']; ?></div>
                     </div>
                 </div>
             </div>
@@ -163,26 +159,32 @@
     }
 
     .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 0.75rem 1.5rem;
-        margin-top: .5rem;
-        justify-items: start;
-        justify-content: start;
-    }
+    display: flex;  /* Usa flexbox ao invés de grid */
+    flex-wrap: wrap; /* Permite que os itens se ajustem para a próxima linha, se necessário */
+    gap: 0.5rem 0.25rem; /* Reduz o espaço entre as colunas (horizontal) e entre as linhas (vertical) */
+    
+}
 
-    .info-label {
-        display: block;
-        font-size: 1rem;
-        color: #6c757d;
-        margin-bottom: .25rem;
-    }
+.info-grid > div {
+    flex: 1 1 30%; /* Faz com que as colunas ocupem 30% do espaço disponível e quebrem para a linha seguinte quando necessário */
+    margin-bottom: 0.5rem; /* Espaçamento inferior para as colunas */
+}
 
-    .info-value {
-        font-size: 1rem;
-        color: #212529;
-        font-weight: 600;
-    }
+.info-label, .info-value {
+    display: block;
+    font-size: 1rem;
+    color: #212529;
+}
+
+.info-label {
+    color: #6c757d;
+    margin-bottom: .25rem;
+}
+
+.info-value {
+    font-weight: 600;
+}
+
 
     .anamnese-panel {
         background-color: transparent;

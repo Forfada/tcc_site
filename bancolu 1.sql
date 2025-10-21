@@ -13,8 +13,8 @@ CREATE TABLE clientes (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `clientes` (`id`, `cli_nome`, `cli_idade`, `cli_cpf`, `cli_num`, `cli_nasc`)
- VALUES (1, 'Rafaela Morais', '18', '503.346.718-25', '15997444383', '2006-01-10'),
- (2, 'Thiego França', '18', '503.643.817-52', '15998009628', '2006-12-24');
+ VALUES (1, 'Rafaela Morais', '18', '50334671825', '15997444383', '2006-01-10'),
+ (2, 'Thiego França', '18', '50364381752', '15998009628', '2006-12-24');
  
  ALTER TABLE `clientes`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
@@ -53,7 +53,7 @@ CREATE TABLE usuarios (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
-(1, '15998009628', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.UFZ6Sp2bbz/FEWdXSFF6hx71tGrjUc.', 'avatar1.png');
+(1, '15998009628', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png');
 
 
 -- criando tabela: agendamento

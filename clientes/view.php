@@ -87,7 +87,21 @@
                                         <tr>
                                             <th>Hipertensão</th>
                                             <th>Diabetes</th>
-                                            <th>Câncer</th>
+                                            <th style="width: 5%">Câncer</th>
+                                            <th>Fumante</th>
+                                            <th style="width: 5%">Alergia</th>
+                                            <th>Gravidez</th>
+                                            <th style="width: 5%">Herpes</th>
+                                            <th>Queloide</th>
+                                            <th>Hepatite</th>
+                                            <th>Cardiopata</th>
+                                            <th style="width: 5%">Anemia</th>
+                                            <th>Depressão</th>
+                                            <th>Glaucoma</th>
+                                            <th style="width: 2%">HIV</th>
+                                            <th>Doença Pele</th>
+                                            <th>Remédio Acne</th>
+                                            <th>Outro</th>
                                             <th>Medicações</th>
                                             <th>Registrado em</th>
                                             <th>Ações</th>
@@ -98,7 +112,21 @@
                                         <tr>
                                             <td><?php echo htmlspecialchars($a['an_hipertensao']); ?></td>
                                             <td><?php echo htmlspecialchars($a['an_diabetes']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_cancer']); ?></td>
+                                            <td style="width: 5%"><?php echo htmlspecialchars($a['an_cancer']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_fumante']); ?></td>
+                                            <td style="width: 5%"><?php echo htmlspecialchars($a['an_alergia']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_gravidez']); ?></td>
+                                            <td style="width: 5%"><?php echo htmlspecialchars($a['an_herpes']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_cardiopata']); ?></td>
+                                            <td style="width: 2%"><?php echo htmlspecialchars($a['an_anemia']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_depressao']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_glaucoma']); ?></td>
+                                            <td style="width: 5%"><?php echo htmlspecialchars($a['an_hiv']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_pele']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_acne']); ?></td>
+                                            <td><?php echo htmlspecialchars($a['an_outro']); ?></td>
                                             <td><?php echo nl2br(htmlspecialchars($a['an_medic'])); ?></td>
                                             <td><?php echo formatadata($a['an_data']); ?></td>
                                             <td>
@@ -150,6 +178,117 @@
         padding-left: 5%;
         padding-right: 5%;
         justify-content: center;
+    }
+}
+
+/* ===== Compact table buttons and tighter anamnese columns ===== */
+/* reduce cell padding / font-size only for the anamnese table */
+.anamnese-panel .tabela-lunaris thead th,
+.anamnese-panel .tabela-lunaris tbody td {
+    padding: 6px 8px;
+    font-size: 0.86rem;
+    vertical-align: middle;
+}
+
+/* compact buttons/links inside the anamnese table */
+.anamnese-panel .tabela-lunaris button,
+.anamnese-panel .tabela-lunaris a.buttonc,
+.anamnese-panel .view-cli-btns a.buttonc {
+    padding: 6px 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+    line-height: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: auto;
+}
+
+/* force narrower widths for the many short boolean columns (override inline styles if present) */
+.anamnese-panel .tabela-lunaris thead th:nth-child(-n+14),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(-n+14) {
+    width: 5% !important;
+    max-width: 5% !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* slightly wider for descriptive small columns */
+.anamnese-panel .tabela-lunaris thead th:nth-child(15),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(15) {
+    width: 9% !important;
+    max-width: 9% !important;
+}
+.anamnese-panel .tabela-lunaris thead th:nth-child(16),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(16) {
+    width: 9% !important;
+    max-width: 9% !important;
+}
+.anamnese-panel .tabela-lunaris thead th:nth-child(17),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(17) {
+    width: 9% !important;
+    max-width: 9% !important;
+}
+
+/* medicações, data e ações */
+.anamnese-panel .tabela-lunaris thead th:nth-child(18),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(18) {
+    width: 12% !important;
+    max-width: 12% !important;
+}
+.anamnese-panel .tabela-lunaris thead th:nth-child(19),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(19) {
+    width: 8% !important;
+    max-width: 8% !important;
+    white-space: nowrap;
+}
+.anamnese-panel .tabela-lunaris thead th:nth-child(20),
+.anamnese-panel .tabela-lunaris tbody td:nth-child(20) {
+    width: 10% !important;
+    max-width: 10% !important;
+}
+
+/* responsive adjustments so table remains usable on very small screens */
+@media (max-width: 768px) {
+    .anamnese-panel .tabela-lunaris thead th,
+    .anamnese-panel .tabela-lunaris tbody td {
+        padding: 6px 6px;
+        font-size: 0.84rem;
+    }
+    .anamnese-panel .tabela-lunaris thead th:nth-child(-n+14),
+    .anamnese-panel .tabela-lunaris tbody td:nth-child(-n+14) {
+        width: 6% !important;
+        max-width: 6% !important;
+    }
+    .anamnese-panel .tabela-lunaris thead th:nth-child(18),
+    .anamnese-panel .tabela-lunaris tbody td:nth-child(18),
+    .anamnese-panel .tabela-lunaris thead th:nth-child(20),
+    .anamnese-panel .tabela-lunaris tbody td:nth-child(20) {
+        width: 12% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .view-cli-btns {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .buttonc {
+        width: 100%;
+        justify-content: center;
+
+    }
+    .view-cli-btns{
+        padding-left: 5%;
+        padding-right: 5%;
+        justify-content: center;
+    }
+    /* allow table to scroll naturally on very small screens */
+    .anamnese-panel .tabela-wrapper { overflow-x: auto; }
+    .anamnese-panel .tabela-lunaris thead th,
+    .anamnese-panel .tabela-lunaris tbody td {
+        white-space: nowrap;
     }
 }
 </style>

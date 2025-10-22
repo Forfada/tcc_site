@@ -68,7 +68,7 @@
 								<div class="card-content">
 									<h2 class="name"><?php echo ($proc['p_nome']); ?></h2>
 									<p class="description"><?php echo ($proc['p_descricao']); ?></p>
-									<button class="buttonc">Saber mais</button>
+									 <a href="procedimentos/view.php?id=<?php echo $proc['id']; ?>" class="buttonc" >Saber mais</a>
 								</div>
 							</div>
 						<?php endforeach; ?>

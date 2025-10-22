@@ -7,7 +7,7 @@
 					<div id="contato" class="col-md-4">
 						<h5 class="fw-bold mb-3" style="color:var(--cor1)">Contato</h5>
 						<p class="d-flex align-items-center justify-content-center justify-content-md-start">
-							<i class="fas fa-phone me-2"></i> (13) 99639-4246
+							<i class="fas fa-phone me-2"></i> (13) 98172-2031
 						</p>
 						<p class="d-flex align-items-center justify-content-center justify-content-md-start">
 							<i class="fas fa-envelope me-2"></i> lmoraes.farma@gmail.com
@@ -40,9 +40,8 @@
 				
 				<div class="social-icons text-center text-md-start">
 					<a href="https://www.instagram.com/larissamoraes_abe?igsh=ZjE4bGhvNnA5dXJs" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-					<a href="https://www.facebook.com/share/15tbYmLGpw/" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-					<a href="#" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-					<a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+					<a href="https://www.facebook.com/profile.php?id=61572506913122" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+					<a href="https://wa.me/13981722031" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 				</div>
 
 

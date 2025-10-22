@@ -50,13 +50,13 @@ index();
                     <tbody>
                         <?php if ($clientes) : ?>
                             <?php foreach ($clientes as $cli) : ?>
-                                <tr>
+                                <tr data-href="view.php?id=<?php echo $cli['id']; ?>" style="cursor: pointer;">
                                     <td><?php echo $cli["cli_nome"]; ?></td>
                                     <td><?php echo $cli["cli_cidade"]; ?></td>
                                     <td><?php echo telefone($cli["cli_num"]); ?></td>
                                     <td><?php echo formatadata($cli["cli_nasc"]); ?></td>
                                     <td class="actions text-center text-md-end d-flex flex-column gap-2">
-                                        <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto"><i class="fa fa-eye  me-2"></i> Visualizar</a>
+                                        <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto" onclick="event.stopPropagation();"><i class="fa fa-eye  me-2"></i> Visualizar</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -73,3 +73,25 @@ index();
 </section>
 
 <?php include(FOOTER_TEMPLATE); ?>
+
+<script>
+    // Make table rows with `data-href` clickable and keyboard-accessible
+    document.addEventListener('DOMContentLoaded', function () {
+        const rows = document.querySelectorAll('tr[data-href]');
+        rows.forEach(row => {
+            // make it focusable for accessibility
+            row.setAttribute('tabindex', '0');
+            row.addEventListener('click', function () {
+                const url = this.getAttribute('data-href');
+                if (url) window.location.href = url;
+            });
+            row.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const url = this.getAttribute('data-href');
+                    if (url) window.location.href = url;
+                }
+            });
+        });
+    });
+</script>

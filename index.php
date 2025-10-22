@@ -3,8 +3,21 @@
 	include(DBAPI);
 	include(HEADER_TEMPLATE);
 	if (!isset($_SESSION)) session_start();
-?>
 
+	$proc = null;
+	$procedimentos = null;
+	function index() {
+			global $procedimentos;
+			if (!empty($_POST['proc'])) {
+				$procedimentos = filter("procedimentos","p_nome like '%" . $_POST['proc'] . "%';");
+			}
+			else {
+				$procedimentos = find_all ("procedimentos");
+			}
+		}
+
+	index();
+?>
 <?php if (!empty($_SESSION['message'])) : ?>
 	<div class="container d-flex justify-content-center" style="margin-top: 120px;">
 		<div class="alert alert-<?php echo $_SESSION['type']; ?> alert-dismissible fade show w-75 text-center" role="alert">
@@ -44,70 +57,26 @@
 			<div class="slide-content">
 				<div class="card-wrapper swiper-wrapper">
 					<!-- Todos os cards do seu código original, sem alterações -->
-					<div class="card swiper-slide">
-						<div class="image-content"><span class="overlay"></span>
-							<div class="card-image">
-								<img src="<?php echo BASEURL; ?>procedimentos/imagens/hid_C.jpeg" alt="" class="card-img">
+					<?php if ($procedimentos) : ?>
+						<?php foreach ($procedimentos as $proc): ?>
+							<div class="card swiper-slide">
+								<div class="image-content"><span class="overlay"></span>
+									<div class="card-image">
+										<img src="procedimentos/imagens/<?php echo ($proc['p_foto']); ?>"  alt="<?php echo ($proc['p_nome']); ?>" class="card-img">
+									</div>
+								</div>
+								<div class="card-content">
+									<h2 class="name"><?php echo ($proc['p_nome']); ?></h2>
+									<p class="description"><?php echo ($proc['p_descricao']); ?></p>
+									<button class="buttonc">Saber mais</button>
+								</div>
 							</div>
-						</div>
-						<div class="card-content">
-							<h2 class="name">HidraColor</h2>
-							<p class="description">Realce e destaque a aparência de seus lábios com HidraColor, hidratando, renovando e realçando a cor de seus lábios.</p>
-							<button class="buttonc">Saber mais</button>
-						</div>
-					</div>
-					<div class="card swiper-slide">
-						<div class="image-content"><span class="overlay"></span>
-							<div class="card-image">
-								<img src="<?php echo BASEURL; ?>procedimentos/imagens/hid_L.jpeg" alt="" class="card-img">
-							</div>
-						</div>
-						<div class="card-content">
-							<h2 class="name">HidraLips</h2>
-							<p class="description">Renove e realce a aparência de seus lábios com nossa técnica de HidraLips, hidratando e dando brilho aos seus lábios.</p>
-							<button class="buttonc">Saber mais</button>
-						</div>
-					</div>
-					<div class="card swiper-slide">
-						<div class="image-content"><span class="overlay"></span>
-							<div class="card-image">
-								<img src="<?php echo BASEURL; ?>procedimentos/imagens/mic_l.jpeg" alt="" class="card-img">
-							</div>
-						</div>
-						<div class="card-content">
-							<h2 class="name">Micropigmentação Labial</h2>
-							<p class="description">Defina o contorno de sua boca, realce sua cor natural e corrija assimetrias indesejadas.</p>
-							<button class="buttonc">Saber mais</button>
-						</div>
-					</div>
-					<!-- Continuam todos os outros cards exatamente como no seu código original até o final -->
-					<div class="card swiper-slide">
-						<div class="image-content"><span class="overlay"></span>
-							<div class="card-image">
-								<img src="<?php echo BASEURL; ?>procedimentos/imagens/lash.jpg" alt="" class="card-img">
-							</div>
-						</div>
-						<div class="card-content">
-							<h2 class="name">Lash Lifting</h2>
-							<p class="description">Realce seu olhar com naturalidade, com cílios mais alongados, curvados e volumosos.</p>
-							<button class="buttonc">Saber mais</button>
-						</div>
-					</div>
-					<div class="card swiper-slide">
-						<div class="image-content"><span class="overlay"></span>
-							<div class="card-image">
-								<img src="<?php echo BASEURL; ?>procedimentos/imagens/care.jpg" alt="" class="card-img">
-							</div>
-						</div>
-						<div class="card-content">
-							<h2 class="name">Skin Care</h2>
-							<p class="description">Melhore sua autoestima com uma rotina personalizada de Skin Care, para tratar as o que mais te incomodam.</p>
-							<button class="buttonc">Saber mais</button>
-						</div>
-					</div>
+						<?php endforeach; ?>
+					<?php endif; ?>
 					<!-- TODOS OS CARDS ATÉ O FINAL DO SEU CÓDIGO ORIGINAL MANTIDOS -->
 				</div>
 			</div>
+
 			<div class="swiper-button-next swiper-navbtn"></div>
 			<div class="swiper-button-prev swiper-navbtn"></div>
 			<div class="swiper-pagination"></div>

@@ -177,8 +177,8 @@
                                         <td><?php echo htmlspecialchars($a['an_depressao']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_glaucoma']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_hiv']); ?></td>
-                                        <td><?php echo htmlspecialchars($a['an_pele']); ?></td>
-                                        <td><?php echo htmlspecialchars($a['an_outro']); ?></td>
+                                        <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($a['an_pele']); ?></td>
+                                        <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($a['an_outro']); ?></td>
                                         <td><?php echo formatadata($a['an_data']); ?></td>
                                     </tr>
                                 </tbody>
@@ -206,7 +206,7 @@
                                         <td><?php echo htmlspecialchars($a['an_alergia']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_gravidez']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_herpes']); ?></td>
-                                        <td><?php echo htmlspecialchars($a['an_acne']); ?></td>
+                                        <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($a['an_acne']); ?></td>
                                         <td style="word-wrap: break-word; word-break: break-word;"><?php echo nl2br(htmlspecialchars($a['an_medic'])); ?></td>
                                         <td>
                                             <div class="view-cli-btns">

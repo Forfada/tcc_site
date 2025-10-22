@@ -35,46 +35,41 @@ index();
 
 		<hr>
 
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th width="30%">Nome</th>
-                        <th>Telefone</th>
-                        <th>Nascimento</th>
-                        <th width="26%">Opções</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($clientes) : ?>
-                        <?php foreach ($clientes as $cli) : ?>
-                            <tr>
-                                
-                                <td><?php echo $cli["id"]; ?></td>
-                                <td><?php echo $cli["cli_nome"]; ?></td>
-                                <td><?php echo telefone($cli["cli_num"]); ?></td>
-                                <td><?php echo formatadata($cli["cli_nasc"]); ?></td>
-                                <td class="actions text-center text-md-end d-flex flex-column gap-2">
-                                    <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto"><i class="fa fa-eye  me-2"></i> Visualizar</a>
-                                    <a href="edit.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-secondary d-flex align-items-center justify-content-center w-auto"><i class="fa-solid fa-pen-to-square  me-2"></i> Editar</a>
-                                    <a href="#" class="btn btn-sm btn-light d-flex align-items-center justify-content-center w-auto" 
-                                    data-bs-toggle="modal" data-bs-target="#delete-cli-modal" data-clientes="<?php echo $cli['id'];?>">
-                                        <i class="fa fa-trash  me-2"></i> Excluir
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else : ?>
+        <div class="colmd-12">
+            <div class="tabela-wrapper">
+                <table class="tabela-lunaris">
+                    <thead>
                         <tr>
-                            <td colspan="6">Nenhum registro encontrado.</td>
+                            <th width="30%">Nome</th>
+                            <th>Cidade</th>
+                            <th width="15%">Telefone</th>
+                            <th>Nascimento</th>
+                            <th width="26%">Opções</th>
                         </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php if ($clientes) : ?>
+                            <?php foreach ($clientes as $cli) : ?>
+                                <tr>
+                                    <td><?php echo $cli["cli_nome"]; ?></td>
+                                    <td><?php echo $cli["cli_cidade"]; ?></td>
+                                    <td><?php echo telefone($cli["cli_num"]); ?></td>
+                                    <td><?php echo formatadata($cli["cli_nasc"]); ?></td>
+                                    <td class="actions text-center text-md-end d-flex flex-column gap-2">
+                                        <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto"><i class="fa fa-eye  me-2"></i> Visualizar</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="6">Nenhum registro encontrado.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
 
-<?php include("modal.php"); ?>
 <?php include(FOOTER_TEMPLATE); ?>

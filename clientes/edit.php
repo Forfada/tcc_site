@@ -63,6 +63,19 @@
             <div class="row justify-content-center">
                 <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
+                        <label for="cli_sexo">Sexo</label>
+                        <input type="text" class="form-control text-center" id="cli_sexo" name="cli[cli_sexo]" value="<?php echo $cli['cli_sexo']; ?>">
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cli_cidade">Cidade</label>
+                        <input type="text" class="form-control text-center" id="cli_cidade" name="cli[cli_cidade]" value="<?php echo $cli['cli_cidade']; ?>">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-5 d-flex justify-content-center gap-2 form">
+                    <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
                         <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" value="<?php echo date('Y-m-d', strtotime($cli['cli_nasc'])); ?>">
                     </div>

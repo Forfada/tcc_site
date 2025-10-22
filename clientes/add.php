@@ -66,12 +66,25 @@
             <div class="row justify-content-center">
                 <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
+                        <label for="cli_sexo">Sexo</label>
+                        <input type="text" class="form-control" id="cli_sexo" name="cli[cli_sexo]" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cli_cidade">Cidade</label>
+                        <input type="text" class="form-control" id="cli_cidade" name="cli[cli_cidade]" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-md-5 d-flex justify-content-center gap-2 form">
+                    <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
                         <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="cli_obs">Observação</label>
-                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1 required></textarea>
+                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1></textarea>
                     </div>
                 </div>
             </div>

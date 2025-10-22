@@ -17,18 +17,6 @@
 		}
 	}
 
-	/* mostrar todos os procedimentos por id
-    try {
-        $pdo = new PDO('mysql:host=localhost;dbname=bancolu;charset=utf8mb4', 'root', '');
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $pdo->query("SELECT * FROM procedimentos ORDER BY id_p ASC");
-        $procedimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        echo "Erro ao conectar ao banco: " . $e->getMessage();
-        $procedimentos = [];
-    }*/
-
 	//  Upload de imagem
     function upload ($pasta_destino, $arquivo_destino, $tipo_arquivo, $nome_temp, $tamanho_arquivo) {
         try {
@@ -82,8 +70,6 @@
     global $proc;
     	$proc = find("procedimentos", $id);
 }
-
-	
 
     //  Cadastro de procedimentos
 	function add() {

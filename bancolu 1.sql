@@ -11,7 +11,7 @@ CREATE TABLE clientes (
     cli_cpf VARCHAR(11) NOT NULL,
     cli_num VARCHAR(11) NOT NULL,
     cli_nasc DATETIME NOT NULL,
-    cli_obs VARCHAR(250) NOT NULL
+    cli_obs VARCHAR(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `clientes` (`id`, `cli_nome`, `cli_idade`, `cli_sexo`, `cli_cidade`, `cli_cpf`, `cli_num`, `cli_nasc`)

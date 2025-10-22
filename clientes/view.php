@@ -28,140 +28,6 @@
     include(HEADER_TEMPLATE);
 ?>
 
-<section class="clientes section-light section-cor3 py-5" id="clientes">
-    <div class="container mt-5" style="margin-top: 6rem !important;">
-        <h2 class="txt1 mb-1 text-center">Visualização de Cliente</h2>
-        <p class="txt4 text-center mb-2">Acompanhe os dados cadastrados completos deste cliente.</p>
-
-        <div class="container my-5">
-            <div class="row my-5">
-                <div class="col-12">
-                    <div class="tabela-wrapper">
-                        <table class="tabela-lunaris">
-                            <thead>
-                                <tr>
-                                    <th scope="col" colspan="4" class="mb-0 text-start"><h5>Cliente: <?php echo $cli['cli_nome']; ?></h5></th>
-                                    <th scope="col" colspan="1" class="mb-0">
-                                        <div class="justify-content-end view-cli-btns">
-                                            <a href="index.php" class="buttona"><i class="fa-solid fa-arrow-rotate-left"></i> Voltar</a>
-                                            <a href="edit.php?id=<?php echo $cli['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <thead>
-                                <tr>
-                                <th style="width:7%">Idade</th>
-                                <th style="width:17%">CPF</th>
-                                <th style="width:17%">Telefone</th>
-                                <th style="width:14%">Nascimento</th>
-                                <th style="width:45%">Observação</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>  
-                                    <td><?php echo htmlspecialchars($cli['cli_idade']); ?></td>
-                                    <td><?php echo cpf($cli['cli_cpf']); ?></td>
-                                    <td><?php echo telefone($cli['cli_num']); ?></td>
-                                    <td><?php echo formatadata($cli['cli_nasc']); ?></td>
-                                    <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($cli['cli_obs']); ?></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>	
-            </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <div class="anamnese-panel p-3">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="mb-0">Anamnese</h4>
-                            <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Anamnese</a>
-                        </div>
-
-                        <?php if (!empty($anamnese) && is_array($anamnese)): ?>
-                            <div class="tabela-wrapper">
-                                <table class="tabela-lunaris">
-                                    <thead>
-                                        <tr>
-                                            <th>Queloide</th>
-                                            <th>Hepatite</th>
-                                            <th>Cardiopata</th>
-                                            <th style="width: 5%">Anemia</th>
-                                            <th>Depressão</th>
-                                            <th>Glaucoma</th>
-                                            <th style="width: 2%">HIV</th>
-                                            <th>Doença Pele</th>
-                                            <th>Outro</th>
-                                            <th>Registrado em</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($anamnese as $a): ?>
-                                        <!-- linha superior: campos compactos + medicações + ações -->
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_cardiopata']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_anemia']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_depressao']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_glaucoma']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_hiv']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_pele']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_outro']); ?></td>
-                                            <td><?php echo formatadata($a['an_data']); ?></td>
-                                        </tr>
-                                    </tbody>
-                                    <thead>
-                                        <tr>
-                                            <th>Hipertensão</th>
-                                            <th>Diabetes</th>
-                                            <th style="width: 5%">Câncer</th>
-                                            <th>Fumante</th>
-                                            <th style="width: 5%">Alergia</th>
-                                            <th>Gravidez</th>
-                                            <th style="width: 5%">Herpes</th>
-                                            <th>Remédio Acne</th>
-                                            <th>Medicações</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                        
-                                    </thead>
-                                     <tbody>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($a['an_hipertensao']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_diabetes']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_cancer']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_fumante']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_alergia']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_gravidez']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_herpes']); ?></td>
-                                            <td><?php echo htmlspecialchars($a['an_acne']); ?></td>
-                                            <td><?php echo nl2br(htmlspecialchars($a['an_medic'])); ?></td>
-                                            <td>
-                                                <div class="view-cli-btns">
-                                                    <a href="edit_an.php?anid=<?php echo $a['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                                    <a href="delete_an.php?anid=<?php echo $a['id']; ?>&client_id=<?php echo $cli['id']; ?>" class="buttonc" onclick="return confirm('Confirma remoção desta anamnese?');"><i class="fa fa-trash"></i> Excluir</a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <!-- linha inferior: campos restantes + data -->
-                                        
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php else: ?>
-                            <p class="text-muted mb-0">Não há anamnese cadastrada para este cliente.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <style>
 .view-cli-btns {
     display: flex;
@@ -220,4 +86,149 @@
 }
 </style>
 
+<section class="clientes section-light section-cor3 py-5" id="clientes">
+    <div class="container mt-5" style="margin-top: 6rem !important;">
+        <h2 class="txt1 mb-1 text-center">Visualização de Cliente</h2>
+        <p class="txt4 text-center mb-2">Acompanhe os dados cadastrados completos deste cliente.</p>
+        <div class="col-12 col-md-12 text-md-end mt-2 mt-md-0">  
+            <a href="index.php" class="buttona"><i class="fa-solid fa-arrow-rotate-left"></i> Voltar</a>
+        </div>
+
+        <hr>
+
+        <div class="row my-5">
+            <div class="col-md-12">
+                <div class="tabela-wrapper">
+                    <table class="tabela-lunaris">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="6" class="mb-0 text-start"><h5>Cliente: <?php echo $cli['cli_nome']; ?></h5></th>
+                                <th scope="col" colspan="1" class="mb-0">
+                                    <div class="justify-content-end view-cli-btns">
+                                        
+                                        <a href="edit.php?id=<?php echo $cli['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                            <a href="#" class="buttonc" data-bs-toggle="modal" data-bs-target="#delete-cli-modal" data-clientes="<?php echo $cli['id'];?>">
+                                            <i class="fa fa-trash  me-2"></i> Excluir
+                                        </a>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <thead>
+                            <tr>
+                            <th width="5%">Idade</th>
+                            <th width="17%">Cidade</th>
+                            <th width="8%">Sexo</th>
+                            <th width="14%">CPF</th>
+                            <th width="15%">Telefone</th>
+                            <th width="10%">Nascimento</th>
+                            <th width="31%">Observação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>  
+                                <td><?php echo htmlspecialchars($cli['cli_idade']); ?></td>
+                                <td><?php echo htmlspecialchars($cli['cli_cidade']); ?></td>
+                                <td><?php echo htmlspecialchars($cli['cli_sexo']); ?></td>
+                                <td><?php echo cpf($cli['cli_cpf']); ?></td>
+                                <td><?php echo telefone($cli['cli_num']); ?></td>
+                                <td><?php echo formatadata($cli['cli_nasc']); ?></td>
+                                <td style="word-wrap: break-word; word-break: break-word;"><?php echo htmlspecialchars($cli['cli_obs']); ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>	
+        </div>
+
+        <div class="row my-5">
+            <div class="col-md-12">
+                <div class="anamnese-panel p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Anamnese</h4>
+                        <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Anamnese</a>
+                    </div>
+                    <hr>
+                    <?php if (!empty($anamnese) && is_array($anamnese)): ?>
+                        <div class="tabela-wrapper">
+                            <table class="tabela-lunaris">
+                                <thead>
+                                    <tr>
+                                        <th>Queloide</th>
+                                        <th>Hepatite</th>
+                                        <th>Cardiopata</th>
+                                        <th>Anemia</th>
+                                        <th>Depressão</th>
+                                        <th>Glaucoma</th>
+                                        <th>HIV</th>
+                                        <th>Doença Pele</th>
+                                        <th>Outro</th>
+                                        <th>Registrado em</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($anamnese as $a): ?>
+                                    <!-- linha superior: campos compactos + medicações + ações -->
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_cardiopata']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_anemia']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_depressao']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_glaucoma']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_hiv']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_pele']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_outro']); ?></td>
+                                        <td><?php echo formatadata($a['an_data']); ?></td>
+                                    </tr>
+                                </tbody>
+                                <thead>
+                                    <tr>
+                                        <th>Hipertensão</th>
+                                        <th>Diabetes</th>
+                                        <th>Câncer</th>
+                                        <th>Fumante</th>
+                                        <th>Alergia</th>
+                                        <th>Gravidez</th>
+                                        <th>Herpes</th>
+                                        <th>Remédio Acne</th>
+                                        <th>Medicações</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                    
+                                </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($a['an_hipertensao']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_diabetes']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_cancer']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_fumante']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_alergia']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_gravidez']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_herpes']); ?></td>
+                                        <td><?php echo htmlspecialchars($a['an_acne']); ?></td>
+                                        <td style="word-wrap: break-word; word-break: break-word;"><?php echo nl2br(htmlspecialchars($a['an_medic'])); ?></td>
+                                        <td>
+                                            <div class="view-cli-btns">
+                                                <a href="edit_an.php?anid=<?php echo $a['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                                                <a href="delete_an.php?anid=<?php echo $a['id']; ?>&client_id=<?php echo $cli['id']; ?>" class="buttonc" onclick="return confirm('Confirma remoção desta anamnese?');"><i class="fa fa-trash"></i> Excluir</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- linha inferior: campos restantes + data -->
+                                    
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php else: ?>
+                        <p class="text-muted mb-0">Não há anamnese cadastrada para este cliente.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php include("modal.php"); ?>
 <?php include(FOOTER_TEMPLATE); ?>

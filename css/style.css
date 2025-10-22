@@ -156,6 +156,7 @@ body {
     margin: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 .buttonc:hover{
     background: var(--cor4);
@@ -393,6 +394,7 @@ section.sobre{
     margin: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
+    text-decoration: none;
 }
 .buttona:hover{
     color: var(--cor3);
@@ -515,3 +517,77 @@ section.sobre{
 .clientes{
     margin: 0;
 }
+
+/* ======= Tabela (novo visual elegante) ======= */
+.tabela-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  background: linear-gradient(180deg, #fff, #fffaf9);
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 28px rgba(35,20,30,0.08);
+  overflow-x: auto;
+  border: 1px solid rgba(115,33,61,0.06);
+}
+
+.tabela-lunaris {
+  width: 100%;
+  border-collapse: collapse;
+  color: #2d2d2d;
+  font-family: "Inter", "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background: transparent;
+}
+
+/* CENTRALIZA os nomes/células da tabela (header e corpo) */
+.tabela-lunaris thead th,
+.tabela-lunaris tbody td {
+  text-align: center;
+}
+
+.tabela-lunaris thead th {
+  background: linear-gradient(90deg, #fff8f7, #fff);
+  color: #73213d;
+  padding: 12px 14px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-bottom: 2px solid rgba(115,33,61,0.06);
+}
+
+.tabela-lunaris tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(115,33,61,0.04);
+  vertical-align: middle;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.tabela-lunaris tbody tr {
+  background: transparent;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.tabela-lunaris tbody tr:hover {
+  background: linear-gradient(90deg, rgba(115,33,61,0.03), rgba(160,90,111,0.02));
+  transform: translateY(-2px);
+}
+
+.tabela-lunaris tbody tr:nth-child(even) {
+  background: rgba(115,33,61,0.02);
+}
+
+.tabela-lunaris button {
+  background: linear-gradient(180deg, #a05a6f, #73213d);
+  border: none;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ensure header cells don't look cramped on small screens */
+@media (max-width: 768px) {
+  .tabela-lunaris thead th, .tabela-lunaris tbody td { padding: 10px 8px; font-size: 0.9rem; }
+  .tabela-wrapper { padding: 12px; }
+} 

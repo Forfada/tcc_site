@@ -124,7 +124,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
                 </div>
                 <div class="modal-body">
-                    Deseja mesmo excluir sua conta?
+                    Deseja mesmo excluir sua conta? Esta ação não pode ser desfeita.
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

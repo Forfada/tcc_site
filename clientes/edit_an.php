@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese']) && isset
                 <div id="actions" class="col-md-6 mt-3">
                     <div class="d-flex justify-content-center gap-2">
                         <button type="submit" class="buttonc"><i class="fa-solid fa-check"></i> Salvar</button>
-                        <a href="index.php" class="buttona" style="text-decoration: none;"><i class="fa-solid fa-arrow-rotate-left"></i> Cancelar</a>
+                        <a href="index.php" class="buttona"><i class="fa-solid fa-arrow-rotate-left"></i> Cancelar</a>
                     </div>
                 </div>
             </div>

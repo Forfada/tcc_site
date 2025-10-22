@@ -68,7 +68,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <label for="cli_obs">Observação</label>
-                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1 value="<?php echo $cli['cli_obs']; ?>"></textarea>
+                        <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1><?php echo $cli['cli_obs']; ?></textarea>
                     </div>
                 </div>
             </div>

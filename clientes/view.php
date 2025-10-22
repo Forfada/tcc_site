@@ -192,8 +192,8 @@
 /* manter células compactas na anamnese (reduz padding/font) */
 .anamnese-panel .tabela-lunaris thead th,
 .anamnese-panel .tabela-lunaris tbody td {
-    padding: 6px 8px;
-    font-size: 0.85rem;
+    padding: 8px 8px;
+    font-size: 1rem;
 }
 
 /* garantir que os links/botões fiquem compactos */
@@ -204,33 +204,20 @@
     padding: 8px 8px !important;    /* botões mais compactos */
     font-size: 1rem !important;
     line-height: 1.1rem !important;
-    display: inline-flex !important;
-    gap: 6px !important;            /* espaço interno entre ícone/texto */
-    white-space: nowrap !important;
-    min-width: 0 !important;
 }
 
-/* manter células compactas na anamnese (reduz padding/font) */
-.anamnese-panel .tabela-lunaris thead th,
-.anamnese-panel .tabela-lunaris tbody td {
-    padding: 6px 8px;
-    font-size: 0.85rem;
+@media (max-width: 768px) {
+    .view-cli-btns {
+        flex-wrap: wrap;         /* não quebra em desktops/tablets maiores */
+        gap: 4px !important;       /* menor espaçamento como solicitado */
+        justify-content: flex-end; /* alinha à direita (como estava) */
+        width: auto;
+    }
 }
-
-/* evitar quebra inesperada dos botões na célula de ações */
-.anamnese-panel .tabela-lunaris tbody td:last-child,
-.tabela-lunaris thead th:last-child {
-    white-space: nowrap !important;
-}
-
 /* pequena proteção em telas muito pequenas: permitir scroll horizontal se necessário */
 @media (max-width: 480px) {
-    .view-cli-btns { gap: 6px !important; }
-    .view-cli-btns a.buttonc,
-    .view-cli-btns a.buttona { padding: 6px 8px !important; font-size: 0.9rem !important; }
     .anamnese-panel .tabela-wrapper { overflow-x: auto; }
 }
-</style>
 </style>
 
 <?php include(FOOTER_TEMPLATE); ?>

@@ -43,10 +43,10 @@ index();
                     <thead>
                         <tr>
                             <th width="30%">Nome</th>
+                            <th>Sexo</th>
                             <th>Cidade</th>
                             <th width="15%">Telefone</th>
                             <th>Nascimento</th>
-                            <th width="26%">Opções</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,12 +54,10 @@ index();
                             <?php foreach ($clientes as $cli) : ?>
                                 <tr data-href="view.php?id=<?php echo $cli['id']; ?>" style="cursor: pointer;">
                                     <td><?php echo $cli["cli_nome"]; ?></td>
+                                    <td><?php echo $cli["cli_sexo"]; ?></td>
                                     <td><?php echo $cli["cli_cidade"]; ?></td>
                                     <td><?php echo telefone($cli["cli_num"]); ?></td>
                                     <td><?php echo formatadata($cli["cli_nasc"]); ?></td>
-                                    <td class="actions text-center text-md-end d-flex flex-column gap-2">
-                                        <a href="view.php?id=<?php echo $cli['id']; ?>" class="btn btn-sm btn-dark d-flex align-items-center justify-content-center w-auto" onclick="event.stopPropagation();"><i class="fa fa-eye  me-2"></i> Visualizar</a>
-                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>

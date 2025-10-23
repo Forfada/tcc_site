@@ -161,8 +161,8 @@
         <div class="row my-5">
             <div class="col-md-12">
                 <div class="anamnese-panel p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0">Anamnese</h4>
+                    <h4 class="mb-0 text-md-start">Anamnese</h4>
+                    <div class="col-12 col-md-12 text-md-end mt-2 mt-md-0">
                         <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Anamnese</a>
                     </div>
                     <hr>

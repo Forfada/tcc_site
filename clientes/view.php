@@ -13,8 +13,7 @@
     $cid = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 
     if ($cid === false || $cid === null || $cid <= 0) {
-        // id inválido: redirecionar ou mostrar erro amigável
-        header('Location: index.php'); // ou mostrar mensagem
+        header('Location: index.php');
         exit;
     }
     view($cid);
@@ -35,7 +34,7 @@
     justify-content: center;
     width: 90%;
     flex-wrap: nowrap;
-    gap: 4px !important;            /* menor espaçamento entre botões */
+    gap: 4px !important;
     margin: 0 !important;
     padding: 0 !important;
 }
@@ -43,46 +42,67 @@
     background-color: transparent; 
     padding: 1rem; 
 }
-
-/* container de botões da anamnese: sempre em linha, sem wrap */
 .anamnese-panel .view-cli-btns {
     flex-direction: row !important;
 }
-
-/* botões dentro da anamnese: compactos e inline */
 .anamnese-panel .view-cli-btns a.buttonc,
 .anamnese-panel .tabela-lunaris a.buttonc {
     white-space: nowrap !important;
 }
-
-/* manter células compactas na anamnese (reduz padding/font) */
 .anamnese-panel .tabela-lunaris thead th,
 .anamnese-panel .tabela-lunaris tbody td {
     padding: 8px 8px;
     font-size: 1rem;
 }
-
-/* garantir que os links/botões fiquem compactos */
 .view-cli-btns a.buttonc,
 .view-cli-btns a.buttona,
 .anamnese-panel .tabela-lunaris a.buttonc {
-    margin: 0 !important;           /* remove margens extras */
-    padding: 8px 8px !important;    /* botões mais compactos */
+    margin: 0 !important;
+    padding: 8px 8px !important;
     font-size: 1rem !important;
     line-height: 1.1rem !important;
 }
-
 @media (max-width: 768px) {
     .view-cli-btns {
-        flex-wrap: wrap;         /* não quebra em desktops/tablets maiores */
-        gap: 4px !important;       /* menor espaçamento como solicitado */
-        justify-content: flex-end; /* alinha à direita (como estava) */
+        flex-wrap: wrap;
+        gap: 4px !important;
+        justify-content: flex-end;
         width: auto;
     }
 }
-/* pequena proteção em telas muito pequenas: permitir scroll horizontal se necessário */
 @media (max-width: 480px) {
     .anamnese-panel .tabela-wrapper { overflow-x: auto; }
+}
+
+/* --- Estilo do modal de exclusão de anamnese igual ao delete-cli-modal --- */
+.modal-card-custom {
+    border-radius: 12px;
+    padding: 20px 22px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    color: #222;
+}
+.modal-title-custom {
+    margin-top: 0;
+    color: #73213d;
+}
+.modal-text {
+    margin-top: 10px;
+    color: #444;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 14px;
+}
+.modal-actions .buttonc {
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+.modal-actions .buttonc.cancel {
+    background: #ccc;
+    color: #333;
 }
 </style>
 
@@ -105,9 +125,8 @@
                                 <th scope="col" colspan="6" class="mb-0 text-start"><h5>Cliente: <?php echo $cli['cli_nome']; ?></h5></th>
                                 <th scope="col" colspan="1" class="mb-0">
                                     <div class="justify-content-end view-cli-btns">
-                                        
                                         <a href="edit.php?id=<?php echo $cli['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                            <a href="#" class="buttonc" data-bs-toggle="modal" data-bs-target="#delete-cli-modal" data-clientes="<?php echo $cli['id'];?>">
+                                        <a href="#" class="buttonc" data-bs-toggle="modal" data-bs-target="#delete-cli-modal" data-clientes="<?php echo $cli['id'];?>">
                                             <i class="fa fa-trash  me-2"></i> Excluir
                                         </a>
                                     </div>
@@ -116,13 +135,13 @@
                         </thead>
                         <thead>
                             <tr>
-                            <th width="5%">Idade</th>
-                            <th width="17%">Cidade</th>
-                            <th width="8%">Sexo</th>
-                            <th width="14%">CPF</th>
-                            <th width="15%">Telefone</th>
-                            <th width="10%">Nascimento</th>
-                            <th width="31%">Observação</th>
+                                <th width="5%">Idade</th>
+                                <th width="17%">Cidade</th>
+                                <th width="8%">Sexo</th>
+                                <th width="14%">CPF</th>
+                                <th width="15%">Telefone</th>
+                                <th width="10%">Nascimento</th>
+                                <th width="31%">Observação</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,7 +157,7 @@
                         </tbody>
                     </table>
                 </div>
-            </div>	
+            </div>  
         </div>
 
         <div class="row my-5">
@@ -168,7 +187,6 @@
                                 </thead>
                                 <tbody>
                                     <?php foreach ($anamnese as $a): ?>
-                                    <!-- linha superior: campos compactos + medicações + ações -->
                                     <tr>
                                         <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
@@ -195,9 +213,8 @@
                                         <th>Medicações</th>
                                         <th>Ações</th>
                                     </tr>
-                                    
                                 </thead>
-                                    <tbody>
+                                <tbody>
                                     <tr>
                                         <td><?php echo htmlspecialchars($a['an_hipertensao']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_diabetes']); ?></td>
@@ -211,12 +228,16 @@
                                         <td>
                                             <div class="view-cli-btns">
                                                 <a href="edit_an.php?anid=<?php echo $a['id']; ?>" class="buttonc"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                                                <a href="delete_an.php?anid=<?php echo $a['id']; ?>&client_id=<?php echo $cli['id']; ?>" class="buttonc" onclick="return confirm('Confirma remoção desta anamnese?');"><i class="fa fa-trash"></i> Excluir</a>
+                                                <a href="#" class="buttonc btn-excluir-anamnese" 
+                                                    data-id="<?php echo $a['id']; ?>" 
+                                                    data-client="<?php echo $cli['id']; ?>" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deleteAnamneseModal">
+                                                    <i class="fa fa-trash"></i> Excluir
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
-                                    <!-- linha inferior: campos restantes + data -->
-                                    
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -229,6 +250,38 @@
         </div>
     </div>
 </section>
+
+<!-- Modal: Excluir Anamnese -->
+<div class="modal fade" id="deleteAnamneseModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-card-custom">
+            <div class="modal-body text-center">
+                <h3 class="modal-title-custom">Excluir Anamnese</h3>
+                <p class="modal-text">Deseja realmente excluir esta anamnese? Esta ação não pode ser desfeita.</p>
+
+                <div class="modal-actions d-flex justify-content-center gap-3">
+                    <a type="button" class="buttonc gap" id="confirmDeleteAnamnese" href="#">
+                        <i class="fa-solid fa-check"></i> Sim, excluir
+                    </a>
+                    <button type="button" class="buttonc cancel" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const confirmBtn = document.getElementById('confirmDeleteAnamnese');
+document.querySelectorAll('.btn-excluir-anamnese').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const anamneseId = this.dataset.id;
+        const clientId = this.dataset.client;
+        confirmBtn.href = `delete_an.php?anid=${anamneseId}&client_id=${clientId}`;
+    });
+});
+</script>
 
 <?php include("modal.php"); ?>
 <?php include(FOOTER_TEMPLATE); ?>

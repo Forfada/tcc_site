@@ -1,7 +1,7 @@
 <?php
 include 'functions.php';
 
-// somente administrador pode acessar a área de clientes
+// só administrador pode acessar
 if (!function_exists('is_admin') || !is_admin()) {
     if (session_status() === PHP_SESSION_NONE) session_start();
     $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
@@ -10,28 +10,45 @@ if (!function_exists('is_admin') || !is_admin()) {
     exit;
 }
 
-// Se receber GET com anid, carrega a anamnese para edição
+// se for GET e tiver 'anid', carrega os dados da anamnese para edição
 if (isset($_GET['anid']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-    $id = intval($_GET['anid']);
-    // função edit_an quando chamada sem POST preenche a global $anamnese
-    edit_an();
-    // $anamnese global deve conter os dados
+    $anid = intval($_GET['anid']);
+    edit_an(); // deve preencher $anamnese global
+
     global $anamnese;
     if (empty($anamnese)) {
-        header('Location: index.php'); exit;
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Anamnese não encontrada.";
+        $_SESSION['type'] = "danger";
+        header('Location: index.php');
+        exit;
     }
+
     $client_id = $anamnese['id_cli'];
     include(INIT);
     include(HEADER_TEMPLATE);
 }
 
-// Se for POST, processa e salva
+// se for POST, processa a atualização
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese']) && isset($_GET['anid'])) {
-    edit_an(); // função atualiza e redireciona
+    $success = edit_an(); // função deve retornar true/false
+
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    if ($success) {
+        $_SESSION['message'] = "Erro ao atualizar anamnese.";
+        $_SESSION['type'] = "danger";
+    } else {
+        $_SESSION['message'] = "Anamnese atualizada com sucesso!";
+        $_SESSION['type'] = "success";
+    }
+
+    // redireciona para a página do cliente
+    header('Location: view.php?id=' . intval($_POST['anamnese']['id_cli']));
     exit;
 }
-
 ?>
+
+
 
 <style>
     .form-group{

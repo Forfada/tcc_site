@@ -1,36 +1,50 @@
 <?php
-    include('functions.php');
+include('functions.php');
 
-    // somente administrador pode acessar a área de clientes
-    if (!function_exists('is_admin') || !is_admin()) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+// somente administrador pode acessar a área de clientes
+if (!function_exists('is_admin') || !is_admin()) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+    $_SESSION['type'] = "danger";
+    header("Location: " . BASEURL . "index.php");
+    exit;
+}
+
+// iniciar sessão se não estiver iniciada
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// valida client_id vindo via GET ou POST
+$client_id = $_GET['client_id'] ?? $_POST['anamnese']['id_cli'] ?? null;
+$client_id = $client_id ? intval($client_id) : null;
+
+if (!$client_id) {
+    $_SESSION['message'] = "Cliente não definido.";
+    $_SESSION['type'] = "danger";
+    header('Location: index.php');
+    exit;
+}
+
+// processa submissão do formulário
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese'])) {
+    $success = add_an(); // assume que add_an() retorna true/false
+    if ($success) {
+        $_SESSION['message'] = "Erro ao cadastrar anamnese.";
         $_SESSION['type'] = "danger";
-        header("Location: " . BASEURL . "index.php");
-        exit;
+    } else {
+        $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
+        $_SESSION['type'] = "success";
     }
-    
-    // valida client_id vindo via GET ou POST
-    $client_id = null;
-    if (!empty($_GET['client_id'])) $client_id = intval($_GET['client_id']);
-    if (!empty($_POST['anamnese']['id_cli'])) $client_id = intval($_POST['anamnese']['id_cli']);
+    header("Location: view.php?id=" . $client_id);
+    exit;
+}
 
-    // se for POST, processa a submissão
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese'])) {
-        add_an();
-        // não exit aqui: se ocorrer erro, add_an() define $_SESSION['message'] e
-        // queremos renderizar o formulário novamente com a mensagem.
-    }
+// carrega dados do cliente para o formulário
+view($client_id);
 
-    if (!$client_id) {
-        header('Location: index.php');
-        exit;
-    }
-
-    view($client_id);
-    include(INIT);
-    include(HEADER_TEMPLATE);
+include(INIT);
+include(HEADER_TEMPLATE);
 ?>
+
 <style>
         .form-group{
             --bs-gutter-x: 1rem !important;

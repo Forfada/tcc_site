@@ -1,7 +1,7 @@
 <?php 
     include('functions.php'); 
 
-    // somente administrador pode acessar a área de clientes
+    // Somente administrador pode acessar
     if (!function_exists('is_admin') || !is_admin()) {
         if (session_status() === PHP_SESSION_NONE) session_start();
         $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
@@ -10,7 +10,15 @@
         exit;
     }
 
-    add();
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        add();
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Cliente cadastrado com sucesso!";
+        $_SESSION['type'] = "success";
+        header("Location: index.php");
+        exit;
+    }
+
     include(HEADER_TEMPLATE);
     include(INIT);
 ?>

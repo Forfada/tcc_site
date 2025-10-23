@@ -24,41 +24,21 @@ if (!$client_id) {
     exit;
 }
 
-// processa submissão do formulário
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese'])) {
-    // Mostra os dados antes de processar
-    echo "<pre>";
-    print_r($_POST['anamnese']);
-    echo "</pre>";
+    $success = add_an();
     
-    // Tenta conectar ao banco
-    try {
-        $db = open_database();
-        echo "Conexão com banco estabelecida<br>";
-    } catch (Exception $e) {
-        echo "Erro de conexão: " . $e->getMessage() . "<br>";
+    if ($success === true) {
+        $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
+        $_SESSION['type'] = "success";
+        header("Location: view.php?id=" . $client_id);
+        exit;
     }
-    
-    // Tenta salvar
-    try {
-        $success = add_an();
-        var_dump($success);
-        
-        if ($success) {
-            $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
-            $_SESSION['type'] = "success";
-        } else {
-            $_SESSION['message'] = "Erro ao cadastrar anamnese.";
-            $_SESSION['type'] = "danger";
-        }
-    } catch (Exception $e) {
-        echo "Erro: " . $e->getMessage();
-        $_SESSION['message'] = "Erro ao cadastrar anamnese: " . $e->getMessage();
+    if (empty($_SESSION['message'])) {
+        $_SESSION['message'] = "Erro ao cadastrar anamnese.";
         $_SESSION['type'] = "danger";
     }
-    
-    // Para a execução aqui para vermos os erros
-    die();
+    header("Location: " . $_SERVER['PHP_SELF'] . "?client_id=" . $client_id);
+    exit;
 }
 
 // carrega dados do cliente para o formulário
@@ -142,9 +122,18 @@ include(HEADER_TEMPLATE);
       }
 
     @media (max-width: 767px) {
-        .radio-group { gap: 10px; padding: 6px 8px; }
-        .col-md-2, .col-md-3, .col-md-11 { width: 100% !important; max-width: 100% !important; flex: 0 0 100% !important; }
-        .section-box { padding: 12px; }
+        .radio-group { 
+            gap: 10px;
+            padding: 6px 8px; 
+        }
+        .col-md-2, .col-md-3, .col-md-11 { 
+            width: 100% !important; 
+            max-width: 100% !important; 
+            flex: 0 0 100% !important; }
+        .section-box { 
+            padding: 12px; 
+            width: 85%;
+        }
     }
 </style>
 <section class="clientes section-light section-cor3 py-5" id="anamnese">

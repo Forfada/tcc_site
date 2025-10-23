@@ -55,7 +55,6 @@
     font-size: 1rem;
 }
 .view-cli-btns a.buttonc,
-.view-cli-btns a.buttona,
 .anamnese-panel .tabela-lunaris a.buttonc {
     margin: 0 !important;
     padding: 8px 8px !important;
@@ -74,7 +73,6 @@
     .anamnese-panel .tabela-wrapper { overflow-x: auto; }
 }
 
-/* --- Estilo do modal de exclusão de anamnese igual ao delete-cli-modal --- */
 .modal-card-custom {
     border-radius: 12px;
     padding: 20px 22px;
@@ -169,6 +167,7 @@
                     </div>
                     <hr>
                     <?php if (!empty($anamnese) && is_array($anamnese)): ?>
+                        <?php foreach ($anamnese as $a): ?>
                         <div class="tabela-wrapper">
                             <table class="tabela-lunaris">
                                 <thead>
@@ -186,7 +185,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($anamnese as $a): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
@@ -238,10 +236,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
+                        <br>
+                    <?php endforeach; ?>
                     <?php else: ?>
                         <p class="text-muted mb-0">Não há anamnese cadastrada para este cliente.</p>
                     <?php endif; ?>

@@ -2,6 +2,8 @@
     include 'functions.php';
     include(INIT);
     include(HEADER_TEMPLATE);
+    include '../inc/alert.php';
+
     index();
 ?>  
 

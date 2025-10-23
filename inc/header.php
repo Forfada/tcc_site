@@ -118,17 +118,19 @@
     <!-- Modal: Confirmar Exclusão de Conta -->
     <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="confirmDeleteLabel">Confirmar Exclusão</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
+            <div class="modal-content modal-card-custom text-center">
                 <div class="modal-body">
-                    Deseja mesmo excluir sua conta? Esta ação não pode ser desfeita.
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a href="<?= BASEURL ?>inc/excluir_conta.php" class="btn btn-danger">Sim, excluir</a>
+                    <h3 class="modal-title-custom">Excluir Conta</h3>
+                    <p class="modal-text">Deseja mesmo excluir sua conta? Esta ação não pode ser desfeita.</p>
+
+                    <div class="modal-actions d-flex justify-content-center gap-3">
+                        <button type="button" class="buttonc cancel" style="background:#ccc;color:#333" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark"></i> Cancelar
+                        </button>
+                        <a href="<?= BASEURL ?>inc/excluir_conta.php" class="buttonc">
+                            <i class="fa-solid fa-check"></i> Sim, excluir
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,17 +139,19 @@
     <!-- Modal: Confirmar Logout -->
     <div class="modal fade" id="confirmLogoutModal" tabindex="-1" aria-labelledby="confirmLogoutLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-white">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title" id="confirmLogoutLabel">Confirmar Logout</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
+            <div class="modal-content modal-card-custom text-center">
                 <div class="modal-body">
-                    Deseja mesmo sair da sua conta?
-                </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <a href="<?= BASEURL ?>inc/logout.php" class="btn btn-danger">Sim, sair</a>
+                    <h3 class="modal-title-custom">Sair da Conta</h3>
+                    <p class="modal-text">Deseja mesmo sair da sua conta?</p>
+
+                    <div class="modal-actions d-flex justify-content-center gap-3">
+                        <button type="button" class="buttonc cancel" style="background:#ccc;color:#333" data-bs-dismiss="modal">
+                            <i class="fa-solid fa-xmark"></i> Cancelar
+                        </button>
+                        <a href="<?= BASEURL ?>inc/logout.php" class="buttonc" >
+                            <i class="fa-solid fa-check"></i> Sim, sair
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,3 +246,31 @@
         });
     });
 </script>
+<style>
+/* Ensure modal overlay sits above footer and page content */
+.modal-overlay {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; bottom: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.5);
+  z-index: 2000;
+}
+.modal-overlay .modal-card {
+  z-index: 2001;
+  position: relative;
+  background: #fff;
+  color: #222;
+  padding: 20px 22px;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+  pointer-events: auto;
+}
+.modal-overlay .modal-card h3 { margin-top: 0; color: #73213d; }
+.modal-overlay .modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 14px; }
+.modal-overlay .modal-actions .buttonc { padding: 10px 14px; border-radius: 8px; }
+.modal-overlay .modal-actions form { margin: 0; }
+</style>

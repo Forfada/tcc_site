@@ -1,18 +1,47 @@
-<?php 
-    include('functions.php'); 
+<?php
+include('functions.php');
 
-    // somente administrador pode acessar esta página
-    if (!function_exists('is_admin') || !is_admin()) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+// Somente administrador pode acessar
+if (!function_exists('is_admin') || !is_admin()) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+    $_SESSION['type'] = "danger";
+    header("Location: " . BASEURL . "index.php");
+    exit;
+}
+
+// Inicia sessão se necessário
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// ID do procedimento
+$id = $_GET['id'] ?? null;
+if (!$id) {
+    $_SESSION['message'] = "ID do procedimento não definido.";
+    $_SESSION['type'] = "danger";
+    header("Location: index.php");
+    exit;
+}
+
+// Processamento do form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $success = edit($id); // sua função edit() deve retornar true ou false
+
+    if ($success) {
+        $_SESSION['message'] = "Erro ao editar procedimento.";
         $_SESSION['type'] = "danger";
-        header("Location: " . BASEURL . "index.php");
-        exit;
+    } else {
+        $_SESSION['message'] = "Procedimento editado com sucesso!";
+        $_SESSION['type'] = "success";
     }
 
-    edit($_GET["id"]);
-    include(HEADER_TEMPLATE);
-    include(INIT);
+    header("Location: index.php");
+    exit;
+}
+
+// Se não submeteu o form, apenas exibe o formulário
+$proc = find("procedimentos", $id); // para preencher os campos do form
+include(HEADER_TEMPLATE);
+include(INIT);
 ?>
 
     <style>

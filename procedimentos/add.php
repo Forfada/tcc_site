@@ -1,18 +1,37 @@
-<?php 
-    include('functions.php'); 
+<?php
+include('functions.php');
 
-    // somente administrador pode acessar esta página
-    if (!function_exists('is_admin') || !is_admin()) {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+// Somente administrador pode acessar
+if (!function_exists('is_admin') || !is_admin()) {
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
+    $_SESSION['type'] = "danger";
+    header("Location: " . BASEURL . "index.php");
+    exit;
+}
+
+// Inicia sessão se necessário
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// Processamento do form
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $success = add(); // sua função add() deve retornar true ou false
+
+    if ($success) {
+        $_SESSION['message'] = "Erro ao adicionar procedimento.";
         $_SESSION['type'] = "danger";
-        header("Location: " . BASEURL . "index.php");
-        exit;
+    } else {       
+        $_SESSION['message'] = "Procedimento adicionado com sucesso!";
+        $_SESSION['type'] = "success";
     }
 
-    add();
-    include(HEADER_TEMPLATE);
-    include(INIT);
+    header("Location: index.php");
+    exit;
+}
+
+// Se não submeteu o form, apenas exibe o formulário
+include(HEADER_TEMPLATE);
+include(INIT);
 ?>
 
     <style>

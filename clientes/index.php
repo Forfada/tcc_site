@@ -12,6 +12,8 @@ if (!function_exists('is_admin') || !is_admin()) {
 
 include(INIT);
 include(HEADER_TEMPLATE);
+include '../inc/alert.php';
+
 index();
 ?>  
 

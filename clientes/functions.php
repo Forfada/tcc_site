@@ -94,10 +94,15 @@ function add_an() {
 	if (!empty($_POST['anamnese'])) {
 		try {
 			$an = $_POST['anamnese'];
+			
 			// garante que exista id_cli
 			if (empty($an['id_cli'])) {
 				throw new Exception('ID do cliente ausente.');
 			}
+            
+            // Mostra a query SQL antes de executar
+            echo "Dados a serem inseridos:<br>";
+            var_dump($an);
 
 			// Normaliza a data enviada por datetime-local (ex: 2025-10-17T14:30)
 			if (!empty($an['an_data'])) {
@@ -110,23 +115,89 @@ function add_an() {
 
 			$db = open_database();
 			try {
-				$sql = "INSERT INTO anamnese (an_hipertensao, an_diabetes, an_medic, an_data, id_cli) VALUES (:hip, :dia, :med, :dat, :idcli)";
+				$sql = "INSERT INTO anamnese (
+                    id_cli,
+                    an_fumante,
+                    an_queloide,
+                    an_gravidez,
+                    an_depressao,
+                    an_hiv,
+                    an_herpes,
+                    an_cancer,
+                    an_hepatite,
+                    an_cardiopata,
+                    an_anemia,
+                    an_hipertensao,
+                    an_diabetes,
+                    an_pele,
+                    an_alergia,
+                    an_medic,
+                    an_acne,
+                    an_outro,
+                    an_data
+                ) VALUES (
+                    :id_cli,
+                    :fumante,
+                    :queloide,
+                    :gravidez,
+                    :depressao,
+                    :hiv,
+                    :herpes,
+                    :cancer,
+                    :hepatite,
+                    :cardiopata,
+                    :anemia,
+                    :hipertensao,
+                    :diabetes,
+                    :doenca_pele,
+                    :alergia,
+                    :medicacao_continua,
+                    :medicacao_acne,
+                    :outro_problema,
+                    :data
+                )";
+
 				$stmt = $db->prepare($sql);
-				$stmt->bindValue(':hip', isset($an['an_hipertensao']) ? $an['an_hipertensao'] : null);
-				$stmt->bindValue(':dia', isset($an['an_diabetes']) ? $an['an_diabetes'] : null);
-				$stmt->bindValue(':med', isset($an['an_medic']) ? $an['an_medic'] : null);
-				$stmt->bindValue(':dat', isset($an['an_data']) ? $an['an_data'] : null);
-				$stmt->bindValue(':idcli', intval($an['id_cli']), PDO::PARAM_INT);
-				$stmt->execute();
+				
+				// Bind todos os valores
+				$stmt->bindValue(':id_cli', intval($an['id_cli']), PDO::PARAM_INT);
+				$stmt->bindValue(':fumante', $an['an_fumante'] ?? null);
+				$stmt->bindValue(':queloide', $an['an_queloide'] ?? null);
+				$stmt->bindValue(':gravidez', $an['an_gravidez'] ?? null);
+				$stmt->bindValue(':depressao', $an['an_depressao'] ?? null);
+				$stmt->bindValue(':hiv', $an['an_hiv'] ?? null);
+				$stmt->bindValue(':herpes', $an['an_herpes'] ?? null);
+				$stmt->bindValue(':cancer', $an['an_cancer'] ?? null);
+				$stmt->bindValue(':hepatite', $an['an_hepatite'] ?? null);
+				$stmt->bindValue(':cardiopata', $an['an_cardiopata'] ?? null);
+				$stmt->bindValue(':anemia', $an['an_anemia'] ?? null);
+				$stmt->bindValue(':hipertensao', $an['an_hipertensao'] ?? null);
+				$stmt->bindValue(':diabetes', $an['an_diabetes'] ?? null);
+				$stmt->bindValue(':doenca_pele', $an['an_pele'] ?? null);
+				$stmt->bindValue(':alergia', $an['an_alergia'] ?? null);
+				$stmt->bindValue(':medicacao_continua', $an['an_medic'] ?? null);
+				$stmt->bindValue(':medicacao_acne', $an['an_acne'] ?? null);
+				$stmt->bindValue(':outro_problema', $an['an_outro'] ?? null);
+				$stmt->bindValue(':data', $an['an_data'] ?? null);
+
+				// Mostra a query preparada
+                echo "SQL a ser executado:<br>";
+                $stmt->debugDumpParams();
+                
+                $result = $stmt->execute();
+                if (!$result) {
+                    echo "Erro SQL:<br>";
+                    print_r($stmt->errorInfo());
+                    return false;
+                }
 				close_database($db);
-				header('Location: view.php?id=' . intval($an['id_cli']));
-				return;
+				return true; // Sucesso!
 			} catch (PDOException $e) {
+				error_log("PDOException em add_an: " . $e->getMessage());
 				close_database($db);
 				$_SESSION['message'] = "Erro ao inserir anamnese: " . $e->getMessage();
 				$_SESSION['type'] = 'danger';
-				// Não redireciona para permitir exibição da mensagem na mesma página
-				return;
+				return false;
 			}
 		} catch (Exception $e) {
 			$_SESSION['message'] = "Aconteceu um erro: " . $e->getMessage();

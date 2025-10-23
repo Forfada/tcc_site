@@ -88,16 +88,13 @@ body {
     box-shadow: 0 5px 9px 0 rgba(0, 0, 0, 0.35), 0 6px 20px 0 rgba(0, 0, 0, 0.25);
 }
 .image-content, .card-content{
-    /* Use flex layout so we can align elements vertically */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 10px 14px;
 }
 .card-content{
-    /* fixed height to keep cards consistent and allow footer-aligned button */
-    height: 250px;
-    /* ensure internal layout fills vertical space */
+    height: 220px;
     justify-content: space-between;
 }
 .image-content{
@@ -149,7 +146,6 @@ body {
     font-size: 1.1rem;
     color: #541f33;
     text-align: center;
-    /* allow description to take available space but not push button out */
     flex: 1 1 auto;
     margin: 8px 0;
 }
@@ -160,12 +156,10 @@ body {
     padding: 8px 16px;
     background-color: var(--cor2);
     border-radius: 6px;
-    /* remove large margin and let flexbox position the button at bottom */
-    margin: 8px 0 0 0;
+    margin: 8px 0 6px 0;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
-    /* keep button from stretching horizontally */
     align-self: center;
 }
 .buttonc:hover{

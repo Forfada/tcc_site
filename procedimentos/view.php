@@ -9,8 +9,8 @@
     .view-proc-container {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;       /* centraliza verticalmente */
-        justify-content: center;   /* centraliza horizontalmente */
+        align-items: center;       
+        justify-content: center;   
         gap: 3vw;
         background: transparent;
         padding: 3.2rem 2vw 2.2rem 2vw;
@@ -24,7 +24,7 @@
         flex: 0 0 500px;
         max-width: 500px;
         width: 100%;
-        height: 420px;             /* altura maior em desktop */
+        height: 420px;            
         object-fit: cover;
         border-radius: 18px;
         box-shadow: 0 2px 14px rgba(84,31,51,0.12);
@@ -37,7 +37,7 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: flex-start;   /* alinhado à esquerda em desktops */
+        align-items: flex-start;   
         gap: 1.2rem;
         min-width: 260px;
         max-width: 500px;
@@ -195,7 +195,7 @@
         <div class="view-proc-info">
             <div class="view-proc-title"><?php echo htmlspecialchars($proc['p_nome']); ?></div>
             <div class="view-proc-desc"><?php echo nl2br(htmlspecialchars($proc['p_descricao'])); ?></div>
-            <div class=" txt2"><b>O que é?</b><br><?php echo nl2br(htmlspecialchars($proc['p_descricao2'])); ?></div>
+            <div class="txt2"><b>O que é?</b><br><?php echo nl2br(htmlspecialchars($proc['p_descricao2'])); ?></div>
 
             <div class="view-proc-extra">
                 <div><span>Valor:</span> <?php echo valor($proc['p_valor']); ?></div>

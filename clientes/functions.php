@@ -89,71 +89,46 @@ function index_an($id_cli = null) {
 	return $anamnese;
 }
 
-// Adiciona uma nova anamnese (espera dados em $_POST['anamnese'])
 function add_an() {
-	if (!empty($_POST['anamnese'])) {
-		try {
-			$an = $_POST['anamnese'];
-			// garante que exista id_cli
-			if (empty($an['id_cli'])) {
-				throw new Exception('ID do cliente ausente.');
-			}
+    if (empty($_POST['anamnese'])) return false;
 
-			// Normaliza a data enviada por datetime-local (ex: 2025-10-17T14:30)
-			if (!empty($an['an_data'])) {
-				$an['an_data'] = str_replace('T', ' ', $an['an_data']);
-				// se não contiver segundos, adiciona :00
-				if (preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/', $an['an_data'])) {
-					$an['an_data'] .= ':00';
-				}
-			}
+    $an = $_POST['anamnese'];
+    if (empty($an['id_cli'])) {
+        $_SESSION['message'] = "ID do cliente ausente.";
+        $_SESSION['type'] = "danger";
+        return false;
+    }
 
-			$db = open_database();
-			try {
-				$sql = "INSERT INTO anamnese (an_hipertensao, an_diabetes, an_medic, an_data, id_cli) VALUES (:hip, :dia, :med, :dat, :idcli)";
-				$stmt = $db->prepare($sql);
-				$stmt->bindValue(':hip', isset($an['an_hipertensao']) ? $an['an_hipertensao'] : null);
-				$stmt->bindValue(':dia', isset($an['an_diabetes']) ? $an['an_diabetes'] : null);
-				$stmt->bindValue(':med', isset($an['an_medic']) ? $an['an_medic'] : null);
-				$stmt->bindValue(':dat', isset($an['an_data']) ? $an['an_data'] : null);
-				$stmt->bindValue(':idcli', intval($an['id_cli']), PDO::PARAM_INT);
-				$stmt->execute();
-				close_database($db);
-				header('Location: view.php?id=' . intval($an['id_cli']));
-				return;
-			} catch (PDOException $e) {
-				close_database($db);
-				$_SESSION['message'] = "Erro ao inserir anamnese: " . $e->getMessage();
-				$_SESSION['type'] = 'danger';
-				// Não redireciona para permitir exibição da mensagem na mesma página
-				return;
-			}
-		} catch (Exception $e) {
-			$_SESSION['message'] = "Aconteceu um erro: " . $e->getMessage();
-			$_SESSION['type'] = "danger";
-		}
-	}
+    // Ajusta formato da data
+    if (!empty($an['an_data'])) $an['an_data'] .= ':00';
+
+    // Usa função genérica save() do sistema
+    save('anamnese', $an);
+
+    return true;
 }
 
 // Atualiza uma anamnese (pega id por GET 'anid' e dados em $_POST['anamnese'])
 function edit_an() {
-	try {
-		if (isset($_GET['anid'])) {
-			$id = intval($_GET['anid']);
-			if (isset($_POST['anamnese'])) {
-				$an = $_POST['anamnese'];
-				update('anamnese', $id, $an);
-				// tenta redirecionar para a view do cliente se id_cli foi enviado
-				$cliId = isset($an['id_cli']) ? intval($an['id_cli']) : null;
-				if ($cliId) header('Location: view.php?id=' . $cliId);
-			} else {
-				global $anamnese;
-				$anamnese = find('anamnese', $id);
-			}
-		}
-	} catch (Exception $e) {
-		$_SESSION['message'] = "Aconteceu um erro: " . $e->getMessage();
-		$_SESSION['type'] = "danger";
+    try {
+        if (!isset($_GET['anid'])) {
+            return false;
+        }
+
+        $id = intval($_GET['anid']);
+        
+        if (isset($_POST['anamnese'])) {
+            return update('anamnese', $id, $_POST['anamnese']);
+        } else {
+            global $anamnese;
+            $anamnese = find('anamnese', $id);
+            return !empty($anamnese);
+        }
+    } catch (Exception $e) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Erro: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
+        return false;
 	}
 }
 
@@ -164,5 +139,4 @@ function anamnese_delete($id = null) {
 	}
 	header('Location: view.php');
 }
-
 ?>

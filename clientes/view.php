@@ -55,7 +55,6 @@
     font-size: 1rem;
 }
 .view-cli-btns a.buttonc,
-.view-cli-btns a.buttona,
 .anamnese-panel .tabela-lunaris a.buttonc {
     margin: 0 !important;
     padding: 8px 8px !important;
@@ -74,7 +73,6 @@
     .anamnese-panel .tabela-wrapper { overflow-x: auto; }
 }
 
-/* --- Estilo do modal de exclusão de anamnese igual ao delete-cli-modal --- */
 .modal-card-custom {
     border-radius: 12px;
     padding: 20px 22px;
@@ -163,12 +161,13 @@
         <div class="row my-5">
             <div class="col-md-12">
                 <div class="anamnese-panel p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="mb-0">Anamnese</h4>
+                    <h4 class="mb-0 text-md-start">Anamnese</h4>
+                    <div class="col-12 col-md-12 text-md-end mt-2 mt-md-0">
                         <a href="add_an.php?client_id=<?php echo $cli['id']; ?>" class="buttonc" style="text-decoration: none"><i class="fa fa-plus"></i> Adicionar Anamnese</a>
                     </div>
                     <hr>
                     <?php if (!empty($anamnese) && is_array($anamnese)): ?>
+                        <?php foreach ($anamnese as $a): ?>
                         <div class="tabela-wrapper">
                             <table class="tabela-lunaris">
                                 <thead>
@@ -186,7 +185,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($anamnese as $a): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($a['an_queloide']); ?></td>
                                         <td><?php echo htmlspecialchars($a['an_hepatite']); ?></td>
@@ -238,10 +236,11 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
+                        <br>
+                    <?php endforeach; ?>
                     <?php else: ?>
                         <p class="text-muted mb-0">Não há anamnese cadastrada para este cliente.</p>
                     <?php endif; ?>

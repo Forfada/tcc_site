@@ -44,10 +44,14 @@
 
         <form action="add.php" method="post" id="formAdd">
             <div class="row justify-content-center">
-                <div class="col-md-5 d-flex justify-content-center gap-2 form">
+                <div class="col-md-10 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nome">Nome</label>
                         <input type="text" class="form-control nome" id="cli_nome" name="cli[cli_nome]" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="cli_cidade">Cidade</label>
+                        <input type="text" class="form-control" id="cli_cidade" name="cli[cli_cidade]" required>
                     </div>
                 </div>
             </div>
@@ -59,7 +63,7 @@
                         <input type="number" class="form-control text-center" id="cli_idade" name="cli[cli_idade]" required>
                     </div>
                 </div>
-                <div class="col-md-4 d-flex justify-content-center gap-2 form">
+                <div class="col-md-9 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_cpf">CPF</label>
                         <input type="text" class="form-control text-center cpf" id="cli_cpf" name="cli[cli_cpf]" required>
@@ -68,28 +72,21 @@
                         <label for="cli_num">Número de Telefone</label>
                         <input type="tel" class="form-control text-center telefone" id="cli_num" name="cli[cli_num]" required>
                     </div>
-                </div>
-            </div>
-
-            <div class="row justify-content-center">
-                <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_sexo">Sexo</label>
                         <input type="text" class="form-control" id="cli_sexo" name="cli[cli_sexo]" required>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="cli_cidade">Cidade</label>
-                        <input type="text" class="form-control" id="cli_cidade" name="cli[cli_cidade]" required>
-                    </div>
                 </div>
             </div>
 
             <div class="row justify-content-center">
-                <div class="col-md-5 d-flex justify-content-center gap-2 form">
+                <div class="col-md-3 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_nasc">Data de Nascimento</label>
                         <input type="date" class="form-control text-center" id="cli_nasc" name="cli[cli_nasc]" required>
                     </div>
+                </div>
+                <div class="col-md-5 d-flex justify-content-center gap-2 form">
                     <div class="form-group mb-3">
                         <label for="cli_obs">Observação</label>
                         <textarea type="text" class="form-control" id="cli_obs" name="cli[cli_obs]" rows=1></textarea>

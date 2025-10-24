@@ -162,7 +162,6 @@ include(INIT);
             </form>
         </div>
     </section>
-            <?php// endif;?>
 
 <?php include(FOOTER_TEMPLATE); ?>
 

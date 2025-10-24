@@ -24,18 +24,16 @@ if (!$client_id) {
     exit;
 }
 
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese'])) {
     if (session_status() === PHP_SESSION_NONE) session_start();
-    
-    error_log("Processando POST em add_an.php");
-    error_log("Dados POST: " . print_r($_POST['anamnese'], true));
     
     try {
         if (add_an()) {
             $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
             $_SESSION['type'] = "success";
-            error_log("Sucesso - Redirecionando para view.php?id=" . $client_id);
-            header("Location: view.php?id=" . $client_id);
+            header('Location: view.php?id=' . intval($_POST['anamnese']['id_cli']));
         } else {
             throw new Exception("Falha ao salvar anamnese");
         }

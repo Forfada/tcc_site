@@ -1,6 +1,10 @@
 CREATE DATABASE IF NOT EXISTS `bancolu` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `bancolu`;
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 -- criando tabela: clientes
 CREATE TABLE clientes (
     id INT(11) UNSIGNED PRIMARY KEY NOT NULL,
@@ -46,19 +50,54 @@ INSERT INTO `procedimentos` (`id`, `p_nome`, `p_descricao`, `p_descricao2`, `p_d
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
  
   -- criando tabela: usuarios
-CREATE TABLE usuarios (
-    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    u_email varchar(255) NOT NULL UNIQUE,
-    u_user varchar(120) NOT NULL,
-    u_senha varchar(120) NOT NULL,
-    foto varchar(255) DEFAULT NULL,
-    auth_token varchar(128) DEFAULT NULL
+CREATE TABLE `usuarios` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `u_email` varchar(255) NOT NULL,
+  `u_user` varchar(120) NOT NULL,
+  `u_senha` varchar(120) NOT NULL,
+  `foto` varchar(255) DEFAULT NULL,
+  `auth_token` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `usuarios` (`id`, `u_email`, `u_user`, `u_senha`, `foto`) VALUES
-(1, 'pedrofunceca@gmail.com', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png'),
-(2, 'adm@example.com', 'adm', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar1.png'),
-(3, 'user3@example.com', 'fds', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png');
+INSERT INTO `usuarios` (`id`, `u_email`, `u_user`, `u_senha`, `foto`, `auth_token`) VALUES
+(1, 'pedrofunceca@gmail.com', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.sXHUj16Ozct5isv1fBqP43RxrjasQQu', 'avatar1.png', '7dc90acdff5d1f63af5dd25bf38c4d1494ebfcd459c15138d9ba4cec28525898'),
+(2, 'adm@example.com', 'adm', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar1.png', NULL),
+(3, 'user3@example.com', 'fds', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png', NULL),
+(4, 'afonsodias3628@gmail.com', 'teste', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar4.png', NULL);
+
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `u_email` (`u_email`);
+
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+
+    -- criando tabela: password_resets
+CREATE TABLE `password_resets` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `token` varchar(128) NOT NULL,
+  `new_password_hash` varchar(255) NOT NULL,
+  `expires_at` datetime NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `password_resets` (`id`, `user_id`, `token`, `new_password_hash`, `expires_at`, `created_at`) VALUES
+(1, 1, '56f4b1aa4fda1b7af095787374bd88166cc9ffbde31baca73159e01d1c307a59', '$2y$10$rX9Ci5XQv4WPhk1oxhsj3OtnFR9qxXnKXlHwI93JzYpGEl3yfvTOG', '2025-10-24 19:04:37', '2025-10-24 16:04:37');
+
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `token` (`token`),
+  ADD KEY `user_id` (`user_id`);
+
+ALTER TABLE `password_resets`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+ALTER TABLE `password_resets`
+  ADD CONSTRAINT `fk_pr_user` FOREIGN KEY (`user_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+COMMIT;
+
 
 -- criando tabela: agendamento
  CREATE TABLE agendamento (
@@ -66,7 +105,8 @@ INSERT INTO `usuarios` (`id`, `u_email`, `u_user`, `u_senha`, `foto`) VALUES
      a_hora TIME NOT NULL,
      a_dia DATE NOT NULL,
      id_u INT(11) UNSIGNED NOT NULL,
-     id_p INT(11) UNSIGNED NOT NULL
+     id_p INT(11) UNSIGNED NOT NULL,
+     created_at timestamp NOT NULL DEFAULT current_timestamp()
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
  
  ALTER TABLE `agendamento`ADD CONSTRAINT `fk_agendamento_id_u` FOREIGN KEY (id_u) REFERENCES `usuarios` (id);
@@ -74,10 +114,10 @@ INSERT INTO `usuarios` (`id`, `u_email`, `u_user`, `u_senha`, `foto`) VALUES
  ALTER TABLE agendamento 
     MODIFY id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
--- (opcional mas recomendável)
--- adiciona timestamp de criação
-ALTER TABLE agendamento 
-    ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+INSERT INTO `agendamento` (`id`, `a_hora`, `a_dia`, `id_u`, `id_p`, `created_at`) VALUES
+(1, '10:00:00', '2025-10-30', 4, 7, '2025-10-24 16:34:14'),
+(2, '11:30:00', '2025-10-30', 4, 1, '2025-10-24 16:34:14'),
+(3, '09:00:00', '2025-10-31', 4, 5, '2025-10-24 16:36:48');
  
  -- criando tabela: anamnese 1
  CREATE TABLE anamnese (

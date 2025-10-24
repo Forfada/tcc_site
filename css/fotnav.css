@@ -79,7 +79,7 @@
 	}
 
 	.custom-dropdown .dropdown-link {
-		color: red;
+		color: rgb(255, 254, 254);
 		text-decoration: none;
 		padding: 5px 0;
 		transition: color 0.2s;

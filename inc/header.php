@@ -106,14 +106,14 @@ checkAutoLogin();
                     <a href="<?= BASEURL ?>agendamentos/historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-user-clock"></i>  Histórico</a>
                 <?php endif; ?>
 
-                <button class="btn btn-outline-warning w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>
+                <button class="btn btn-outline-light w-100 text-start mt-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"><i class="fa-solid fa-trash-can"></i>  Excluir conta</button>
             </div>
 
             <hr class="border-light">
 
             <div>
                 <p class="mb-1 fw-semibold text-uppercase small">Sessão</p>
-                <button class="btn btn-outline-danger w-100 text-start" data-bs-toggle="modal" data-bs-target="#confirmLogoutModal"><i class="fa-solid fa-person-walking-arrow-right"></i>  Sair</button>
+                <button class="btn btn-outline-light w-100 text-start" data-bs-toggle="modal" data-bs-target="#confirmLogoutModal"><i class="fa-solid fa-person-walking-arrow-right"></i>  Sair</button>
             </div>
 
         </div>

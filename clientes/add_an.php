@@ -1,7 +1,7 @@
 <?php
 include('functions.php');
 
-// somente administrador pode acessar a área de clientes
+// só administrador pode acessar
 if (!function_exists('is_admin') || !is_admin()) {
     if (session_status() === PHP_SESSION_NONE) session_start();
     $_SESSION['message'] = "Você não pode acessar essa funcionalidade.";
@@ -25,23 +25,29 @@ if (!$client_id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['anamnese'])) {
-    $success = add_an();
+    if (session_status() === PHP_SESSION_NONE) session_start();
     
-    if ($success === true) {
-        $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
-        $_SESSION['type'] = "success";
-        header("Location: view.php?id=" . $client_id);
-        exit;
-    }
-    if (empty($_SESSION['message'])) {
-        $_SESSION['message'] = "Erro ao cadastrar anamnese.";
+    error_log("Processando POST em add_an.php");
+    error_log("Dados POST: " . print_r($_POST['anamnese'], true));
+    
+    try {
+        if (add_an()) {
+            $_SESSION['message'] = "Anamnese cadastrada com sucesso!";
+            $_SESSION['type'] = "success";
+            error_log("Sucesso - Redirecionando para view.php?id=" . $client_id);
+            header("Location: view.php?id=" . $client_id);
+        } else {
+            throw new Exception("Falha ao salvar anamnese");
+        }
+    } catch (Exception $e) {
+        $_SESSION['message'] = $e->getMessage();
         $_SESSION['type'] = "danger";
+        error_log("Erro - Redirecionando de volta para add_an.php");
+        header("Location: " . $_SERVER['PHP_SELF'] . "?client_id=" . $client_id);
     }
-    header("Location: " . $_SERVER['PHP_SELF'] . "?client_id=" . $client_id);
     exit;
 }
 
-// carrega dados do cliente para o formulário
 view($client_id);
 
 include(INIT);
@@ -49,7 +55,6 @@ include(HEADER_TEMPLATE);
 ?>
 
 <style>
-    /* Elegant form styles */
     :root {
         --card-bg: var(--cor1);
         --card-border: rgba(13,110,253,0.08);
@@ -116,7 +121,6 @@ include(HEADER_TEMPLATE);
         transition: border-color 0.12s ease, box-shadow 0.12s ease;
     }
 
-    /* Responsive tweaks */
     @media (max-width: 991px) {
         .section-box { padding: 16px; }
       }
@@ -160,11 +164,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Fumante:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_fumante]" id="fumante_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_fumante]" id="fumante_sim" value="Sim" required>
                                     <label class="form-check-label" for="fumante_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_fumante]" id="fumante_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_fumante]" id="fumante_nao" value="Não">
                                     <label class="form-check-label" for="fumante_nao">Não</label>
                                 </div>
                             </div>
@@ -173,11 +177,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Queloide:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_queloide]" id="queloide_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_queloide]" id="queloide_sim" value="Sim" required>
                                     <label class="form-check-label" for="queloide_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_queloide]" id="queloide_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_queloide]" id="queloide_nao" value="Não">
                                     <label class="form-check-label" for="queloide_nao">Não</label>
                                 </div>
                             </div>
@@ -186,11 +190,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Gravidez:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_gravidez]" id="gravidez_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_gravidez]" id="gravidez_sim" value="Sim" required>
                                     <label class="form-check-label" for="gravidez_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_gravidez]" id="gravidez_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_gravidez]" id="gravidez_nao" value="Não">
                                     <label class="form-check-label" for="gravidez_nao">Não</label>
                                 </div>
                             </div>
@@ -199,11 +203,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Depressão:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_depressao]" id="depressao_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_depressao]" id="depressao_sim" value="Sim" required>
                                     <label class="form-check-label" for="depressao_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_depressao]" id="depressao_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_depressao]" id="depressao_nao" value="Não">
                                     <label class="form-check-label" for="depressao_nao">Não</label>
                                 </div>
                             </div>
@@ -220,11 +224,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>HIV:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hiv]" id="hiv_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hiv]" id="hiv_sim" value="Sim" required>
                                     <label class="form-check-label" for="hiv_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hiv]" id="hiv_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hiv]" id="hiv_nao" value="Não">
                                     <label class="form-check-label" for="hiv_nao">Não</label>
                                 </div>
                             </div>
@@ -233,11 +237,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Herpes:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_herpes]" id="herpes_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_herpes]" id="herpes_sim" value="Sim" required>
                                     <label class="form-check-label" for="herpes_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_herpes]" id="herpes_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_herpes]" id="herpes_nao" value="Não">
                                     <label class="form-check-label" for="herpes_nao">Não</label>
                                 </div>
                             </div>
@@ -246,11 +250,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Câncer:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_cancer]" id="cancer_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_cancer]" id="cancer_sim" value="Sim" required>
                                     <label class="form-check-label" for="cancer_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_cancer]" id="cancer_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_cancer]" id="cancer_nao" value="Não">
                                     <label class="form-check-label" for="cancer_nao">Não</label>
                                 </div>
                             </div>
@@ -259,11 +263,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Hepatite:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hepatite]" id="hepatite_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hepatite]" id="hepatite_sim" value="Sim" required>
                                     <label class="form-check-label" for="hepatite_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hepatite]" id="hepatite_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hepatite]" id="hepatite_nao" value="Não">
                                     <label class="form-check-label" for="hepatite_nao">Não</label>
                                 </div>
                             </div>
@@ -279,11 +283,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Cardiopata:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_cardiopata]" id="cardiopata_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_cardiopata]" id="cardiopata_sim" value="Sim" required>
                                     <label class="form-check-label" for="cardiopata_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_cardiopata]" id="cardiopata_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_cardiopata]" id="cardiopata_nao" value="Não">
                                     <label class="form-check-label" for="cardiopata_nao">Não</label>
                                 </div>
                             </div>
@@ -292,11 +296,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Anemia:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_anemia]" id="anemia_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_anemia]" id="anemia_sim" value="Sim" required>
                                     <label class="form-check-label" for="anemia_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_anemia]" id="anemia_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_anemia]" id="anemia_nao" value="Não">
                                     <label class="form-check-label" for="anemia_nao">Não</label>
                                 </div>
                             </div>
@@ -305,11 +309,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Hipertensão:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hipertensao]" id="hipertensao_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hipertensao]" id="hipertensao_sim" value="Sim" required>
                                     <label class="form-check-label" for="hipertensao_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_hipertensao]" id="hipertensao_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_hipertensao]" id="hipertensao_nao" value="Não">
                                     <label class="form-check-label" for="hipertensao_nao">Não</label>
                                 </div>
                             </div>
@@ -318,11 +322,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Diabetes:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_diabetes]" id="diabetes_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_diabetes]" id="diabetes_sim" value="Sim" required>
                                     <label class="form-check-label" for="diabetes_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_diabetes]" id="diabetes_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_diabetes]" id="diabetes_nao" value="Não">
                                     <label class="form-check-label" for="diabetes_nao">Não</label>
                                 </div>
                             </div>
@@ -338,11 +342,11 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Doença de Pele:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_doenca_pele]" id="doenca_pele_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_pele]" id="doenca_pele_sim" value="Sim" required>
                                     <label class="form-check-label" for="doenca_pele_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_doenca_pele]" id="doenca_pele_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_pele]" id="doenca_pele_nao" value="Não">
                                     <label class="form-check-label" for="doenca_pele_nao">Não</label>
                                 </div>
                             </div>
@@ -351,12 +355,25 @@ include(HEADER_TEMPLATE);
                             <label class="mb-2"><h5>Alergia:</h5></label>
                             <div class="radio-group">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_alergia]" id="alergia_sim" value="sim" required>
+                                    <input class="form-check-input" type="radio" name="anamnese[an_alergia]" id="alergia_sim" value="Sim" required>
                                     <label class="form-check-label" for="alergia_sim">Sim</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="anamnese[an_alergia]" id="alergia_nao" value="não">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_alergia]" id="alergia_nao" value="Não">
                                     <label class="form-check-label" for="alergia_nao">Não</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <label class="mb-2"><h5>Glaucoma:</h5></label>
+                            <div class="radio-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_glaucoma]" id="glaucoma_sim" value="Sim" required>
+                                    <label class="form-check-label" for="glaucoma_sim">Sim</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="anamnese[an_glaucoma]" id="glaucoma_nao" value="Não">
+                                    <label class="form-check-label" for="glaucoma_nao">Não</label>
                                 </div>
                             </div>
                         </div>
@@ -369,20 +386,20 @@ include(HEADER_TEMPLATE);
                     <div class="row gx-4 gy-4 justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="an_medicacao_continua">Toma medicação contínua?</label>
-                                <input type="text" class="form-control" id="an_medicacao_continua" name="anamnese[an_medicacao_continua]" required>
+                                <label for="an_medic">Toma medicação contínua?</label>
+                                <input type="text" class="form-control" id="an_medic" name="anamnese[an_medic]" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="an_medicacao_acne">Toma medicação para acne?</label>
-                                <input type="text" class="form-control" id="an_medicacao_acne" name="anamnese[an_medicacao_acne]" required>
+                                <label for="an_acne">Toma medicação para acne?</label>
+                                <input type="text" class="form-control" id="an_acne" name="anamnese[an_acne]" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="an_outro_problema">Possui outro problema de saúde?</label>
-                                <input type="text" class="form-control" id="an_outro_problema" name="anamnese[an_outro_problema]" required>
+                                <label for="an_outro">Possui outro problema de saúde?</label>
+                                <input type="text" class="form-control" id="an_outro" name="anamnese[an_outro]" required>
                             </div>
                         </div>
                         <div class="col-md-6">

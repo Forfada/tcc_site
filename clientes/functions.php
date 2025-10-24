@@ -124,8 +124,8 @@ function add_an() {
                     an_medic,
                     an_acne,
                     an_outro,
-                    an_data,
-                    an_glaucoma
+					an_glaucoma,
+                    an_data
                 ) VALUES (
                     :id_cli,
                     :fumante,
@@ -145,8 +145,8 @@ function add_an() {
                     :medic,
                     :acne,
                     :outro,
-                    :data,
-                    'não'
+					:glaucoma,
+                    :data
                 )";
 
                 $stmt = $db->prepare($sql);
@@ -170,6 +170,7 @@ function add_an() {
                 $stmt->bindValue(':medic', $an['an_medicacao_continua']);
                 $stmt->bindValue(':acne', $an['an_medicacao_acne']);
                 $stmt->bindValue(':outro', $an['an_outro_problema']);
+				$stmt->bindValue(':glaucoma', $an['an_glaucoma']);
                 $stmt->bindValue(':data', $an['an_data'] . ':00');
 
                 // Mostra a query preparada
@@ -201,23 +202,25 @@ function add_an() {
 
 // Atualiza uma anamnese (pega id por GET 'anid' e dados em $_POST['anamnese'])
 function edit_an() {
-	try {
-		if (isset($_GET['anid'])) {
-			$id = intval($_GET['anid']);
-			if (isset($_POST['anamnese'])) {
-				$an = $_POST['anamnese'];
-				update('anamnese', $id, $an);
-				// tenta redirecionar para a view do cliente se id_cli foi enviado
-				$cliId = isset($an['id_cli']) ? intval($an['id_cli']) : null;
-				if ($cliId) header('Location: view.php?id=' . $cliId);
-			} else {
-				global $anamnese;
-				$anamnese = find('anamnese', $id);
-			}
-		}
-	} catch (Exception $e) {
-		$_SESSION['message'] = "Aconteceu um erro: " . $e->getMessage();
-		$_SESSION['type'] = "danger";
+    try {
+        if (!isset($_GET['anid'])) {
+            return false;
+        }
+
+        $id = intval($_GET['anid']);
+        
+        if (isset($_POST['anamnese'])) {
+            return update('anamnese', $id, $_POST['anamnese']);
+        } else {
+            global $anamnese;
+            $anamnese = find('anamnese', $id);
+            return !empty($anamnese);
+        }
+    } catch (Exception $e) {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        $_SESSION['message'] = "Erro: " . $e->getMessage();
+        $_SESSION['type'] = "danger";
+        return false;
 	}
 }
 
@@ -228,5 +231,4 @@ function anamnese_delete($id = null) {
 	}
 	header('Location: view.php');
 }
-
 ?>

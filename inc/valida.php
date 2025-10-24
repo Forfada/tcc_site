@@ -1,6 +1,7 @@
 <?php
 include("../config.php");
 require_once(DBAPI);
+require_once("cookie_handler.php");
 session_start();
 
 try {
@@ -27,6 +28,18 @@ try {
         $_SESSION['nome'] = $dados['u_user'];
         $_SESSION['user'] = $dados['u_num'];
         $_SESSION['foto'] = $dados['foto'];
+
+        // Gerar token único para autenticação persistente
+        $token = bin2hex(random_bytes(32));
+        
+        // Salvar cookies de autenticação
+        if (isset($_POST['remember']) && $_POST['remember'] == '1') {
+            CookieHandler::setLoginCookie($dados['id'], $token);
+            
+            // Atualizar o token no banco de dados
+            $stmt = $bd->prepare("UPDATE usuarios SET auth_token = :token WHERE id = :id");
+            $stmt->execute([':token' => $token, ':id' => $dados['id']]);
+        }
 
         $_SESSION['message'] = "Bem-vindo(a) " . $_SESSION['nome'] . "!";
         $_SESSION['type'] = "info";

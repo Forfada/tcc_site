@@ -54,9 +54,6 @@ class CookieManager {
     }
 
     checkCookieConsent() {
-        // Re-check cookie consent from actual cookie
-        this.cookieConsent = this.getCookie('cookieConsent');
-        
         if (!this.cookieConsent) {
             this.showCookieBanner();
         } else {
@@ -78,6 +75,12 @@ class CookieManager {
     hideCookieBanner() {
         const banner = document.getElementById('cookieBanner');
         if (banner) banner.style.display = 'none';
+        // Esconde o modal também
+        const modalElement = document.getElementById('cookieModal');
+        if (modalElement) {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) modal.hide();
+        }
     }
 
     showCookieModal() {
@@ -88,33 +91,12 @@ class CookieManager {
         }
     }
 
-    hideModal() {
-        const modalElement = document.getElementById('cookieModal');
-        if (modalElement) {
-            const modal = bootstrap.Modal.getInstance(modalElement);
-            if (modal) {
-                modal.hide();
-            }
-            // Remove o backdrop do modal se existir
-            const backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
-            // Remove a classe modal-open do body
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-        }
-    }
-
     acceptAllCookies() {
         this.setCookie('cookieConsent', 'all', 365);
         this.setCookie('analytics', 'true', 365);
         this.setCookie('marketing', 'true', 365);
         this.setCookie('preferences', 'true', 365);
-        this.cookieConsent = 'all'; // Update the property
         this.hideCookieBanner();
-        this.hideModal();
     }
 
     savePreferences() {
@@ -126,14 +108,31 @@ class CookieManager {
         this.setCookie('analytics', analytics ? 'true' : 'false', 365);
         this.setCookie('marketing', marketing ? 'true' : 'false', 365);
         this.setCookie('preferences', preferences ? 'true' : 'false', 365);
-
-        this.cookieConsent = 'custom'; // Update the property
         this.hideCookieBanner();
-        this.hideModal();
     }
 }
 
-// Inicializar o gerenciador de cookies quando o documento estiver pronto
+// Adicionar tratamento para o erro do img-bo-container
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializa o gerenciador de cookies
     new CookieManager();
+    
+    // Trata o img-bo-container com segurança
+    const imgBoContainer = document.getElementById('img-bo-container');
+    if (imgBoContainer) {
+        const imgHtml = imgBoContainer.innerHTML;
+        function toggleImage() {
+            const screenWidth = window.innerWidth;
+            if (screenWidth < 865) {
+                const img = document.querySelector('.img-bo');
+                if (img) img.remove();
+            } else {
+                if (!document.querySelector('.img-bo')) {
+                    imgBoContainer.innerHTML = imgHtml;
+                }
+            }
+        }
+        toggleImage();
+        window.addEventListener('resize', toggleImage);
+    }
 });

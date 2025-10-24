@@ -13,4 +13,5 @@
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/fotnav.css">
 	<link rel="stylesheet" href="<?php echo BASEURL; ?>css/swiper-bundle.min.css">
 	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+	<script src="<?php echo BASEURL; ?>js/cookie-manager-new.js" defer></script>
 </head>

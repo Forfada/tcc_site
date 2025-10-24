@@ -142,8 +142,9 @@
 
 <script>
 	const imgBoContainer = document.getElementById('img-bo-container');
-	const imgHtml = imgBoContainer.innerHTML;
-	function toggleImage() {
+	if (imgBoContainer) { // Only proceed if element exists
+		const imgHtml = imgBoContainer.innerHTML;
+		function toggleImage() {
 		const screenWidth = window.innerWidth;
 		if (screenWidth < 865) {
 			const img = document.getElementById('laravel-img');
@@ -154,8 +155,9 @@
 			}
 		}
 	}
-	toggleImage();
-	window.addEventListener('resize', toggleImage);
+		toggleImage();
+		window.addEventListener('resize', toggleImage);
+	} // Close if (imgBoContainer)
 
 	document.addEventListener("DOMContentLoaded", function() {
 		const btn = document.querySelector(".buttonS");

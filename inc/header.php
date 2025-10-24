@@ -5,7 +5,11 @@
 
 <body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="80" tabindex="0">
 
-<?php if (!isset($_SESSION)) session_start(); ?>
+<?php 
+if (!isset($_SESSION)) session_start();
+require_once(ABSPATH . "inc/auto_login.php");
+checkAutoLogin();
+?>
 
 <!-- ALERTA DE MENSAGEM -->
 <?php if (!empty($_SESSION['message'])): ?>

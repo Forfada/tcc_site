@@ -59,6 +59,7 @@ INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
 (2, '15998009620', 'adm', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar1.png'),
 (3, '15998009629', 'fds', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png');
 
+ALTER TABLE usuarios ADD COLUMN auth_token VARCHAR(64) DEFAULT NULL;
 
 -- criando tabela: agendamento
  CREATE TABLE agendamento (

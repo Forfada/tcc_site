@@ -31,6 +31,11 @@ session_start();
                     <label for="pass">Senha</label>
                 </div>
 
+                <div class="form-check mb-3">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember" value="1">
+                    <label class="form-check-label" for="remember">Manter conectado</label>
+                </div>
+
                 <div class="d-grid gap-2 mb-3">
                     <button type="submit" class="btn btn-conect">
                         <i class="fa-solid fa-user-check me-2"></i> Conectar

@@ -2,41 +2,65 @@
 include("../config.php");
 include(INIT);
 include(DBAPI);
-session_start();
+require_once(ABSPATH . 'inc/mail.php'); // helper
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $numero = trim($_POST['numero'] ?? '');
-    $nova_senha = trim($_POST['nova_senha'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    
+    if (!empty($email)) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['message'] = "Email inválido.";
+            $_SESSION['type'] = "warning";
+            header("Location: alterar_senha.php");
+            exit;
+        }
 
-    if (!empty($numero) && !empty($nova_senha)) {
-        $senha_criptografada = cri($nova_senha);
+            try {
+                $conn = open_database();
+                $stmt = $conn->prepare("SELECT id, u_user FROM usuarios WHERE u_email = :email");
+                $stmt->bindParam(':email', $email);
+                $stmt->execute();
 
-        try {
-            $conn = open_database();
+                if ($stmt->rowCount() > 0) {
+                    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                    
+                    // Gerar código de verificação
+                    $codigo = rand(100000, 999999);
+                    $_SESSION['reset_senha'] = [
+                        'email' => $email,
+                        'codigo' => $codigo,
+                        'user_id' => $user['id'],
+                        'expires' => time() + 3600 // 1 hora para usar o código
+                    ];
 
-            $stmt = $conn->prepare("SELECT id FROM usuarios WHERE u_num = :numero");
-            $stmt->bindParam(':numero', $numero);
-            $stmt->execute();
+                    // Enviar email com o código
+                    $subject = 'Código de Verificação - Alteração de Senha';
+                    $body = '<p>Olá ' . htmlspecialchars($user['u_user']) . ',</p>';
+                    $body .= '<p>Você solicitou a alteração de sua senha. Use o código abaixo para confirmar:</p>';
+                    $body .= '<h2 style="font-size: 24px; background: #f8f9fa; padding: 10px; text-align: center;">' . $codigo . '</h2>';
+                    $body .= '<p>Este código é válido por 1 hora.</p>';
+                    $body .= '<p>Se você não solicitou esta alteração, ignore este e-mail.</p>';
 
-            if ($stmt->rowCount() > 0) {
-                $update = $conn->prepare("UPDATE usuarios SET u_senha = :senha WHERE u_num = :numero");
-                $update->bindParam(':senha', $senha_criptografada);
-                $update->bindParam(':numero', $numero);
-                $update->execute();
-
-                $_SESSION['message'] = "Senha alterada com sucesso!";
-                $_SESSION['type'] = "success";
-
-                // Redireciona para login
-                header("Location: login.php");
-                exit;
-            } else {
-                $_SESSION['message'] = "Número não encontrado.";
-                $_SESSION['type'] = "warning";
-                header("Location: alterar_senha.php");
-                exit;
-            }
-
+                    $sent = send_email($email, $subject, $body, strip_tags($body));
+                    if (!$sent) {
+                        $_SESSION['message'] = "Erro ao enviar o email. Tente novamente.";
+                        $_SESSION['type'] = "danger";
+                        header("Location: alterar_senha.php");
+                    } else {
+                        $_SESSION['message'] = "Enviamos um código de verificação para seu email.";
+                        $_SESSION['type'] = "info";
+                        header("Location: verificar_reset_senha.php");
+                    }
+                    exit;
+                } else {
+                    $_SESSION['message'] = "Email não encontrado.";
+                    $_SESSION['type'] = "warning";
+                    header("Location: alterar_senha.php");
+                    exit;
+                }
         } catch (PDOException $e) {
             $_SESSION['message'] = "Erro no banco: " . $e->getMessage();
             $_SESSION['type'] = "danger";
@@ -62,18 +86,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form action="alterar_senha.php" method="POST">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form2 telefone" name="numero" id="numero" placeholder="Seu número" required>
-                    <label for="numero">Número</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control form2" name="nova_senha" id="nova_senha" placeholder="Nova senha" minlength="8" required>
-                    <label for="nova_senha">Nova Senha</label>
+                    <input type="email" class="form-control form2" name="email" id="email" placeholder="Seu email" required>
+                    <label for="email">Email</label>
                 </div>
 
                 <div class="d-grid gap-2 mb-3">
                     <button type="submit" class="btn btn-regis">
-                        <i class="fa-solid fa-lock me-2"></i> Alterar Senha
+                        <i class="fa-solid fa-paper-plane me-2"></i> Enviar Código
                     </button>
                 </div>
 

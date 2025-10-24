@@ -27,8 +27,8 @@ session_start();
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form2 telefone" name="numero" id="numero" placeholder="Telefone" required>
-                    <label for="numero">Telefone</label>
+                    <input type="email" class="form-control form2" name="email" id="email" placeholder="Email" required>
+                    <label for="email">Email</label>
                 </div>
 
                 <div class="form-floating mb-4">

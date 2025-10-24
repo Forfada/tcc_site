@@ -306,112 +306,68 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  // inicializa conjunto de datas indisponíveis
   window.unavailableDates = new Set();
 
-  // helper para obter minutos a partir do resumo (JS já existente)
-  const getDurationMinutes = () => (typeof computeSummary === 'function' ? computeSummary().minutes : 30);
+  const getDurationMinutes = () =>
+    typeof computeSummary === 'function' ? computeSummary().minutes : 30;
 
-  // referencia ao input
   const el = document.querySelector("#a_dia");
   if (!el) return;
 
-  // garante flatpickr disponível (CDN fixado para versão UMD)
   if (typeof flatpickr !== 'function') {
-    console.error('flatpickr não está disponível. Verifique o script include.');
+    console.error('flatpickr não está disponível.');
     return;
   }
 
-  // init flatpickr no campo de data (impede datas passadas)
   const fp = flatpickr(el, {
-    dateFormat: "Y-m-d",    // internal format kept for server requests
+    dateFormat: "Y-m-d",
     altInput: true,
-    altFormat: "d/m/Y",     // presentation format (d-m-y) as requested
-    locale: "pt",           // Portuguese month names and labels
-    // não permitir selecionar o dia atual — só a partir de amanhã
-    minDate: (function(){
+    altFormat: "d/m/Y",
+    locale: "pt",
+    minDate: (() => {
       const t = new Date();
       return new Date(t.getFullYear(), t.getMonth(), t.getDate() + 1);
     })(),
     allowInput: false,
     clickOpens: true,
-    appendTo: document.body, // keep calendar above other elements and avoid clipping
+    appendTo: document.body,
     monthSelectorType: 'static',
-    static: false,
-    // onDayCreate: fecha após params (dateObj, dateStr, instance, dayElem)
     onDayCreate: function(dateObj, dateStr, instance, dayElem) {
       if (!dateObj || !dayElem) return;
-      // dateObj é Date — só usa métodos se for Date
-      if (Object.prototype.toString.call(dateObj) !== '[object Date]') return;
-      const y = dateObj.getFullYear();
-      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const d = String(dateObj.getDate()).padStart(2, '0');
-      const ymd = `${y}-${m}-${d}`;
-      if (window.unavailableDates && window.unavailableDates.has(ymd)) {
+      const ymd = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+      if (window.unavailableDates.has(ymd)) {
         dayElem.classList.add('no-slots');
         dayElem.title = 'Sem horários disponíveis';
       } else {
         const today = new Date();
-        const dayOnly = new Date(y, dateObj.getMonth(), dateObj.getDate());
-        // considerar hoje como não selecionável também
+        const dayOnly = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
         if (dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
           dayElem.classList.add('flatpickr-disabled');
         }
       }
     },
     onChange: function(selectedDates, dateStr) {
-      // protege caso seletor permita selecionar data indisponível (fallback)
       if (selectedDates && selectedDates[0]) {
         const dt = selectedDates[0];
-        const y = dt.getFullYear();
-        const m = String(dt.getMonth() + 1).padStart(2, '0');
-        const d = String(dt.getDate()).padStart(2, '0');
-        const ymd = `${y}-${m}-${d}`;
+        const ymd = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
         if (window.unavailableDates.has(ymd)) {
-          // limpa input e avisa
           el.value = '';
-          if (typeof alert === 'function') alert('Data sem horários disponíveis. Escolha outra data.');
+          alert('Data sem horários disponíveis. Escolha outra data.');
           return;
         }
       }
       if (typeof fetchHorarios === 'function') fetchHorarios();
     },
-    onReady: function(selectedDates, dateStr, instance) {
-      loadUnavailable(instance);
-    },
-    onMonthChange: function(selectedDates, dateStr, instance) {
-      loadUnavailable(instance);
-    },
-    onYearChange: function(selectedDates, dateStr, instance) {
-      loadUnavailable(instance);
-    }
+    onReady: loadUnavailable,
+    onMonthChange: loadUnavailable,
+    onYearChange: loadUnavailable
   });
 
-  // DEBUG: confirmar inicialização
-  console.debug('flatpickr loaded:', typeof flatpickr !== 'undefined', 'instance:', fp);
-
-  // garantir abertura ao clicar/focar (fallback se algo bloquear click automático)
-  try {
-    if (fp && typeof fp.open === 'function') {
-      el.addEventListener('click', function (ev) { ev.preventDefault(); fp.open(); });
-      el.addEventListener('focus', function () { fp.open(); });
-    } else {
-      // fallback: abre o calendário padrão do navegador como último recurso
-      el.addEventListener('click', function () { el.showPicker && el.showPicker(); });
-      el.addEventListener('focus', function () { el.showPicker && el.showPicker(); });
-      console.warn('fp.open não disponível; usando fallback showPicker se suportado.');
-    }
-  } catch (e) {
-    console.warn('Não foi possível anexar handlers de abertura do calendário:', e);
-  }
-
-  // função que carrega datas indisponíveis do servidor e define a função de disable dinamicamente
   async function loadUnavailable(fpInstance) {
     const year = fpInstance.currentYear;
-    const month = fpInstance.currentMonth; // 0-indexed
+    const month = fpInstance.currentMonth;
     const start = `${year}-${String(month+1).padStart(2,'0')}-01`;
-    const lastDay = new Date(year, month+1, 0).getDate();
-    const end = `${year}-${String(month+1).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+    const end = `${year}-${String(month+1).padStart(2,'0')}-${String(new Date(year, month+1, 0).getDate()).padStart(2,'0')}`;
     const duration = getDurationMinutes();
 
     try {
@@ -424,357 +380,185 @@ document.addEventListener('DOMContentLoaded', function () {
       const arr = await res.json();
       window.unavailableDates = new Set(Array.isArray(arr) ? arr : []);
 
-      // define função de disable que usa o Set (retorna true para desabilitar) — só se método disponível
       if (fpInstance && typeof fpInstance.set === 'function') {
         fpInstance.set('disable', [function(date) {
-          const y = date.getFullYear();
-          const m = String(date.getMonth() + 1).padStart(2, '0');
-          const d = String(date.getDate()).padStart(2, '0');
-          const ymd = `${y}-${m}-${d}`;
+          const ymd = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
           const today = new Date();
-          const dayOnly = new Date(y, date.getMonth(), date.getDate());
-          // tratar hoje como passado para impedir seleção
+          const dayOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
           const isPast = dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate());
           return isPast || window.unavailableDates.has(ymd);
         }]);
-      } else {
-        console.warn('fpInstance.set não disponível; seleção será controlada por onChange/onDayCreate.');
       }
-
-      // redesenhar para aplicar classes e estado
       fpInstance.redraw && fpInstance.redraw();
     } catch (err) {
       console.error('Erro ao carregar datas indisponíveis:', err);
     }
   }
 
-  // quando procedimentos mudarem, recarregar indisponíveis (para considerar duration)
   const procContainers = document.querySelectorAll('#procedimentos-list, #dropdownContent');
   procContainers.forEach(c => c && c.addEventListener('change', function() {
-    // recalc duration then reload month
     loadUnavailable(fp);
     if (typeof computeSummary === 'function') computeSummary();
   }));
 });
 </script>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const dataInput = document.getElementById('a_dia');
-  // procContainer may be a grid or the dropdown content depending on template
+document.addEventListener('DOMContentLoaded', function () {
+  const dataInput = document.getElementById('a_dia');
   const procContainer = document.getElementById('procedimentos-list') || document.getElementById('dropdownContent');
-        const horaSelect = document.getElementById('a_hora');
-        const summaryList = document.getElementById('summary-list');
-        const summaryTotal = document.getElementById('summary-total');
+  const horaSelect = document.getElementById('a_hora');
+  const summaryList = document.getElementById('summary-list');
+  const summaryTotal = document.getElementById('summary-total');
 
-        function parseDurToMinutes(dur) {
-            if (!dur) return 30;
-            const parts = dur.split(':');
-            const hh = parseInt(parts[0]) || 0;
-            const mm = parseInt(parts[1]) || 0;
-            const m = hh*60 + mm;
-            return m > 0 ? m : 30;
-        }
+  function parseDurToMinutes(dur) {
+    if (!dur) return 30;
+    const [hh, mm] = dur.split(':').map(Number);
+    return hh * 60 + mm || 30;
+  }
 
-        function computeSummary() {
-            // prefer the prettier renderer if available
-            if (typeof renderSummary === 'function') return renderSummary();
-            const checks = Array.from((procContainer ? procContainer.querySelectorAll('input[type="checkbox"]:checked') : document.querySelectorAll('#dropdownContent input[type="checkbox"]:checked')));
-            if (checks.length === 0) {
-                summaryList.textContent = 'Nenhum procedimento selecionado.';
-                summaryTotal.textContent = '';
-                return {minutes: 0, price: 0};
-            }
-            let minutes = 0;
-            let price = 0;
-            summaryList.innerHTML = '';
-            checks.forEach(ch => {
-                const label = ch.parentNode.textContent.trim();
-                const li = document.createElement('div');
-                li.textContent = label;
-                summaryList.appendChild(li);
-                minutes += parseDurToMinutes(ch.dataset.dur);
-                const pv = parseFloat(String(ch.dataset.valor).replace(',', '.')) || 0;
-                price += pv;
-            });
-            summaryTotal.textContent = 'Duração total: ' + minutes + ' minutos — Valor total: R$ ' + price.toFixed(2).replace('.', ',');
-            return {minutes, price};
-        }
+  function computeSummary() {
+    if (typeof renderSummary === 'function') return renderSummary();
+    const checks = Array.from(procContainer.querySelectorAll('input[type="checkbox"]:checked'));
+    if (checks.length === 0) {
+      summaryList.textContent = 'Nenhum procedimento selecionado.';
+      summaryTotal.textContent = '';
+      return {minutes: 0, price: 0};
+    }
+    let minutes = 0;
+    let price = 0;
+    summaryList.innerHTML = '';
+    checks.forEach(ch => {
+      const label = ch.parentNode.textContent.trim();
+      const li = document.createElement('div');
+      li.textContent = label;
+      summaryList.appendChild(li);
+      minutes += parseDurToMinutes(ch.dataset.dur);
+      const pv = parseFloat(String(ch.dataset.valor).replace(',', '.')) || 0;
+      price += pv;
+    });
+    summaryTotal.textContent = 'Duração total: ' + minutes + ' minutos — Valor total: R$ ' + price.toFixed(2).replace('.', ',');
+    return {minutes, price};
+  }
 
-        function fetchHorarios() {
-            const date = dataInput.value;
-      horaSelect.innerHTML = '<option>Carregando...</option>';
-      horaSelect.disabled = true;
-            const minutes = computeSummary().minutes;
-            if (!date || minutes === 0) {
-        horaSelect.innerHTML = '<option>Selecione data e procedimentos</option>';
-        horaSelect.disabled = false;
-                return;
-            }
-      fetch('<?= BASEURL ?>agendamentos/agendamento_horarios.php?data=' + encodeURIComponent(date) + '&duration=' + encodeURIComponent(minutes))
-        .then(res => {
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          return res.text();
-        })
-        .then(text => {
-          let list;
-          try {
-            list = JSON.parse(text);
-          } catch (e) {
-            // show body to help debugging
-            throw new Error('Resposta inválida do servidor: ' + text);
-          }
-          horaSelect.innerHTML = '';
-          if (!Array.isArray(list) || list.length === 0) {
-            horaSelect.innerHTML = '<option>Nenhum horário disponível</option>';
-          } else {
-            list.forEach(h => {
-              if (typeof h !== 'string') return;
-              const v = String(h).trim();
-              // only add well-formed HH:MM values
-              if (!/^[0-2]\d:[0-5]\d$/.test(v)) return;
+  function fetchHorarios() {
+    const date = dataInput.value;
+    horaSelect.innerHTML = '<option>Carregando...</option>';
+    horaSelect.disabled = true;
+    const minutes = computeSummary().minutes;
+    if (!date || minutes === 0) {
+      horaSelect.innerHTML = '<option>Selecione data e procedimentos</option>';
+      horaSelect.disabled = false;
+      return;
+    }
+    fetch('<?= BASEURL ?>agendamentos/agendamento_horarios.php?data=' + encodeURIComponent(date) + '&duration=' + encodeURIComponent(minutes))
+      .then(res => res.text())
+      .then(text => {
+        let list = JSON.parse(text);
+        horaSelect.innerHTML = '';
+        if (!Array.isArray(list) || list.length === 0) {
+          horaSelect.innerHTML = '<option>Nenhum horário disponível</option>';
+        } else {
+          list.forEach(h => {
+            if (/^[0-2]\d:[0-5]\d$/.test(h.trim())) {
               const opt = document.createElement('option');
-              opt.value = v;
-              opt.textContent = v;
+              opt.value = h;
+              opt.textContent = h;
               horaSelect.appendChild(opt);
-            });
-            if (horaSelect.children.length === 0) {
-              horaSelect.innerHTML = '<option>Nenhum horário disponível</option>';
             }
-          }
-          horaSelect.disabled = false;
-        }).catch(err => {
-          console.error('Erro ao buscar horários:', err);
-          const body = String(err.message || err);
-          horaSelect.innerHTML = '<option>Erro ao buscar horários</option>';
-          // small debug option to see server response
-          const dbg = document.createElement('option');
-          dbg.value = '';
-          dbg.textContent = body.length > 120 ? body.slice(0,120)+'...' : body;
-          horaSelect.appendChild(dbg);
-          horaSelect.disabled = false;
-        });
+          });
         }
+        horaSelect.disabled = false;
+      })
+      .catch(err => {
+        console.error('Erro ao buscar horários:', err);
+        horaSelect.innerHTML = '<option>Erro ao buscar horários</option>';
+        horaSelect.disabled = false;
+      });
+  }
 
-    if (dataInput) dataInput.addEventListener('change', fetchHorarios);
-  // delegate clicks on the procedure checkboxes
+  // === 🚀 NOVAS REGRAS CORRIGIDAS ===
+  function limitProcedimentos(e) {
+    const selected = procContainer.querySelectorAll('input[type="checkbox"]:checked');
+    if (selected.length > 3) {
+      e.target.checked = false;
+      alert('Você só pode selecionar até 3 procedimentos.');
+      return true;
+    }
+    return false;
+  }
+
+  function enforceTratamentoAvaliacao(e) {
+    const all = procContainer.querySelectorAll('input[type="checkbox"]');
+    let chkTrat = null, chkAval = null;
+
+    all.forEach(ch => {
+      const txt = ch.parentNode.textContent.toLowerCase();
+      if (txt.includes('tratamento') && txt.includes('fio')) chkTrat = ch;
+      if ((txt.includes('avaliaç') || txt.includes('avaliacao')) && txt.includes('fio')) chkAval = ch;
+    });
+
+    if (!chkTrat || !chkAval) return;
+
+    const alvoTxt = e.target.parentNode.textContent.toLowerCase();
+
+    // Se marcar Tratamento → marca Avaliação
+    if (alvoTxt.includes('tratamento') && alvoTxt.includes('fio') && e.target.checked) {
+      chkAval.checked = true;
+    }
+
+    // Se desmarcar Tratamento → desmarca os dois
+    if (alvoTxt.includes('tratamento') && alvoTxt.includes('fio') && !e.target.checked) {
+      chkAval.checked = false;
+      chkTrat.checked = false;
+    }
+
+    // Se marcar Avaliação → não faz nada
+  }
+
   if (procContainer) {
-    procContainer.addEventListener('change', function(e) { if (e.target && e.target.matches('input[type="checkbox"]')) { computeSummary(); fetchHorarios(); } });
-  }
-        // if old inputs exist, trigger fetch
-        <?php if (isset($_SESSION['old_inputs']['a_dia']) || isset($_SESSION['old_inputs']['id_p'])): ?>
-            computeSummary();
-            fetchHorarios();
-        <?php unset($_SESSION['old_inputs']); endif; ?>
+    procContainer.addEventListener('change', function(e) {
+      if (e.target.matches('input[type="checkbox"]')) {
+        if (limitProcedimentos(e)) return;
+        enforceTratamentoAvaliacao(e);
+        computeSummary();
+        fetchHorarios();
+      }
     });
-</script>
+  }
 
-<script>
-// require at least one procedure on submit and update pretty summary
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.querySelector('form.form-agendamento');
-  if (form) {
-  form.addEventListener('submit', function(e) {
-    const checked = document.querySelectorAll('#procedimentos-list input[type="checkbox"]:checked, #dropdownContent input[type="checkbox"]:checked').length;
-    if (checked === 0) {
-            e.preventDefault();
-            // show toast message
-            const toast = document.getElementById('toast');
-            if (toast) {
-                toast.textContent = 'Selecione ao menos 1 procedimento para agendar.';
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2600);
-            } else alert('Selecione ao menos 1 procedimento para agendar.');
-            // open panel to help user
-            const panel = document.getElementById('procPanel');
-            if (panel) panel.style.display = 'block';
-        }
-    });
-  }
-  // initial render summary
-  if (typeof renderSummary === 'function') renderSummary();
+  if (dataInput) dataInput.addEventListener('change', fetchHorarios);
+
+  <?php if (isset($_SESSION['old_inputs']['a_dia']) || isset($_SESSION['old_inputs']['id_p'])): ?>
+    computeSummary();
+    fetchHorarios();
+  <?php unset($_SESSION['old_inputs']); endif; ?>
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form.form-agendamento');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      const checked = document.querySelectorAll('#procedimentos-list input[type="checkbox"]:checked, #dropdownContent input[type="checkbox"]:checked').length;
+      if (checked === 0) {
+        e.preventDefault();
+        const toast = document.getElementById('toast');
+        if (toast) {
+          toast.textContent = 'Selecione ao menos 1 procedimento para agendar.';
+          toast.classList.add('show');
+          setTimeout(() => toast.classList.remove('show'), 2600);
+        } else alert('Selecione ao menos 1 procedimento para agendar.');
+        const panel = document.getElementById('procPanel');
+        if (panel) panel.style.display = 'block';
+      }
+    });
+  }
+  if (typeof renderSummary === 'function') renderSummary();
+});
+</script>
 <?php
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $data = $_POST['a_dia'] ?? '';
-        $hora = $_POST['a_hora'] ?? '';
-        $ids = $_POST['id_p'] ?? [];
-        $ids = array_map('intval', (array) $ids);
-
-        if ($data && $hora && !empty($ids)) {
-            try {
-                if (!isset($_SESSION)) session_start();
-                // ensure user is logged in
-                $idUsuario = $_SESSION['id'] ?? null;
-                if (!$idUsuario) {
-                    $_SESSION['message'] = 'Você precisa estar logado para agendar.';
-                    $_SESSION['type'] = 'warning';
-                    header('Location: ../inc/login.php');
-                    exit;
-                }
-
-                $db = open_database();
-
-                // build placeholders for IN(...) and fetch selected procedures
-                $placeholders = implode(',', array_fill(0, count($ids), '?'));
-                $stmt = $db->prepare("SELECT id, p_duracao, p_valor, p_nome FROM procedimentos WHERE id IN ($placeholders)");
-                foreach ($ids as $k => $v) $stmt->bindValue($k+1, $v, PDO::PARAM_INT);
-                $stmt->execute();
-                $procs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                // ---------- Server-side business rules validation ----------
-                // normalize names to lowercase for checks
-                $names = array_map(function($p){ return mb_strtolower($p['p_nome'] ?? '', 'UTF-8'); }, $procs);
-                $has = function($keywords) use ($names) {
-                    foreach ($names as $n) {
-                        foreach ((array)$keywords as $kw) {
-                            if (mb_strpos($n, mb_strtolower($kw,'UTF-8')) !== false) return true;
-                        }
-                    }
-                    return false;
-                };
-
-                $has_micro = $has(['micropig','micropigment']);
-                $has_desp  = $has(['despig','despigment']);
-                // tratamento dos fios: require both 'tratamento' and 'fio' present in name OR explicit 'tratamento dos fios'
-                $has_trat_fios = false;
-                foreach ($names as $n) {
-                    if ((mb_strpos($n,'tratamento') !== false && (mb_strpos($n,'fio') !== false || mb_strpos($n,'fios') !== false)) || mb_strpos($n,'tratamento dos fios') !== false) {
-                        $has_trat_fios = true; break;
-                    }
-                }
-                $has_avaliacao = $has(['avaliacao','avaliaç','avalia']);
-
-                // rule: micropig + despig not together
-                if ($has_micro && $has_desp) {
-                    $message = 'Micropigmentação e Despigmentação não podem ser agendadas no mesmo dia.';
-                    $type = 'warning';
-                    close_database($db);
-                }
-                // rule: tratamento dos fios cannot be with micropig OR despig
-                elseif ($has_trat_fios && ($has_micro || $has_desp)) {
-                    $message = 'Tratamento dos fios não pode ser agendado junto com Micropigmentação ou Despigmentação.';
-                    $type = 'warning';
-                    close_database($db);
-                }
-                // rule: avaliação de crescimento only with tratamento dos fios
-                elseif ($has_avaliacao && !$has_trat_fios) {
-                    $message = 'Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.';
-                    $type = 'warning';
-                    close_database($db);
-                }
-                // if any rule set $message, abort further processing for this request
-                if (!empty($message) && isset($type) && $type === 'warning') {
-                    // do not proceed with insertion
-                    // close db already called above in each branch
-                    // fall through to render page with $message
-                } else {
-                    $total_minutes = 0;
-                    $total_price = 0.0;
-                    foreach ($procs as $p) {
-                        if (!empty($p['p_duracao'])) {
-                            list($hh, $mm) = array_pad(explode(':', $p['p_duracao']), 2, '00');
-                            $m = intval($hh)*60 + intval($mm);
-                            if ($m <= 0) $m = 30;
-                        } else {
-                            $m = 30;
-                        }
-                        $total_minutes += $m;
-                        $pp = str_replace(',', '.', preg_replace('/[^0-9,\.]/','', $p['p_valor']));
-                        $total_price += (float)$pp;
-                    }
-
-                    // check user doesn't already have any of these procedures on the date
-                    $stmt = $db->prepare("SELECT COUNT(*) FROM agendamento WHERE id_u = ? AND a_dia = ? AND id_p IN ($placeholders)");
-                    $params = array_merge([$idUsuario, $data], $ids);
-                    $stmt->execute($params);
-                    $same = (int)$stmt->fetchColumn();
-                    if ($same > 0) {
-                        $message = 'Você já possui um dos procedimentos selecionados nessa data.';
-                        $type = 'warning';
-                        close_database($db);
-                    } else {
-                        // check availability for entire block
-                        $start_ts = strtotime($data . ' ' . $hora);
-                        $end_ts = $start_ts + $total_minutes*60;
-
-                        $sql = "SELECT a.a_hora, p.p_duracao FROM agendamento a JOIN procedimentos p ON a.id_p = p.id WHERE a.a_dia = :a_dia";
-                        $stmt = $db->prepare($sql);
-                        $stmt->bindParam(':a_dia', $data);
-                        $stmt->execute();
-                        $existing = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                        $conflict = false;
-                        foreach ($existing as $e) {
-                            $s_ts = strtotime($data . ' ' . $e['a_hora']);
-                            $d_minutes = 30;
-                            if (!empty($e['p_duracao'])) {
-                                list($eh, $em) = array_pad(explode(':', $e['p_duracao']), 2, '00');
-                                $d_minutes = intval($eh) * 60 + intval($em);
-                            }
-                            $e_end = $s_ts + $d_minutes * 60;
-                            if ($s_ts < $end_ts && $e_end > $start_ts) {
-                                $conflict = true;
-                                break;
-                            }
-                        }
-
-                        if ($conflict) {
-                            $message = 'O bloco de horários selecionado conflita com outros agendamentos.';
-                            $type = 'danger';
-                            close_database($db);
-                        } else {
-                            // insert sequential appointments in a transaction
-                            $db->beginTransaction();
-                            try {
-                                // build map of durations keyed by id
-                                $dur_map = [];
-                                foreach ($procs as $p) {
-                                    list($hh, $mm) = array_pad(explode(':', $p['p_duracao'] ?? ''), 2, '00');
-                                    $m = (!empty($p['p_duracao'])) ? intval($hh)*60 + intval($mm) : 30;
-                                    if ($m <= 0) $m = 30;
-                                    $dur_map[$p['id']] = $m;
-                                }
-
-                                $cursor = $start_ts;
-                                $inserted = 0;
-                                $sql = "INSERT INTO agendamento (a_dia, a_hora, id_u, id_p, created_at) VALUES (:a_dia, :a_hora, :id_u, :id_p, NOW())";
-                                $ins = $db->prepare($sql);
-                                foreach ($ids as $pid) {
-                                    $hora_ins = date('H:i:s', $cursor);
-                                    $ins->bindParam(':a_dia', $data);
-                                    $ins->bindParam(':a_hora', $hora_ins);
-                                    $ins->bindParam(':id_u', $idUsuario);
-                                    $ins->bindParam(':id_p', $pid);
-                                    $ins->execute();
-                                    $inserted++;
-                                    $cursor += ($dur_map[$pid] ?? 30) * 60;
-                                }
-                                $db->commit();
-                                if ($inserted > 0) {
-                                    // mensagem curta e padronizada
-                                    $message = 'agendamento realizado com sucesso';
-                                     $type = 'success';
-                                }
-                            } catch (Exception $e) {
-                                $db->rollBack();
-                                throw $e;
-                            }
-                            close_database($db);
-                        }
-                    }
-                }
-            } catch (PDOException $e) {
-                $message = 'Erro ao agendar: ' . $e->getMessage();
-                $type = 'danger';
-            }
-        } else {
-            $message = 'Preencha todos os campos.';
-            $type = 'warning';
-        }
-    }
 
     /* ============= BUSCA DE PROCEDIMENTOS ============= */
     $procedimentos = [];
@@ -1243,20 +1027,92 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    // RULE: avaliação de crescimento só com tratamento dos fios
+    // RULE: avaliação de crescimento deve sempre acompanhar Tratamento dos Fios
+    // se avaliação foi selecionada sem tratamento, auto-seleciona o tratamento e bloqueia a alteração direta
     if (hasAvaliacao && !hasTratFios) {
-      e.target.checked = false;
-      showToast('Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.');
-      if (procGrid) {
-        procGrid.querySelectorAll('.proc-card').forEach(function(card) {
-          const cb = card.querySelector('input[type="checkbox"]');
-          if (cb && cb.checked) card.classList.add('selected'); else card.classList.remove('selected');
+      try {
+        const ID_TRAT_FIOS = '7';
+        const findCbsByVal = val => Array.from(document.querySelectorAll('#procedimentos-list input[type="checkbox"][value="' + val + '"] , #dropdownContent input[type="checkbox"][value="' + val + '"]'));
+        // before auto-selecting, ensure we won't exceed maxSelect
+        const alreadyChecked = getCheckedInputs().length;
+        const willAdd = findCbsByVal(ID_TRAT_FIOS).some(cb => !cb.checked) ? 1 : 0;
+        if (alreadyChecked + willAdd > maxSelect) {
+          e.target.checked = false;
+          showToast('Não é possível selecionar Avaliação pois excederia o número máximo de procedimentos.');
+        } else {
+          const tratCbs = findCbsByVal(ID_TRAT_FIOS);
+          tratCbs.forEach(cb => {
+            if (!cb.checked) {
+              cb.checked = true;
+              cb.dataset.auto = '1';
+            }
+            cb.disabled = true;
+          });
+        }
+      } catch (ex) {
+        console.warn('Erro ao auto-selecionar tratamento para avaliação', ex);
+        // fallback: inform user and undo
+        e.target.checked = false;
+        showToast('Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.');
+      }
+    }
+
+    // Auto-select rule: when 'Tratamento dos Fios' is selected, automatically select 'Avaliação de crescimento de fios'
+    // and disable unchecking it while the treatment is selected. When treatment is removed, restore the evaluation state.
+    try {
+      const ID_AVALIACAO = '1';
+      const ID_TRAT_FIOS = '7';
+      // helper to find all matching checkboxes by value across both containers
+      const findCbsByVal = val => Array.from(document.querySelectorAll('#procedimentos-list input[type="checkbox"][value="' + val + '"] , #dropdownContent input[type="checkbox"][value="' + val + '"]'));
+
+      // If treatment was just checked, ensure evaluation is checked and marked as auto
+      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_TRAT_FIOS && e.target.checked) {
+        const evalCbs = findCbsByVal(ID_AVALIACAO);
+        evalCbs.forEach(cb => {
+          if (!cb.checked) {
+            cb.checked = true;
+            cb.dataset.auto = '1';
+          }
+          cb.disabled = true; // prevent unchecking while treatment active
         });
       }
-      updateCounter();
-      if (document.getElementById('a_dia') && document.getElementById('a_dia').value && typeof fetchHorarios === 'function') fetchHorarios();
-      if (typeof renderSummary === 'function') renderSummary();
-      return;
+
+      // If treatment was just unchecked, remove auto-check and re-enable evaluation (if it was auto-checked)
+      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_TRAT_FIOS && !e.target.checked) {
+        const evalCbs = findCbsByVal(ID_AVALIACAO);
+        evalCbs.forEach(cb => {
+          if (cb.dataset.auto === '1') {
+            cb.checked = false;
+            delete cb.dataset.auto;
+          }
+          cb.disabled = false;
+        });
+      }
+      // If evaluation was just checked, ensure treatment is checked and mark treatment as auto (mirror behavior)
+      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_AVALIACAO && e.target.checked) {
+        const tratCbs = findCbsByVal(ID_TRAT_FIOS);
+        tratCbs.forEach(cb => {
+          if (!cb.checked) {
+            cb.checked = true;
+            cb.dataset.auto = '1';
+          }
+          cb.disabled = true;
+        });
+      }
+
+      // If evaluation was just unchecked, remove auto-check and re-enable treatment (if it was auto-checked)
+      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_AVALIACAO && !e.target.checked) {
+        const tratCbs = findCbsByVal(ID_TRAT_FIOS);
+        tratCbs.forEach(cb => {
+          if (cb.dataset.auto === '1') {
+            cb.checked = false;
+            delete cb.dataset.auto;
+          }
+          cb.disabled = false;
+        });
+      }
+    } catch (exAuto) {
+      console.warn('Auto-select tratamento/avaliacao failed', exAuto);
     }
 
     // update selected class for grid cards if present

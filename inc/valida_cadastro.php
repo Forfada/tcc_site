@@ -8,48 +8,79 @@ try {
     $bd->exec("USE " . DB_NAME);
 
     $nome = trim($_POST['nome'] ?? '');
-    $numero = trim($_POST['numero'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $senha = trim($_POST['senha'] ?? '');
 
-    if ($nome === '' || $numero === '' || $senha === '') {
+    if ($nome === '' || $email === '' || $senha === '') {
         throw new Exception("Todos os campos são obrigatórios.");
     }
 
-    // Verifica duplicidade
-    $stmt = $bd->prepare("SELECT COUNT(*) FROM usuarios WHERE u_num = :numero");
-    $stmt->bindParam(':numero', $numero);
-    $stmt->execute();
-
-    if ($stmt->fetchColumn() > 0) {
-        $_SESSION['message'] = "Erro: Este número já está cadastrado.";
+    // valida formato de email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['message'] = "Erro: Email inválido.";
         $_SESSION['type'] = "danger";
         header("Location: cadastro.php");
         exit();
     }
 
-    $senhaCripto = cri($senha);
-    $avatares = ['avatar1.png','avatar2.png','avatar3.png','avatar4.png','avatar5.png'];
-    $foto = $avatares[array_rand($avatares)];
+    // Verifica duplicidade
+    $stmt = $bd->prepare("SELECT COUNT(*) FROM usuarios WHERE u_email = :email");
+    $stmt->bindParam(':email', $email);
+    $stmt->execute();
 
-    $stmt = $bd->prepare("INSERT INTO usuarios (u_num, u_user, u_senha, foto) VALUES (:numero, :nome, :senha, :foto)");
-    $stmt->bindParam(':numero', $numero);
-    $stmt->bindParam(':nome', $nome);
-    $stmt->bindParam(':senha', $senhaCripto);
-    $stmt->bindParam(':foto', $foto);
-
-    if ($stmt->execute()) {
-        $_SESSION['message'] = "Cadastro realizado com sucesso!";
-        $_SESSION['type'] = "success";
-        header("Location: login.php");
+    if ($stmt->fetchColumn() > 0) {
+        $_SESSION['message'] = "Erro: Este email já está cadastrado.";
+        $_SESSION['type'] = "danger";
+        header("Location: cadastro.php");
         exit();
-    } else {
-        throw new Exception("Erro ao inserir usuário.");
     }
+
+    // Gerar código de verificação e salvar em sessão temporária
+    $codigo = rand(100000, 999999);
+    $_SESSION['cadastro'] = [
+        'nome' => $nome,
+        'email' => $email,
+        'senha' => $senha,
+        'codigo' => $codigo
+    ];
+
+    // Tentar enviar email (simulação se mail() não estiver configurado)
+    $subject = 'Seu código de verificação';
+    $message = "Olá {$nome},\n\nSeu código de verificação é: {$codigo}\n\nSe você não solicitou, ignore esta mensagem.";
+    $headers = 'From: no-reply@localhost' . "\r\n" . 'Content-Type: text/plain; charset=UTF-8';
+
+    $mail_sent = false;
+    try {
+        if (function_exists('mail')) {
+            $mail_sent = mail($email, $subject, $message, $headers);
+        }
+    } catch (Exception $e) {
+        $mail_sent = false;
+    }
+
+    if (!$mail_sent) {
+        // Em ambiente de desenvolvimento, mostrar o código na mensagem de sessão para testes
+        $_SESSION['message'] = "Código enviado para o email $email (simulado: $codigo)";
+    } else {
+        $_SESSION['message'] = "Código de verificação enviado para o seu email.";
+    }
+    $_SESSION['type'] = 'info';
+
+    header('Location: verificar_cadastro.php');
+    exit();
 
 } catch (Exception $e) {
     $_SESSION['message'] = "Erro: " . $e->getMessage();
     $_SESSION['type'] = "danger";
     header("Location: cadastro.php");
     exit();
+}
+?><?php
+require_once(ABSPATH . 'inc/mail.php');
+$sent = send_email($email, $subject, $body, $altBody);
+if (!$sent) {
+    // fallback behavior, por ex.: guardar o token na sessão para testes
+    $_SESSION['message'] = "E-mail não enviado via SMTP; verifique a configuração (simulated).";
+    $_SESSION['type'] = 'info';
 }
 ?>

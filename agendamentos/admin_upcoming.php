@@ -25,7 +25,7 @@ try {
             a.created_at,
             u.id AS user_id,
             u.u_user AS user_name,
-            u.u_num  AS user_phone,
+            u.u_email  AS user_email,
             p.p_nome AS procedimento
         FROM agendamento a
         JOIN usuarios u ON a.id_u = u.id
@@ -57,7 +57,7 @@ try {
             <tr>
               <th>ID</th>
               <th>Usuário</th>
-              <th>Telefone</th>
+              <th>Email</th>
               <th>Procedimento</th>
               <th>Data</th>
               <th>Hora</th>
@@ -69,7 +69,7 @@ try {
             <tr>
               <td><?php echo intval($r['id']); ?></td>
               <td style="text-align:left;"><?php echo htmlspecialchars($r['user_name']); ?></td>
-              <td><?php echo htmlspecialchars($r['user_phone']); ?></td>
+              <td><?php echo htmlspecialchars($r['user_email']); ?></td>
               <td style="text-align:left;"><?php echo htmlspecialchars($r['procedimento']); ?></td>
               <td><?php echo date('d/m/Y', strtotime($r['a_dia'])); ?></td>
               <td><?php echo htmlspecialchars(substr($r['a_hora'],0,5)); ?></td>

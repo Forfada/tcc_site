@@ -22,8 +22,8 @@ session_start();
 
             <form action="valida.php" method="post">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control form1 telefone" name="login" id="log" placeholder="Telefone" required>
-                    <label for="log">Telefone</label>
+                    <input type="email" class="form-control form1" name="email" id="log" placeholder="Email" required>
+                    <label for="log">Email</label>
                 </div>
 
                 <div class="form-floating mb-3">

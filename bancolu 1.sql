@@ -47,19 +47,18 @@ INSERT INTO `procedimentos` (`id`, `p_nome`, `p_descricao`, `p_descricao2`, `p_d
  
   -- criando tabela: usuarios
 CREATE TABLE usuarios (
-  id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
-  u_num varchar(11) NOT NULL,
-  u_user varchar(120) NOT NULL,
-  u_senha varchar(120) NOT NULL,
-  foto varchar(255) DEFAULT NULL
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    u_email varchar(255) NOT NULL UNIQUE,
+    u_user varchar(120) NOT NULL,
+    u_senha varchar(120) NOT NULL,
+    foto varchar(255) DEFAULT NULL,
+    auth_token varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `usuarios` (`id`, `u_num`, `u_user`, `u_senha`, `foto`) VALUES
-(1, '15998009628', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png'),
-(2, '15998009620', 'adm', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar1.png'),
-(3, '15998009629', 'fds', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png');
-
-ALTER TABLE usuarios ADD COLUMN auth_token VARCHAR(64) DEFAULT NULL;
+INSERT INTO `usuarios` (`id`, `u_email`, `u_user`, `u_senha`, `foto`) VALUES
+(1, 'pedrofunceca@gmail.com', 'admin', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png'),
+(2, 'adm@example.com', 'adm', '$2a$08$Cf1f11ePArKlBJomM0F6a.BCzdVKJqfJTiox5MhpR.J1KjJ.KWCbO', 'avatar1.png'),
+(3, 'user3@example.com', 'fds', '$2a$08$Cf1f11ePArKlBJomM0F6a.kde0EnMOqlC3yy97YbmH4z5QiTVRlXK', 'avatar1.png');
 
 -- criando tabela: agendamento
  CREATE TABLE agendamento (
@@ -112,3 +111,16 @@ ALTER TABLE agendamento
   INSERT INTO `anamnese` (`id`, `an_hipertensao`, `an_cancer`, `an_fumante`, `an_alergia`, `an_gravidez`, `an_herpes`, `an_queloide`, `an_hepatite`, `an_cardiopata`, `an_anemia`, `an_depressao`, `an_glaucoma`, `an_hiv`, `an_pele`, `an_acne`, `an_outro`, `an_diabetes`, `an_medic`, `an_data`, `id_cli`) VALUES
  (1, 'Não', 'Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não', 'Nenhum', '2023-11-01', 1),
  (2, 'Sim', 'Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não','Não', 'Metformina', '2023-11-05', 2);
+
+-- tabela para requests de alteração de senha (token seguro)
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    user_id INT(11) UNSIGNED NOT NULL,
+    token VARCHAR(128) NOT NULL,
+    new_password_hash VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX (token),
+    INDEX (user_id),
+    CONSTRAINT fk_pr_user FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

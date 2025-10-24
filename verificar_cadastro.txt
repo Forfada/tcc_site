@@ -8,14 +8,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($codigo_digitado == $_SESSION['cadastro']['codigo']) {
         $nome = $_SESSION['cadastro']['nome'];
-        $numero = $_SESSION['cadastro']['numero'];
+        $email = $_SESSION['cadastro']['email'];
         $senha = $_SESSION['cadastro']['senha'];
         $senha_criptografada = cri($senha);
 
         $conn = open_database();
 
-        $stmt = $conn->prepare("INSERT INTO usuarios (u_num, u_user, u_senha) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $numero, $nome, $senha_criptografada);
+        $stmt = $conn->prepare("INSERT INTO usuarios (u_email, u_user, u_senha) VALUES (:email, :nome, :senha)");
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':nome', $nome);
+        $stmt->bindParam(':senha', $senha_criptografada);
 
         if ($stmt->execute()) {
             $_SESSION['message'] = "Cadastro realizado com sucesso!";
@@ -24,9 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['message'] = "Erro ao cadastrar.";
             $_SESSION['type'] = "danger";
         }
-
-        $stmt->close();
-        $conn->close();
+        // PDO: no explicit close required
         unset($_SESSION['cadastro']);
         header("Location: login.php");
         exit;

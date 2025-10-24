@@ -13,7 +13,7 @@ function checkAutoLogin() {
     if ($userId && $userToken) {
         try {
             $bd = open_database();
-            $stmt = $bd->prepare("SELECT id, u_user, u_num, foto, auth_token FROM usuarios WHERE id = :id");
+            $stmt = $bd->prepare("SELECT id, u_user, u_email, foto, auth_token FROM usuarios WHERE id = :id");
             $stmt->execute([':id' => $userId]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -21,7 +21,7 @@ function checkAutoLogin() {
             if ($user && hash_equals($user['auth_token'], $userToken)) {
                 $_SESSION['id'] = $user['id'];
                 $_SESSION['nome'] = $user['u_user'];
-                $_SESSION['user'] = $user['u_num'];
+                $_SESSION['user'] = $user['u_email'];
                 $_SESSION['foto'] = $user['foto'];
                 
                 // Atualiza o token para maior segurança

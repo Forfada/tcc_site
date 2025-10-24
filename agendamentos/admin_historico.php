@@ -21,7 +21,7 @@ try {
         SELECT 
             u.id AS user_id,
             u.u_user AS user_name,
-            u.u_num  AS user_phone,
+            u.u_email  AS user_email,
             a.id AS ag_id,
             a.a_dia,
             a.a_hora,
@@ -46,11 +46,11 @@ $byUser = [];
 foreach ($rows as $r) {
     $uid = $r['user_id'];
     if (!isset($byUser[$uid])) {
-        $byUser[$uid] = [
-            'name' => $r['user_name'],
-            'phone' => $r['user_phone'],
-            'appointments' => []
-        ];
+    $byUser[$uid] = [
+      'name' => $r['user_name'],
+      'email' => $r['user_email'],
+      'appointments' => []
+    ];
     }
     $byUser[$uid]['appointments'][] = $r;
 }
@@ -70,7 +70,7 @@ foreach ($rows as $r) {
             <div class="d-flex justify-content-between align-items-center mb-2">
               <div>
                 <h5 class="mb-0"><?php echo htmlspecialchars($user['name']); ?></h5>
-                <small class="text-muted"><?php echo htmlspecialchars($user['phone']); ?></small>
+                <small class="text-muted"><?php echo htmlspecialchars($user['email']); ?></small>
               </div>
               <div><small class="text-muted"><?php echo count($user['appointments']); ?> agendamentos</small></div>
             </div>

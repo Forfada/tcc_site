@@ -1,0 +1,7 @@
+{
+    "name": "lunaris/tcc-site",
+    "description": "Sistema Lunaris",
+    "require": {
+        "phpmailer/phpmailer": "6.8"
+    }
+}

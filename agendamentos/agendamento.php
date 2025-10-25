@@ -22,6 +22,8 @@
   $type = $_SESSION['type'] ?? 'info';
   // consume flash now so header doesn't also display it
   unset($_SESSION['message'], $_SESSION['type']);
+  // ensure old inputs are used only once (prevents date staying after navigation/refresh)
+  if (isset($_SESSION['old_inputs'])) unset($_SESSION['old_inputs']);
 
   include(HEADER_TEMPLATE);
 ?>
@@ -218,18 +220,19 @@
   display: none;
   position: absolute;
   left: 0;
-  top: calc(100% + 8px);
+  top: calc(100% + 4px);
   z-index: 1200;
   background: #fff;
   border: 1px solid #eed3d7;
   border-radius: 10px;
   width: 100%;
-  max-height: 260px;
+  max-height: 300px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(35,20,30,0.08);
+  box-shadow: 0 12px 32px rgba(35,20,30,0.12);
   padding: 8px;
   box-sizing: border-box;
   text-align: left;
+  margin-bottom: 16px;
 }
 
 /* exibir */
@@ -257,8 +260,17 @@
   flex: 0 0 auto;
   width: 18px;
   height: 18px;
-  transform: scale(1.06);
-  accent-color: #c76d8b;
+  cursor: pointer;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  border: 2px solid #73213d;
+  border-radius: 3px;
+  position: relative;
+  outline: none;
+  accent-color: #73213d;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: block !important;
 }
 
 /* texto ocupa o restante */
@@ -333,17 +345,37 @@ document.addEventListener('DOMContentLoaded', function () {
     appendTo: document.body,
     monthSelectorType: 'static',
     onDayCreate: function(dateObj, dateStr, instance, dayElem) {
-      if (!dateObj || !dayElem) return;
-      const ymd = `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
-      if (window.unavailableDates.has(ymd)) {
-        dayElem.classList.add('no-slots');
-        dayElem.title = 'Sem horários disponíveis';
-      } else {
-        const today = new Date();
-        const dayOnly = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
-        if (dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
-          dayElem.classList.add('flatpickr-disabled');
+      // flatpickr may pass parameters in different orders in some builds
+      // or the date object may be available as dayElem.dateObj. Be defensive.
+      try {
+        if (!dayElem) return;
+        var d = null;
+        if (Object.prototype.toString.call(dateObj) === '[object Date]') {
+          d = dateObj;
+        } else if (dayElem && dayElem.dateObj && Object.prototype.toString.call(dayElem.dateObj) === '[object Date]') {
+          d = dayElem.dateObj;
+        } else {
+          return; // nothing we can do
         }
+
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var dd = String(d.getDate()).padStart(2, '0');
+        var ymd = y + '-' + m + '-' + dd;
+
+        if (window.unavailableDates && window.unavailableDates.has(ymd)) {
+          dayElem.classList.add('no-slots');
+          dayElem.title = 'Sem horários disponíveis';
+        } else {
+          var today = new Date();
+          var dayOnly = new Date(y, d.getMonth(), d.getDate());
+          if (dayOnly <= new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
+            dayElem.classList.add('flatpickr-disabled');
+          }
+        }
+      } catch (ex) {
+        // don't break the calendar on unexpected errors
+        console && console.debug && console.debug('onDayCreate fallback caught', ex);
       }
     },
     onChange: function(selectedDates, dateStr) {
@@ -358,10 +390,36 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (typeof fetchHorarios === 'function') fetchHorarios();
     },
-    onReady: loadUnavailable,
-    onMonthChange: loadUnavailable,
-    onYearChange: loadUnavailable
+  onReady: function(selectedDates, dateStr, instance) { loadUnavailable(instance); },
+  onMonthChange: function(selectedDates, dateStr, instance) { loadUnavailable(instance); },
+  onYearChange: function(selectedDates, dateStr, instance) { loadUnavailable(instance); }
   });
+
+  // Ensure clicking the <label for="a_dia"> focuses the visible flatpickr input and opens the calendar.
+  try {
+    const label = document.querySelector('label[for="a_dia"]');
+    if (label) {
+      // indicate clickable
+      label.style.cursor = 'pointer';
+      const openPicker = function (ev) {
+        try {
+          // prefer using the fp instance
+          if (fp && typeof fp.open === 'function') fp.open();
+          // focus the visible alt input if present
+          const alt = fp && fp.altInput ? fp.altInput : document.querySelector('#a_dia');
+          if (alt && typeof alt.focus === 'function') alt.focus();
+        } catch (err) {
+          console && console.warn && console.warn('Erro ao abrir flatpickr via label:', err);
+        }
+        // prevent default label behavior that might focus hidden original input
+        if (ev && typeof ev.preventDefault === 'function') ev.preventDefault();
+      };
+      label.addEventListener('click', openPicker);
+      label.addEventListener('touchstart', openPicker);
+    }
+  } catch (e) {
+    console && console.warn && console.warn('Erro ao vincular label a flatpickr:', e);
+  }
 
   async function loadUnavailable(fpInstance) {
     const year = fpInstance.currentYear;
@@ -541,18 +599,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const form = document.querySelector('form.form-agendamento');
   if (form) {
     form.addEventListener('submit', function(e) {
-      const checked = document.querySelectorAll('#procedimentos-list input[type="checkbox"]:checked, #dropdownContent input[type="checkbox"]:checked').length;
+      // Check procedures
+      const checked = document.querySelectorAll('#dropdownContent input[name="procedimentos[]"]:checked').length;
       if (checked === 0) {
         e.preventDefault();
-        const toast = document.getElementById('toast');
-        if (toast) {
-          toast.textContent = 'Selecione ao menos 1 procedimento para agendar.';
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 2600);
-        } else alert('Selecione ao menos 1 procedimento para agendar.');
-        const panel = document.getElementById('procPanel');
-        if (panel) panel.style.display = 'block';
+        alert('Selecione ao menos 1 procedimento para agendar.');
+        return;
       }
+
+      // Check date
+      const date = document.querySelector('input[name="data"]').value;
+      if (!date) {
+        e.preventDefault();
+        alert('Selecione uma data para o agendamento.');
+        return;
+      }
+
+      // Check time
+      const time = document.querySelector('select[name="horario"]').value;
+      if (!time) {
+        e.preventDefault();
+        alert('Selecione um horário para o agendamento.');
+        return;
+      }
+
+      // If we get here, form is valid
+      return true;
     });
   }
   if (typeof renderSummary === 'function') renderSummary();
@@ -560,17 +632,196 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <?php
 
-    /* ============= BUSCA DE PROCEDIMENTOS ============= */
-    $procedimentos = [];
-    try {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $data = $_POST['a_dia'] ?? '';
+    $hora = $_POST['a_hora'] ?? '';
+    $ids = $_POST['id_p'] ?? [];
+    $ids = array_map('intval', (array) $ids);
+
+    if ($data && $hora && !empty($ids)) {
+      try {
+        if (!isset($_SESSION)) session_start();
+        // ensure user is logged in
+        $idUsuario = $_SESSION['id'] ?? null;
+        if (!$idUsuario) {
+          $_SESSION['message'] = 'Você precisa estar logado para agendar.';
+          $_SESSION['type'] = 'warning';
+          header('Location: ../inc/login.php');
+          exit;
+        }
+
         $db = open_database();
-        // include duration and value so the form and JS can use them
-        $stmt = $db->query("SELECT id, p_nome, p_duracao, p_valor FROM procedimentos ORDER BY p_nome ASC");
-        $procedimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        $message = "Erro ao carregar procedimentos: " . $e->getMessage();
-        $type = "danger";
+
+        // build placeholders for IN(...) and fetch selected procedures
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $db->prepare("SELECT id, p_duracao, p_valor, p_nome FROM procedimentos WHERE id IN ($placeholders)");
+        foreach ($ids as $k => $v) $stmt->bindValue($k+1, $v, PDO::PARAM_INT);
+        $stmt->execute();
+        $procs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // ---------- Server-side business rules validation ----------
+        // normalize names to lowercase for checks
+        $names = array_map(function($p){ return mb_strtolower($p['p_nome'] ?? '', 'UTF-8'); }, $procs);
+        $has = function($keywords) use ($names) {
+          foreach ($names as $n) {
+            foreach ((array)$keywords as $kw) {
+              if (mb_strpos($n, mb_strtolower($kw,'UTF-8')) !== false) return true;
+            }
+          }
+          return false;
+        };
+
+        $has_micro = $has(['micropig','micropigment']);
+        $has_desp  = $has(['despig','despigment']);
+        // tratamento dos fios: require both 'tratamento' and 'fio' present in name OR explicit 'tratamento dos fios'
+        $has_trat_fios = false;
+        foreach ($names as $n) {
+          if ((mb_strpos($n,'tratamento') !== false && (mb_strpos($n,'fio') !== false || mb_strpos($n,'fios') !== false)) || mb_strpos($n,'tratamento dos fios') !== false) {
+            $has_trat_fios = true; break;
+          }
+        }
+        $has_avaliacao = $has(['avaliacao','avaliaç','avalia']);
+
+        // rule: micropig + despig not together
+        if ($has_micro && $has_desp) {
+          $message = 'Micropigmentação e Despigmentação não podem ser agendadas no mesmo dia.';
+          $type = 'warning';
+          close_database($db);
+        }
+        // rule: tratamento dos fios cannot be with micropig OR despig
+        elseif ($has_trat_fios && ($has_micro || $has_desp)) {
+          $message = 'Tratamento dos fios não pode ser agendado junto com Micropigmentação ou Despigmentação.';
+          $type = 'warning';
+          close_database($db);
+        }
+        // rule: avaliação de crescimento only with tratamento dos fios
+        elseif ($has_avaliacao && !$has_trat_fios) {
+          $message = 'Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.';
+          $type = 'warning';
+          close_database($db);
+        }
+        // if any rule set $message, abort further processing for this request
+        if (!empty($message) && isset($type) && $type === 'warning') {
+          // do not proceed with insertion
+          // close db already called above in each branch
+          // fall through to render page with $message
+        } else {
+          $total_minutes = 0;
+          $total_price = 0.0;
+          foreach ($procs as $p) {
+            if (!empty($p['p_duracao'])) {
+              list($hh, $mm) = array_pad(explode(':', $p['p_duracao']), 2, '00');
+              $m = intval($hh)*60 + intval($mm);
+              if ($m <= 0) $m = 30;
+            } else {
+              $m = 30;
+            }
+            $total_minutes += $m;
+            $pp = str_replace(',', '.', preg_replace('/[^0-9,\.]/','', $p['p_valor']));
+            $total_price += (float)$pp;
+          }
+
+          // check user doesn't already have any of these procedures on the date
+          $stmt = $db->prepare("SELECT COUNT(*) FROM agendamento WHERE id_u = ? AND a_dia = ? AND id_p IN ($placeholders)");
+          $params = array_merge([$idUsuario, $data], $ids);
+          $stmt->execute($params);
+          $same = (int)$stmt->fetchColumn();
+          if ($same > 0) {
+            $message = 'Você já possui um dos procedimentos selecionados nessa data.';
+            $type = 'warning';
+            close_database($db);
+          } else {
+            // check availability for entire block
+            $start_ts = strtotime($data . ' ' . $hora);
+            $end_ts = $start_ts + $total_minutes*60;
+
+            $sql = "SELECT a.a_hora, p.p_duracao FROM agendamento a JOIN procedimentos p ON a.id_p = p.id WHERE a.a_dia = :a_dia";
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam(':a_dia', $data);
+            $stmt->execute();
+            $existing = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $conflict = false;
+            foreach ($existing as $e) {
+              $s_ts = strtotime($data . ' ' . $e['a_hora']);
+              $d_minutes = 30;
+              if (!empty($e['p_duracao'])) {
+                list($eh, $em) = array_pad(explode(':', $e['p_duracao']), 2, '00');
+                $d_minutes = intval($eh) * 60 + intval($em);
+              }
+              $e_end = $s_ts + $d_minutes * 60;
+              if ($s_ts < $end_ts && $e_end > $start_ts) {
+                $conflict = true;
+                break;
+              }
+            }
+
+            if ($conflict) {
+              $message = 'O bloco de horários selecionado conflita com outros agendamentos.';
+              $type = 'danger';
+              close_database($db);
+            } else {
+              // insert sequential appointments in a transaction
+              $db->beginTransaction();
+              try {
+                // build map of durations keyed by id
+                $dur_map = [];
+                foreach ($procs as $p) {
+                  list($hh, $mm) = array_pad(explode(':', $p['p_duracao'] ?? ''), 2, '00');
+                  $m = (!empty($p['p_duracao'])) ? intval($hh)*60 + intval($mm) : 30;
+                  if ($m <= 0) $m = 30;
+                  $dur_map[$p['id']] = $m;
+                }
+
+                $cursor = $start_ts;
+                $inserted = 0;
+                $sql = "INSERT INTO agendamento (a_dia, a_hora, id_u, id_p, created_at) VALUES (:a_dia, :a_hora, :id_u, :id_p, NOW())";
+                $ins = $db->prepare($sql);
+                foreach ($ids as $pid) {
+                  $hora_ins = date('H:i:s', $cursor);
+                  $ins->bindParam(':a_dia', $data);
+                  $ins->bindParam(':a_hora', $hora_ins);
+                  $ins->bindParam(':id_u', $idUsuario);
+                  $ins->bindParam(':id_p', $pid);
+                  $ins->execute();
+                  $inserted++;
+                  $cursor += ($dur_map[$pid] ?? 30) * 60;
+                }
+                $db->commit();
+                if ($inserted > 0) {
+                  // mensagem curta e padronizada
+                  $message = 'agendamento realizado com sucesso';
+                   $type = 'success';
+                }
+              } catch (Exception $e) {
+                $db->rollBack();
+                throw $e;
+              }
+              close_database($db);
+            }
+          }
+        }
+      } catch (PDOException $e) {
+        $message = 'Erro ao agendar: ' . $e->getMessage();
+        $type = 'danger';
+      }
+    } else {
+      $message = 'Preencha todos os campos.';
+      $type = 'warning';
     }
+  }
+
+  /* ============= BUSCA DE PROCEDIMENTOS ============= */
+  $procedimentos = [];
+  try {
+    $db = open_database();
+    // include duration and value so the form and JS can use them
+    $stmt = $db->query("SELECT id, p_nome, p_duracao, p_valor FROM procedimentos ORDER BY p_nome ASC");
+    $procedimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $e) {
+    $message = "Erro ao carregar procedimentos: " . $e->getMessage();
+    $type = "danger";
+  }
 
     /* ============= BUSCA DOS AGENDAMENTOS DO USUÁRIO ============= */
     $agendamentos = [];
@@ -612,45 +863,38 @@ document.addEventListener('DOMContentLoaded', function() {
 <section id="agendamento" class="section-cor3"> 
   <div class="form-agendamento">
     <h2>Agendar Procedimento</h2>
-    <form method="POST" class="form-agendamento">
+    <form action="agendar.php" method="POST" class="form-agendamento">
 
       <!-- Dropdown de Procedimentos -->
       <div class="form-group dropdown-group">
-        <label for="procedimentos">Procedimentos</label>
+        <label for="dropdownButton">Procedimentos</label>
         <div class="dropdown-wrapper" id="procPanel">
           <button type="button" id="dropdownButton" class="dropdown-btn">Selecionar procedimentos ▼</button>
           <div id="dropdownContent" class="dropdown-content" aria-hidden="true">
-            <?php foreach ($procedimentos as $p): ?>
-              <?php
-                $p_id = (int) $p['id'];
-                $p_nome = htmlspecialchars($p['p_nome'], ENT_QUOTES);
-                $p_valor = number_format(floatval($p['p_valor']), 2, ',', '.');
-                $p_dur = $p['p_duracao'] ?? '00:30';
-              ?>
+            <?php foreach ($procedimentos as $p):
+              $p_id = (int) $p['id'];
+              $p_nome = htmlspecialchars($p['p_nome'], ENT_QUOTES);
+              $p_valor = number_format(floatval($p['p_valor']), 2, ',', '.');
+              $p_dur = $p['p_duracao'] ?? '00:30';
+            ?>
               <label class="dropdown-item">
-                <input type="checkbox" name="id_p[]" value="<?= $p_id ?>"
-                      
-                       data-valor="<?= htmlspecialchars($p['p_valor'], ENT_QUOTES) ?>"
-                       data-name="<?= $p_nome ?>">
+                <input type="checkbox" name="procedimentos[]" value="<?= $p_id ?>" data-dur="<?= $p_dur ?>" data-valor="<?= $p_valor ?>" data-name="<?= $p_nome ?>">
                 <span class="proc-name"><?= $p_nome ?></span>
                 <span class="proc-price">R$ <?= $p_valor ?></span>
               </label>
             <?php endforeach; ?>
           </div>
-        </div>
-        <small id="proc-counter-text" class="form-text text-muted">Selecionados 0/3</small>
-      </div>
 
       <!-- Data e Hora -->
       <div class="form-row">
         <div class="form-group">
           <label for="a_dia">Data:</label>
           <!-- readonly removido para garantir que clique/focus funcionem; flatpickr controla input -->
-          <input type="text" name="a_dia" id="a_dia" required value="<?= $old['data'] ?? '' ?>" autocomplete="off">
+          <input type="text" name="data" id="a_dia" required value="<?= $old['data'] ?? '' ?>" autocomplete="off">
         </div>
         <div class="form-group">
           <label for="a_hora">Hora:</label>
-          <select class="form-control" id="a_hora" name="a_hora">
+          <select class="form-control" id="a_hora" name="horario" required>
             <option value="">Selecione a data e procedimentos primeiro</option>
           </select>
         </div>
@@ -1028,85 +1272,108 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // RULE: avaliação de crescimento deve sempre acompanhar Tratamento dos Fios
-    // se avaliação foi selecionada sem tratamento, auto-seleciona o tratamento e bloqueia a alteração direta
+    // se avaliação foi selecionada sem tratamento, auto-seleciona o tratamento
     if (hasAvaliacao && !hasTratFios) {
-      try {
-        const ID_TRAT_FIOS = '7';
-        const findCbsByVal = val => Array.from(document.querySelectorAll('#procedimentos-list input[type="checkbox"][value="' + val + '"] , #dropdownContent input[type="checkbox"][value="' + val + '"]'));
-        // before auto-selecting, ensure we won't exceed maxSelect
-        const alreadyChecked = getCheckedInputs().length;
-        const willAdd = findCbsByVal(ID_TRAT_FIOS).some(cb => !cb.checked) ? 1 : 0;
-        if (alreadyChecked + willAdd > maxSelect) {
-          e.target.checked = false;
-          showToast('Não é possível selecionar Avaliação pois excederia o número máximo de procedimentos.');
-        } else {
-          const tratCbs = findCbsByVal(ID_TRAT_FIOS);
-          tratCbs.forEach(cb => {
-            if (!cb.checked) {
-              cb.checked = true;
-              cb.dataset.auto = '1';
-            }
-            cb.disabled = true;
-          });
-        }
-      } catch (ex) {
-        console.warn('Erro ao auto-selecionar tratamento para avaliação', ex);
-        // fallback: inform user and undo
+      // Find treatment-of-hair checkboxes by name (avoid hard-coded IDs)
+      const allCbs = Array.from(document.querySelectorAll('#dropdownContent input[type="checkbox"], #procedimentos-list input[type="checkbox"]'));
+      const tratCbs = allCbs.filter(cb => {
+        const n = (cb.dataset.name || cb.parentNode.textContent || '').toLowerCase();
+        return ((n.indexOf('tratamento') !== -1 && (n.indexOf('fio') !== -1 || n.indexOf('fios') !== -1)) || n.indexOf('tratamento dos fios') !== -1);
+      });
+
+      const alreadyChecked = getCheckedInputs().length;
+      const needToAdd = tratCbs.filter(cb => !cb.checked).length;
+
+      if (alreadyChecked + needToAdd > maxSelect) {
         e.target.checked = false;
-        showToast('Avaliação de crescimento só pode ser agendada em conjunto com Tratamento dos fios.');
+        showToast('Não é possível selecionar Avaliação pois excederia o número máximo de procedimentos.');
+      } else {
+        tratCbs.forEach(cb => {
+          if (!cb.checked) {
+            cb.checked = true;
+            cb.dataset.auto = '1';
+            // Dispara evento de change para atualizar o UI
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
       }
+    }
+    
+    // Se desmarcou Avaliação, desmarca também Tratamento se foi auto-selecionado
+    if (!hasAvaliacao) {
+      const ID_TRAT_FIOS = '7';
+      const tratCbs = Array.from(document.querySelectorAll('input[type="checkbox"][value="' + ID_TRAT_FIOS + '"][data-auto="1"]'));
+      tratCbs.forEach(cb => {
+        cb.checked = false;
+        delete cb.dataset.auto;
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      });
     }
 
     // Auto-select rule: when 'Tratamento dos Fios' is selected, automatically select 'Avaliação de crescimento de fios'
     // and disable unchecking it while the treatment is selected. When treatment is removed, restore the evaluation state.
     try {
-      const ID_AVALIACAO = '1';
-      const ID_TRAT_FIOS = '7';
-      // helper to find all matching checkboxes by value across both containers
-      const findCbsByVal = val => Array.from(document.querySelectorAll('#procedimentos-list input[type="checkbox"][value="' + val + '"] , #dropdownContent input[type="checkbox"][value="' + val + '"]'));
+      // Identify treatment and evaluation checkboxes by name (avoid brittle numeric IDs)
+      const allCbs = Array.from(document.querySelectorAll('#dropdownContent input[type="checkbox"], #procedimentos-list input[type="checkbox"]'));
+      const findByName = (pred) => allCbs.filter(cb => {
+        const n = (cb.dataset.name || cb.parentNode.textContent || '').toLowerCase();
+        return pred(n, cb);
+      });
+
+      const isTratName = (n) => ((n.indexOf('tratamento') !== -1 && (n.indexOf('fio') !== -1 || n.indexOf('fios') !== -1)) || n.indexOf('tratamento dos fios') !== -1);
+      const isAvalName = (n) => (n.indexOf('avalia') !== -1 || n.indexOf('avaliacao') !== -1 || n.indexOf('avaliaç') !== -1);
+
+      const targetName = (e.target && (e.target.dataset.name || e.target.parentNode.textContent || '')).toLowerCase();
+      const targetIsTrat = isTratName(targetName);
+      const targetIsAval = isAvalName(targetName);
 
       // If treatment was just checked, ensure evaluation is checked and marked as auto
-      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_TRAT_FIOS && e.target.checked) {
-        const evalCbs = findCbsByVal(ID_AVALIACAO);
+      if (targetIsTrat && e.target.checked) {
+        const evalCbs = findByName((n)=>isAvalName(n));
         evalCbs.forEach(cb => {
           if (!cb.checked) {
             cb.checked = true;
             cb.dataset.auto = '1';
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
           }
           cb.disabled = true; // prevent unchecking while treatment active
         });
       }
 
       // If treatment was just unchecked, remove auto-check and re-enable evaluation (if it was auto-checked)
-      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_TRAT_FIOS && !e.target.checked) {
-        const evalCbs = findCbsByVal(ID_AVALIACAO);
+      if (targetIsTrat && !e.target.checked) {
+        const evalCbs = findByName((n)=>isAvalName(n));
         evalCbs.forEach(cb => {
           if (cb.dataset.auto === '1') {
             cb.checked = false;
             delete cb.dataset.auto;
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
           }
           cb.disabled = false;
         });
       }
+
       // If evaluation was just checked, ensure treatment is checked and mark treatment as auto (mirror behavior)
-      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_AVALIACAO && e.target.checked) {
-        const tratCbs = findCbsByVal(ID_TRAT_FIOS);
+      if (targetIsAval && e.target.checked) {
+        const tratCbs = findByName((n)=>isTratName(n));
         tratCbs.forEach(cb => {
           if (!cb.checked) {
             cb.checked = true;
             cb.dataset.auto = '1';
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
           }
           cb.disabled = true;
         });
       }
 
       // If evaluation was just unchecked, remove auto-check and re-enable treatment (if it was auto-checked)
-      if (e.target && e.target.matches('input[type="checkbox"]') && e.target.value === ID_AVALIACAO && !e.target.checked) {
-        const tratCbs = findCbsByVal(ID_TRAT_FIOS);
+      if (targetIsAval && !e.target.checked) {
+        const tratCbs = findByName((n)=>isTratName(n));
         tratCbs.forEach(cb => {
           if (cb.dataset.auto === '1') {
             cb.checked = false;
             delete cb.dataset.auto;
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
           }
           cb.disabled = false;
         });

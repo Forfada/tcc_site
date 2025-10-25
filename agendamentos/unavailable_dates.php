@@ -18,9 +18,18 @@ $start = $_GET['start'] ?? date('Y-m-d');
 $end   = $_GET['end']   ?? date('Y-m-d', strtotime('+60 days'));
 $duration_override = isset($_GET['duration']) ? intval($_GET['duration']) : 0;
 
-$work_start = '08:00:00';
-$work_end   = '18:00:00';
 $default_step = 30;
+// weekly schedule with possible multiple working windows per day
+// weekday: 1=Monday .. 7=Sunday
+$weekly_schedule = [
+    1 => [['09:30:00','13:00:00'], ['14:00:00','16:50:00']], // Monday
+    2 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Tuesday
+    3 => [['09:30:00','12:00:00'], ['13:00:00','16:50:00']], // Wednesday
+    4 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Thursday
+    5 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Friday
+    6 => [['10:30:00','12:00:00'], ['13:00:00','19:30:00']], // Saturday
+    7 => [] // Sunday closed
+];
 
 try {
     $db = open_database();
@@ -44,20 +53,34 @@ try {
         $duration_minutes = $default_step;
         if ($duration_override > 0) $duration_minutes = $duration_override;
 
-        $start_ts = strtotime($date . ' ' . $work_start);
-        $end_ts   = strtotime($date . ' ' . $work_end);
+        // build candidate slots using the weekly schedule for this weekday
+        $weekday = (int) $dt->format('N'); // 1 (Mon) .. 7 (Sun)
+        $windows = $weekly_schedule[$weekday] ?? [];
         $step = $duration_minutes * 60;
 
-        // no possible slot if duration exceeds working window
-        if (($start_ts + $step) > $end_ts) {
+        // if no windows (e.g. Sunday), mark unavailable
+        if (empty($windows)) {
             $unavailable[] = $date;
             continue;
         }
 
-        // build candidate slots
+        // build candidate slots across all windows; if no window can fit the duration, day is unavailable
         $slots = [];
-        for ($t = $start_ts; ($t + $step) <= $end_ts; $t += $step) {
-            $slots[] = ['start' => $t, 'end' => $t + $step];
+        foreach ($windows as $win) {
+            $w_start_ts = strtotime($date . ' ' . $win[0]);
+            $w_end_ts = strtotime($date . ' ' . $win[1]);
+            if (($w_start_ts + $step) > $w_end_ts) {
+                // this particular window cannot fit the duration; skip it
+                continue;
+            }
+            for ($t = $w_start_ts; ($t + $step) <= $w_end_ts; $t += $step) {
+                $slots[] = ['start' => $t, 'end' => $t + $step];
+            }
+        }
+
+        if (empty($slots)) {
+            $unavailable[] = $date;
+            continue;
         }
 
         // fetch existing appointments for the date

@@ -31,12 +31,18 @@ if ($data <= $today) {
     exit;
 }
 
-// clinic working hours (assumption) - you can change these values
-$work_start = '08:00:00';
-$work_end = '18:00:00';
-
-// default slot step (in minutes) if procedure not provided
-$default_step = 30;
+// weekly schedule with possible multiple working windows per day
+// weekday: 1=Monday .. 7=Sunday
+$default_step = 30; // fallback minutes
+$weekly_schedule = [
+    1 => [['09:30:00','13:00:00'], ['14:00:00','16:50:00']], // Monday
+    2 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Tuesday
+    3 => [['09:30:00','12:00:00'], ['13:00:00','16:50:00']], // Wednesday
+    4 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Thursday
+    5 => [['09:30:00','12:00:00'], ['13:00:00','18:30:00']], // Friday
+    6 => [['10:30:00','12:00:00'], ['13:00:00','19:30:00']], // Saturday
+    7 => [] // Sunday closed
+];
 
 $duration_minutes = $default_step;
 // if a duration is explicitly provided, use it (this handles multiple procedures combined)
@@ -59,14 +65,17 @@ if ($duration_override && $duration_override > 0) {
     }
 }
 
-// build candidate slots stepping by procedure duration
+// build candidate slots stepping by procedure duration using the weekly schedule
 $slots = [];
-$start_ts = strtotime($data . ' ' . $work_start);
-$end_ts = strtotime($data . ' ' . $work_end);
 $step = $duration_minutes * 60;
-
-for ($t = $start_ts; ($t + $step) <= $end_ts; $t += $step) {
-    $slots[] = date('H:i', $t);
+$weekday = (int) date('N', strtotime($data)); // 1 (Mon) .. 7 (Sun)
+$windows = $weekly_schedule[$weekday] ?? [];
+foreach ($windows as $win) {
+    $w_start_ts = strtotime($data . ' ' . $win[0]);
+    $w_end_ts = strtotime($data . ' ' . $win[1]);
+    for ($t = $w_start_ts; ($t + $step) <= $w_end_ts; $t += $step) {
+        $slots[] = date('H:i', $t);
+    }
 }
 
 // fetch existing appointments for the date and compute their occupied intervals

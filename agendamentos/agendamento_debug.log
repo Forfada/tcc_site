@@ -1,0 +1,5 @@
+2025-10-25 05:17:46 | POST recibo: procedimentos=[], data='2025-10-30', hora='14:00'
+2025-10-25 05:18:00 | POST recibo: procedimentos=["7"], data='2025-11-20', hora='14:00'
+2025-10-25 05:24:29 | POST recibo: procedimentos=[], data='2025-10-30', hora='15:00'
+2025-10-25 05:25:33 | POST recibo: procedimentos=["4"], data='2025-10-27', hora='15:00'
+2025-10-25 05:26:13 | POST recibo: procedimentos=["3"], data='2025-10-27', hora='14:00'

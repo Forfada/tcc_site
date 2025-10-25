@@ -99,7 +99,7 @@ checkAutoLogin();
                 // - se for admin: exibir os dois links administrativos (futuros + histórico admin) e Clientes
                 // - se não for admin: exibir somente o histórico do próprio usuário
                 if (function_exists('is_admin') && is_admin()): ?>
-                    <a href="<?= BASEURL ?>agendamentos/admin_upcoming.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-calendar-days"></i> Agendamentos (Futuros)</a>
+                    <a href="<?= BASEURL ?>agendamentos/admin_upcoming.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-calendar-days"></i> Agendamentos Futuros</a>
                     <a href="<?= BASEURL ?>agendamentos/admin_historico.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-file-lines"></i> Histórico (Admin)</a>
                     <a href="<?= BASEURL ?>clientes/index.php" class="btn btn-outline-light w-100 text-start"><i class="fa-solid fa-users"></i>  Clientes</a>
                 <?php else: ?>

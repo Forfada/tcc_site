@@ -38,22 +38,27 @@
     margin: 0 !important;
     padding: 0 !important;
 }
+
 .anamnese-panel { 
     background-color: transparent; 
     padding: 1rem; 
 }
+
 .anamnese-panel .view-cli-btns {
     flex-direction: row !important;
 }
+
 .anamnese-panel .view-cli-btns a.buttonc,
 .anamnese-panel .tabela-lunaris a.buttonc {
     white-space: nowrap !important;
 }
+
 .anamnese-panel .tabela-lunaris thead th,
 .anamnese-panel .tabela-lunaris tbody td {
     padding: 8px 8px;
     font-size: 1rem;
 }
+
 .view-cli-btns a.buttonc,
 .anamnese-panel .tabela-lunaris a.buttonc {
     margin: 0 !important;
@@ -61,6 +66,7 @@
     font-size: 1rem !important;
     line-height: 1.1rem !important;
 }
+
 @media (max-width: 768px) {
     .view-cli-btns {
         flex-wrap: wrap;
@@ -69,6 +75,7 @@
         width: auto;
     }
 }
+
 @media (max-width: 480px) {
     .anamnese-panel .tabela-wrapper { overflow-x: auto; }
 }
@@ -80,24 +87,29 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     color: #222;
 }
+
 .modal-title-custom {
     margin-top: 0;
     color: #73213d;
 }
+
 .modal-text {
     margin-top: 10px;
     color: #444;
 }
+
 .modal-actions {
     display: flex;
     gap: 12px;
     justify-content: flex-end;
     margin-top: 14px;
 }
+
 .modal-actions .buttonc {
     padding: 10px 14px;
     border-radius: 8px;
 }
+
 .modal-actions .buttonc.cancel {
     background: #ccc;
     color: #333;
@@ -108,13 +120,11 @@
     <div class="container mt-5" style="margin-top: 6rem !important;">
         <h2 class="txt1 mb-1 text-center">Visualização de Cliente</h2>
         <p class="txt4 text-center mb-2">Acompanhe os dados cadastrados completos deste cliente.</p>
-        <div class="col-12 col-md-12 text-md-end mt-2 mt-md-0">  
+        <div class="col-12 col-md-12 text-md-end mt-3 mt-md-0">  
             <a href="index.php" class="buttona"><i class="fa-solid fa-arrow-rotate-left"></i> Voltar</a>
         </div>
-
         <hr>
-
-        <div class="row my-5">
+        <div class="row">
             <div class="col-md-12">
                 <div class="tabela-wrapper">
                     <table class="tabela-lunaris">

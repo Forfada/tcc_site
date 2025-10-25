@@ -526,7 +526,7 @@ section.sobre{
 .tabela-wrapper {
   width: 100%;
   max-width: 1200px;
-  background: linear-gradient(180deg, #fff, #fffaf9);
+  background: #fff;
   border-radius: 14px;
   padding: 16px;
   box-shadow: 0 8px 28px rgba(35,20,30,0.08);
@@ -549,7 +549,7 @@ section.sobre{
 }
 
 .tabela-lunaris thead th {
-  background: linear-gradient(90deg, #fff8f7, #fff);
+  background:  #fff;
   color: #73213d;
   padding: 12px 14px;
   font-weight: 700;

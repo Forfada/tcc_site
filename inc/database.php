@@ -107,14 +107,27 @@ function remove($table = null, $id = null) {
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        $_SESSION['message'] = "Registro removido com sucesso.";
-        $_SESSION['type'] = "success";
+        $affected = $stmt->rowCount();
+        if ($affected > 0) {
+            $_SESSION['message'] = "Registro removido com sucesso.";
+            $_SESSION['type'] = "success";
+            close_database($db);
+            return true;
+        } else {
+            // nothing deleted (id not found)
+            $_SESSION['message'] = "Registro não encontrado.";
+            $_SESSION['type'] = "warning";
+            close_database($db);
+            return false;
+        }
     } catch (PDOException $e) {
         $_SESSION['message'] = "Erro ao remover: " . $e->getMessage();
         $_SESSION['type'] = "danger";
+        close_database($db);
+        return false;
     }
 
-    close_database($db);
+    
 }
 
 // === Filtro (com parâmetros seguros) ===

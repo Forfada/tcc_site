@@ -58,16 +58,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="pt-br">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Verificar cadastro</title>
     <link rel="stylesheet" href="<?php echo BASEURL; ?>css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo BASEURL; ?>css/style.css">
+    <style>
+        .verification-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #73213d, #9c2952);
+            padding: 20px;
+        }
+        .verification-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 480px;
+        }
+        .verification-title {
+            color: #73213d;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            text-align: center;
+        }
+        .verification-input {
+            letter-spacing: 0.5em;
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        .btn-verificar {
+            background: #73213d;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+        .btn-verificar:hover {
+            background: #9c2952;
+            transform: translateY(-2px);
+        }
+        .back-link {
+            color: #73213d;
+            text-decoration: none;
+            margin-top: 1rem;
+            display: inline-block;
+            transition: color 0.3s ease;
+        }
+        .back-link:hover {
+            color: #9c2952;
+        }
+    </style>
 </head>
 <body>
-<div class="container" style="max-width:480px; margin-top:6rem;">
-    <h3>Verificação de Email</h3>
+<div class="verification-container">
+    <div class="verification-card">
+        <h3 class="verification-title">Verificação de Email</h3>
 
-    <?php if (!empty($_SESSION['message'])): ?>
-        <div class="alert alert-<?php echo $_SESSION['type']; ?>"><?php echo $_SESSION['message']; ?></div>
-    <?php endif; ?>
+        <?php if (!empty($_SESSION['message'])): ?>
+            <div class="alert alert-<?php echo $_SESSION['type']; ?>"><?php echo $_SESSION['message']; ?></div>
+        <?php endif; ?>
 
     <p>Enviamos um código para <strong><?php echo htmlspecialchars($dados['email']); ?></strong>. Digite-o abaixo para concluir o cadastro.</p>
 

@@ -111,3 +111,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script src="../js/formatar.js"></script>
 <script src="<?php echo BASEURL; ?>js/bootstrap/bootstrap.bundle.min.js"></script>
+<style>
+    .senha-container {
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        align-items: stretch;
+    }
+
+    .senha-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #73213d, #9c2952);
+    }
+
+    .senha-right {
+        flex: 1;
+        background: url('../img/altsen2.jpg') center/cover no-repeat;
+    }
+
+    @media (max-width: 992px) {
+        .senha-right {
+            display: none;
+        }
+        
+        .senha-left {
+            flex: 1;
+        }
+        
+        .cadastro-card {
+            max-width: 450px;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .senha-left {
+            padding: 1rem;
+        }
+    }
+</style>

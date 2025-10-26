@@ -1,0 +1,101 @@
+/* Verification Pages Styles */
+body.verification-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #73213d, #9c2952);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verification-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 20px;
+    padding: 2rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.verification-title {
+    color: #73213d;
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.verification-input {
+    text-align: center;
+    letter-spacing: 0.5em;
+    font-size: 1.5rem;
+}
+
+.verification-message {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-verificar {
+    width: 100%;
+    padding: 12px;
+    background: #73213d;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-verificar:hover {
+    background: #9c2952;
+    transform: translateY(-2px);
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    color: #73213d;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #9c2952;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .verification-container {
+        margin: 15px;
+        padding: 1.5rem;
+    }
+    .verification-title {
+        font-size: 1.5rem;
+    }
+    .verification-input {
+        font-size: 1.25rem;
+    }
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Validation Styles */
+.was-validated .verification-input:invalid {
+    border-color: #dc3545;
+}
+
+.was-validated .verification-input:valid {
+    border-color: #198754;
+}
+
+.invalid-feedback {
+    text-align: center;
+    margin-top: 0.5rem;
+}

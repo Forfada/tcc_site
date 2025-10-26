@@ -44,25 +44,26 @@ try {
         'codigo' => $codigo
     ];
 
-    // Tentar enviar email (simulação se mail() não estiver configurado)
+    // Enviar código por email usando helper (PHPMailer via inc/mail.php)
+    require_once(ABSPATH . 'inc/mail.php');
     $subject = 'Seu código de verificação';
-    $message = "Olá {$nome},\n\nSeu código de verificação é: {$codigo}\n\nSe você não solicitou, ignore esta mensagem.";
-    $headers = 'From: no-reply@localhost' . "\r\n" . 'Content-Type: text/plain; charset=UTF-8';
+    $body = "<p>Olá " . htmlspecialchars($nome, ENT_QUOTES) . ",</p>" .
+            "<p>Seu código de verificação é: <strong>" . $codigo . "</strong></p>" .
+            "<p>Se você não solicitou este cadastro, ignore esta mensagem.</p>";
+    $altBody = "Olá {$nome}\n\nSeu código de verificação é: {$codigo}\n\nSe você não solicitou este cadastro, ignore esta mensagem.";
 
-    $mail_sent = false;
+    $sent = false;
     try {
-        if (function_exists('mail')) {
-            $mail_sent = mail($email, $subject, $message, $headers);
-        }
+        $sent = send_email($email, $subject, $body, $altBody);
     } catch (Exception $e) {
-        $mail_sent = false;
+        $sent = false;
     }
 
-    if (!$mail_sent) {
-        // Em ambiente de desenvolvimento, mostrar o código na mensagem de sessão para testes
-        $_SESSION['message'] = "Código enviado para o email $email (simulado: $codigo)";
-    } else {
+    if ($sent) {
         $_SESSION['message'] = "Código de verificação enviado para o seu email.";
+    } else {
+        // fallback para ambiente de desenvolvimento/testes: mostrar código na sessão (não seguro em produção)
+        $_SESSION['message'] = "Código enviado para o email $email (simulado: $codigo)";
     }
     $_SESSION['type'] = 'info';
 

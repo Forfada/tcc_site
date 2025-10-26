@@ -75,14 +75,126 @@
               <input class="form-check-input" type="checkbox" id="marketingCheck" checked>
               <label class="form-check-label" for="marketingCheck">Cookies de marketing</label>
             </div>
-            <small class="text-muted d-block mt-2">Observação: alguns cookies HttpOnly (por exemplo cookies de sessão do servidor) não podem ser gerenciados via JavaScript.</small>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" id="cookieRejectBtn">Recusar</button>
             <button type="button" class="btn btn-outline-secondary" id="cookieSaveModalBtn">Salvar Preferências</button>
             <button type="button" class="btn btn-primary" id="cookieAcceptModalBtn">Aceitar todos</button>
           </div>
-        </div>
+          </div>
+
+          <style>
+            /* Cookie preferences modal: improved visuals and responsive layout */
+            #cookieModal .modal-content {
+              border-radius: 14px;
+              overflow: hidden;
+              border: 0;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            }
+
+            #cookieModal .modal-header {
+              background: linear-gradient(90deg, #73213d 0%, #9c2952 100%);
+              color: #fff;
+              border-bottom: 0;
+              padding: 1rem 1.25rem;
+            }
+
+            #cookieModal .modal-title {
+              margin: 0;
+              font-weight: 700;
+              letter-spacing: 0.2px;
+            }
+
+            #cookieModal .modal-body {
+              background: #fbfbfb;
+              color: #222;
+              padding: 1.25rem;
+              font-size: 0.97rem;
+              line-height: 1.45;
+            }
+
+            #cookieModal .form-check {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              padding: 10px 12px;
+              border-radius: 10px;
+              background: #fff;
+              margin-bottom: 10px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+
+            #cookieModal .form-check-label { margin: 0; font-weight: 600; color: #333; }
+            #cookieModal .form-check small { display:block; font-weight:400; color:#666; }
+
+            #cookieModal .form-check-input {
+              width: 1.1rem;
+              height: 1.1rem;
+              margin-top: 0;
+              margin-left: 2px;
+              accent-color: #73213d;
+            }
+
+            #cookieModal .modal-footer {
+              border-top: 0;
+              padding: 1rem 1.25rem;
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+              flex-wrap: wrap;
+              background: linear-gradient(180deg, rgba(255,255,255,0), rgba(250,250,250,0.7));
+            }
+
+            /* Botões do modal com as cores do tema */
+            #cookieModal .btn { min-width: 110px; }
+            #cookieModal .btn-primary {
+              background: #73213d;
+              border-color: #73213d;
+            }
+            #cookieModal .btn-primary:hover {
+              background: #9c2952;
+              border-color: #9c2952;
+            }
+            #cookieModal .btn-outline-secondary {
+              color: #73213d;
+              border-color: #73213d;
+            }
+            #cookieModal .btn-outline-secondary:hover {
+              background: rgba(115,33,61,0.08);
+              color: #73213d;
+            }
+            #cookieModal .btn-secondary {
+              background: #6c757d;
+              border-color: #6c757d;
+            }
+            #cookieModal .btn-secondary:hover {
+              background: #5c636a;
+              border-color: #565e64;
+            }
+
+            /* Mobile: ajustes para melhor visualização */
+            @media (max-width: 575px) {
+              #cookieModal .modal-dialog { margin: 0.75rem; }
+              #cookieModal .modal-body { padding: 1rem; }
+              #cookieModal .modal-footer { 
+                flex-direction: column-reverse;
+                align-items: stretch;
+                gap: 8px;
+                padding: 0.75rem 1rem;
+              }
+              #cookieModal .modal-footer .btn { 
+                width: 100%;
+                padding: 0.5rem;
+                font-size: 0.95rem;
+              }
+            }
+
+            /* Improved focus outline for accessibility */
+            #cookieModal .form-check-input:focus, #cookieModal .btn:focus {
+              box-shadow: 0 0 0 4px rgba(115,33,61,0.12);
+              outline: none;
+            }
+          </style>
       </div>
     </div>
 

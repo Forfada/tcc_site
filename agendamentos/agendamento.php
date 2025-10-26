@@ -367,10 +367,11 @@
   display: flex;
   gap: 12px;
   width: 100%;
-  justify-content: space-between;
+  /* center the date/hour blocks horizontally while keeping them side-by-side when space allows */
+  justify-content: center;
   align-items: flex-start;
 }
-.form-row .form-group { flex: 1 1 0; align-items: flex-start; }
+.form-row .form-group { flex: 0 1 360px; max-width: 360px; align-items: center; }
 @media (max-width: 576px) {
   .form-row { flex-direction: column; }
 }
@@ -1093,7 +1094,8 @@ document.addEventListener('DOMContentLoaded', function() {
   gap: 12px;
   align-items: flex-end;
   width: 100%;
-  justify-content: space-between;
+  /* keep the two fields centered as a group */
+  justify-content: center;
 }
 .form-row .field { flex: 1 1 0; min-width: 120px; }
 
@@ -1159,6 +1161,7 @@ input.flatpickr-alt-input,
   align-items: center;
   gap: 6px;
   margin-bottom: 0; /* avoid double spacing introduced by .input-group label */
+  text-align: center; /* ensure label text itself is centered */
 }
 
 /* Ensure procedimentos label and dropdown button wrap on small screens instead of overflowing */

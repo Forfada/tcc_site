@@ -31,6 +31,77 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/pt.js"></script>
 
 <style>
+/* ===== Page Layout & Responsive Container ===== */
+.agendamento-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(115, 33, 61, 0.08);
+}
+
+@media (max-width: 768px) {
+    .agendamento-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+.form-title {
+    color: var(--cor2);
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--cor2);
+    margin: 0.5rem auto;
+    border-radius: 2px;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #fafafa;
+    border-radius: 0.8rem;
+    border: 1px solid #f0f0f0;
+}
+
+.form-section-title {
+    color: var(--cor2);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-section-title i {
+    font-size: 1.1em;
+    opacity: 0.8;
+}
+
+/* ===== Input Styling ===== */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    color: #444;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
 /* ===== Elegant Flatpickr Theme (custom) ===== */
 #agendamento input#a_dia {
   background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="%2373213d" d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 14H5V9h14v9Z"/></svg>') no-repeat 12px center;
@@ -262,11 +333,12 @@
 }
 
 /* texto ocupa o restante */
+/* allow procedure names to wrap instead of being truncated */
 .dropdown-item span {
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  display: block;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
   flex: 1 1 auto;
   text-align: left;
   color: #73213d;
@@ -284,8 +356,23 @@
 .dropdown-item .proc-name {
   flex: 1 1 auto;
   padding-right: 8px;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  /* allow long names to wrap to multiple lines */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* layout for form row: date and hour side-by-side on wide viewports */
+.form-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.form-row .form-group { flex: 1 1 0; align-items: flex-start; }
+@media (max-width: 576px) {
+  .form-row { flex-direction: column; }
 }
 
 /* ===== Summary spacing ===== */
@@ -301,6 +388,18 @@
 #summary-list li span:last-child { color: #333; font-weight:700; white-space:nowrap; margin-left:8px; }
 #summary-total { color: #73213d; }
 #summary-range { color: #666; font-size:0.95rem; }
+
+/* Em telas pequenas, esconder o preço dentro do dropdown para facilitar leitura do nome */
+@media (max-width: 576px) {
+  .dropdown-item .proc-price {
+    display: none;
+  }
+  /* aumentar legibilidade do nome quando o preço some */
+  .dropdown-item .proc-name {
+    font-size: 0.98rem;
+    font-weight: 600;
+  }
+}
 /* ...existing code... */
 </style>
 
@@ -328,6 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
     altInput: true,
     altFormat: "d/m/Y",     // presentation format (d-m-y) as requested
     locale: "pt",           // Portuguese month names and labels
+    disableMobile: true,     // Prevent flatpickr from replacing input with native date control on mobile
     // não permitir selecionar o dia atual — só a partir de amanhã
     minDate: (function(){
       const t = new Date();
@@ -335,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })(),
     allowInput: false,
     clickOpens: true,
-    appendTo: document.body, // keep calendar above other elements and avoid clipping
+  appendTo: (el && el.parentNode) ? el.parentNode : document.body, // append to input parent to keep alt-input inside form when possible
     monthSelectorType: 'static',
     static: false,
     // onDayCreate: fecha após params (dateObj, dateStr, instance, dayElem)
@@ -377,6 +477,19 @@ document.addEventListener('DOMContentLoaded', function () {
       if (typeof fetchHorarios === 'function') fetchHorarios();
     },
     onReady: function(selectedDates, dateStr, instance) {
+      // ensure altInput inherits form-control classes and basic attributes so it keeps site styling
+      try {
+        if (instance && instance.altInput) {
+          // copy some attributes from original input
+          instance.altInput.classList.add('form-control','input','flatpickr-alt-input');
+          // keep tabindex consistent
+          const t = el.getAttribute('tabindex');
+          if (t) instance.altInput.setAttribute('tabindex', t);
+          // keep placeholder if present
+          const ph = el.getAttribute('placeholder');
+          if (ph && !instance.altInput.getAttribute('placeholder')) instance.altInput.setAttribute('placeholder', ph);
+        }
+      } catch(e) { console.warn('flatpickr altInput copy error', e); }
       loadUnavailable(instance);
     },
     onMonthChange: function(selectedDates, dateStr, instance) {
@@ -832,10 +945,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <!-- Dropdown de Procedimentos -->
       <div class="form-group dropdown-group">
-        <label for="procedimentos">Procedimentos</label>
-        <div class="dropdown-wrapper" id="procPanel">
-          <button type="button" id="dropdownButton" class="dropdown-btn">Selecionar procedimentos ▼</button>
-          <div id="dropdownContent" class="dropdown-content" aria-hidden="true">
+        <!-- Wrapping the dropdown inside the label ensures the label is always associated
+             even if JS moves/re-renders DOM nodes (avoids for/id mismatches) -->
+        <label class="procedimentos-label">Procedimentos
+          <div class="dropdown-wrapper" id="procPanel">
+            <button type="button" id="dropdownButton" class="dropdown-btn">Selecionar procedimentos ▼</button>
+            <div id="dropdownContent" class="dropdown-content" aria-hidden="true">
             <?php foreach ($procedimentos as $p): ?>
               <?php
                 $p_id = (int) $p['id'];
@@ -852,24 +967,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="proc-price">R$ <?= $p_valor ?></span>
               </label>
             <?php endforeach; ?>
+            </div>
           </div>
-        </div>
+        </label>
         <small id="proc-counter-text" class="form-text text-muted">Selecionados 0/3</small>
       </div>
 
       <!-- Data e Hora -->
       <div class="form-row">
         <div class="form-group">
-          <label for="a_dia">Data:</label>
-          <!-- readonly removido para garantir que clique/focus funcionem; flatpickr controla input -->
-          <input type="text" name="a_dia" id="a_dia" required value="<?= $old['data'] ?? '' ?>" autocomplete="off">
+          <!-- Wrap input inside label to keep association even if DOM nodes are moved -->
+          <label>Data:
+            <!-- readonly removido para garantir que clique/focus funcionem; flatpickr controla input -->
+            <input type="text" name="a_dia" id="a_dia" required value="<?= $old['data'] ?? '' ?>" autocomplete="off">
+          </label>
         </div>
-        <div class="form-group">
-          <label for="a_hora">Hora:</label>
-          <select class="form-control" id="a_hora" name="a_hora">
-            <option value="">Selecione a data e procedimentos primeiro</option>
-          </select>
-        </div>
+          <div class="form-group">
+            <label>Hora:
+              <select class="form-control" id="a_hora" name="a_hora">
+                <option value="">Selecione a data e procedimentos primeiro</option>
+              </select>
+            </label>
+          </div>
       </div>
 
       <!-- Resumo -->
@@ -903,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', function() {
                <td><?= htmlspecialchars($ag['procedimento']) ?></td>
                <td><?= formatadata($ag['a_dia'], 'd/m/Y') ?></td>
                <td><?= htmlspecialchars($ag['a_hora']) ?></td>
-              <td><?= formatadata($ag['created_at'], 'd/m/Y') ?></td>
+               <td><?= formatadata($ag['created_at'], 'd/m/Y') ?></td>
                <td><button class="buttonc btn-delete-ag open-delete-modal" data-id="<?= htmlspecialchars($ag['id']) ?>">Excluir</button></td>
             </tr>
           <?php endforeach; ?>
@@ -951,7 +1070,7 @@ document.addEventListener('DOMContentLoaded', function() {
   padding: 40px 30px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 700px;
+  max-width: 860px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -968,6 +1087,89 @@ document.addEventListener('DOMContentLoaded', function() {
   gap: 8px;
 }
 
+/* Layout helpers: align date + hour on the same baseline on desktop, stack on mobile */
+.form-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  width: 100%;
+  justify-content: space-between;
+}
+.form-row .field { flex: 1 1 0; min-width: 120px; }
+
+/* Ensure date input and flatpickr-created alt/input variants keep consistent styling
+   Note: flatpickr may append an alt-input to document.body (appendTo: document.body).
+   We therefore include global selectors (not only #agendamento) so the alt input
+   inherits the same visual styles and doesn't 'lose' its styling when created. */
+input#a_dia,
+input.flatpickr-input,
+input.flatpickr-alt-input,
+.flatpickr-input,
+.flatpickr-alt-input,
+#agendamento input#a_dia,
+#agendamento input.flatpickr-input,
+#agendamento input.flatpickr-alt-input,
+#agendamento .flatpickr-input,
+#agendamento .flatpickr-alt-input {
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6d2d6;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background: #fff;
+}
+
+/* Match select height to inputs for visual alignment */
+#agendamento select#a_hora,
+#agendamento select#a_hora {
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6d2d6;
+  font-size: 1rem;
+  background: #fff;
+}
+
+@media (max-width: 576px) {
+  .form-row { flex-direction: column; align-items: stretch; }
+  .proc-price { display: none !important; }
+}
+
+/* Small-screen: center labels and inputs horizontally */
+@media (max-width: 576px) {
+  .form-row { justify-content: center; }
+  .form-row .form-group { width: 100%; display: flex; flex-direction: column; align-items: center; }
+  .form-row .form-group label { width: 100%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .form-row .form-group label input,
+  .form-row .form-group label select,
+  .flatpickr-alt-input {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 360px; /* keep inputs reasonably narrow on small screens */
+    box-sizing: border-box;
+    text-align: center; /* center the typed/selected value */
+  }
+}
+
+/* Align label text and input horizontally so "Data" and "Hora" sit on the same baseline */
+.form-row .form-group label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0; /* avoid double spacing introduced by .input-group label */
+}
+
+/* Ensure procedimentos label and dropdown button wrap on small screens instead of overflowing */
+.procedimentos-label {
+  display: block;
+  width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+.dropdown-btn { white-space: normal; }
+
 /* ======= Painel de Procedimentos ======= */
 .proc-panel {
   display: block;
@@ -976,7 +1178,7 @@ document.addEventListener('DOMContentLoaded', function() {
   border-radius: 14px;
   padding: 20px;
   width: 100%;
-  max-width: 700px;
+  max-width: 860px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
@@ -988,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', function() {
   background: #fff;
   text-align: left;
   width: 100%;
-  max-width: 700px;
+  max-width: 860px;
 }
 
 /* ======= Botão ======= */

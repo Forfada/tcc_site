@@ -30,7 +30,7 @@ try {
         FROM agendamento a
         JOIN usuarios u ON a.id_u = u.id
         JOIN procedimentos p ON a.id_p = p.id
-        ORDER BY u.u_user ASC, a.a_dia DESC, a.a_hora DESC
+        ORDER BY u.u_user ASC, a.a_dia ASC, a.a_hora ASC
     ";
     $stmt = $db->prepare($sql);
     $stmt->execute();

@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="alert alert-<?php echo $_SESSION['type']; ?>"><?php echo $_SESSION['message']; ?></div>
         <?php endif; ?>
 
-        <p>Enviamos um código para <strong><?php echo htmlspecialchars($login['email']); ?></strong>. Digite-o abaixo para concluir o acesso.</p>
+        <p>Enviamos um código para <strong><?php echo htmlspecialchars($login['email']); ?></strong>. Digite-o abaixo para concluir o acesso. Caso não tenha recebido, verifique sua caixa de spam.</p>
 
         <form method="post">
             <div class="mb-3">

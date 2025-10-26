@@ -100,7 +100,7 @@ try {
       <h2 class="txt1 mb-1 text-center">Agendamentos — Não realizado</h2>
       <p class="txt4 text-center mb-2">Visualize todos os procedimentos agendados que ainda não foram realizados logo abaixo.</p>
       <div class="col-12 col-md-12 text-md-end mt-3 mt-md-0">
-        <a href="<?php echo BASEURL; ?>agendamentos/admin_upcoming.php" class="buttonc" style="text-decoration:none;">Ver futuros</a>
+        <a href="<?php echo BASEURL; ?>agendamentos/admin_historico.php" class="buttonc" style="text-decoration:none;">Ver Histórico</a>
       </div>
       <hr>
 

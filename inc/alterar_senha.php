@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['type'] = "danger";
                         header("Location: alterar_senha.php");
                     } else {
-                        $_SESSION['message'] = "Enviamos um código de verificação para seu email.";
+                        $_SESSION['message'] = "Enviamos um código de verificação para seu email. Caso não tenha recebido, verifique sua caixa de spam.";
                         $_SESSION['type'] = "info";
                         header("Location: verificar_reset_senha.php");
                     }

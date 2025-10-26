@@ -942,6 +942,11 @@ document.addEventListener('DOMContentLoaded', function() {
 <section id="agendamento" class="section-cor3"> 
   <div class="form-agendamento">
     <h2>Agendar Procedimento</h2>
+    <?php  if (!function_exists('is_admin') || !is_admin()): ?>
+      <div class="alert alert-info" role="alert">
+        <i class="fa-solid fa-circle-info"></i> Solicitamos que, em caso de desistência, o cancelamento (exlusão do agendamento) seja realizado até 2 dias antes da data marcada. Visualize seu histórico de agendamentos <a href="<?= BASEURL ?>agendamentos/historico.php" class="alert-link">aqui</a>.
+      </div>
+    <?php endif; ?>
     <form method="POST" class="form-agendamento">
 
       <!-- Dropdown de Procedimentos -->
@@ -957,7 +962,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 $p_id = (int) $p['id'];
                 $p_nome = htmlspecialchars($p['p_nome'], ENT_QUOTES);
                 $p_valor = number_format(floatval($p['p_valor']), 2, ',', '.');
-                $p_dur = $p['p_duracao'] ?? '00:30';
+                $p_dur = duracao($p['p_duracao']) ?? '00:30';
               ?>
               <label class="dropdown-item">
                 <input type="checkbox" name="id_p[]" value="<?= $p_id ?>"
@@ -1006,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <!-- Lista de agendamentos -->
   <?php if (!empty($agendamentos)): ?>
-    <div class="tabela-wrapper">
+    <div class="tabela-wrapper" id="tabela-agendamentos">
       <table class="tabela-lunaris">
         <thead>
           <tr>
@@ -1022,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <tr>
                <td><?= htmlspecialchars($ag['procedimento']) ?></td>
                <td><?= formatadata($ag['a_dia'], 'd/m/Y') ?></td>
-               <td><?= htmlspecialchars($ag['a_hora']) ?></td>
+               <td><?= duracao($ag['a_hora']) ?></td>
                <td><?= formatadata($ag['created_at'], 'd/m/Y') ?></td>
                <td><button class="buttonc btn-delete-ag open-delete-modal" data-id="<?= htmlspecialchars($ag['id']) ?>">Excluir</button></td>
             </tr>

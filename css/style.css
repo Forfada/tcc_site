@@ -86,6 +86,7 @@ body {
     border-radius: 25px;
     background-color: var(--cor1);
     box-shadow: 0 5px 9px 0 rgba(0, 0, 0, 0.35), 0 6px 20px 0 rgba(0, 0, 0, 0.25);
+   
 }
 .image-content, .card-content{
     display: flex;
@@ -141,6 +142,8 @@ body {
     font-size: 1.3rem;
     font-weight: 500;
     color:#333;
+    word-wrap: break-word;
+    word-break: break-word;
 }
 .description{
     font-size: 1.1rem;

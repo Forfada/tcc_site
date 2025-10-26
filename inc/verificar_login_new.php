@@ -135,7 +135,7 @@ $pageTitle = 'Verificar Login';
 
         <p class="verification-message">
             Enviamos um código para <strong><?php echo htmlspecialchars($login['email']); ?></strong>.<br>
-            Digite-o abaixo para concluir o acesso.
+            Digite-o abaixo para concluir o acesso. Caso não tenha recebido, verifique sua caixa de spam.
         </p>
 
         <form method="post" class="needs-validation" novalidate>

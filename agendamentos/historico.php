@@ -33,7 +33,7 @@ try {
         FROM agendamento a
         JOIN procedimentos p ON a.id_p = p.id
         WHERE a.id_u = :id_u
-        ORDER BY a.a_dia DESC, a.a_hora DESC
+       ORDER BY a.a_dia ASC, a.a_hora ASC
     ";
 
     $stmt = $db->prepare($sql);
@@ -65,6 +65,9 @@ try {
         <h1 class="titulo-historico">Histórico de Agendamentos</h1>
         <p class="txt4 text-center mb-2">Visualize todos os seus procedimentos agendados logo abaixo.</p>
        <hr>
+        <div class="alert alert-info" role="alert">
+        <i class="fa-solid fa-circle-info"></i> Solicitamos que, em caso de desistência, o cancelamento (exlusão do agendamento) seja realizado até 2 dias antes da data marcada. Exclua seus procedimentos <a href="<?php echo BASEURL; ?>agendamentos/agendamento.php#tabela-agendamentos" class="alert-link">aqui</a>.
+        </div>
         <div style="width:100%; max-width:1000px; margin-bottom:2.5rem;">
             <h2 class="text-start subtitulo-historico">Será realizado</h2>
             <?php if (!empty($sera_realizado)): ?>

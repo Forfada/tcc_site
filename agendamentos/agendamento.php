@@ -370,10 +370,11 @@
   /* center the date/hour blocks horizontally while keeping them side-by-side when space allows */
   justify-content: center;
   align-items: flex-start;
-}
+},
 .form-row .form-group { flex: 0 1 360px; max-width: 360px; align-items: center; }
 @media (max-width: 576px) {
   .form-row { flex-direction: column; }
+  .form-group{flex: 1 1 100%; max-width: 100%;}
 }
 
 /* ===== Summary spacing ===== */

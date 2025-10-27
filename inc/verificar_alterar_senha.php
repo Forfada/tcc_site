@@ -1,7 +1,9 @@
 <?php
 include("../config.php");
 require_once(DBAPI);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $token = trim($_GET['token'] ?? $_POST['token'] ?? '');
 

@@ -1,7 +1,9 @@
 <?php 
 include("../config.php");
 require_once("cookie_handler.php");
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+	session_start();
+}
 
 // Remove os cookies de login
 CookieHandler::removeLoginCookies();

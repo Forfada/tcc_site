@@ -61,14 +61,16 @@ try {
 
     if ($sent) {
         $_SESSION['message'] = "Código de verificação enviado para o seu email.";
+        $_SESSION['type'] = 'info';
+        header('Location: verificar_cadastro.php');
+        exit();
     } else {
-        // fallback para ambiente de desenvolvimento/testes: mostrar código na sessão (não seguro em produção)
-        $_SESSION['message'] = "Código enviado para o email $email (simulado: $codigo)";
+        // Em produção, não exibir o código nem informações sensíveis.
+        $_SESSION['message'] = "Não foi possível enviar o e-mail de verificação. Tente novamente mais tarde ou contate o suporte.";
+        $_SESSION['type'] = 'danger';
+        header('Location: cadastro.php');
+        exit();
     }
-    $_SESSION['type'] = 'info';
-
-    header('Location: verificar_cadastro.php');
-    exit();
 
 } catch (Exception $e) {
     $_SESSION['message'] = "Erro: " . $e->getMessage();
@@ -76,12 +78,5 @@ try {
     header("Location: cadastro.php");
     exit();
 }
-?><?php
-require_once(ABSPATH . 'inc/mail.php');
-$sent = send_email($email, $subject, $body, $altBody);
-if (!$sent) {
-    // fallback behavior, por ex.: guardar o token na sessão para testes
-    $_SESSION['message'] = "E-mail não enviado via SMTP; verifique a configuração (simulated).";
-    $_SESSION['type'] = 'info';
-}
+?>
 ?>

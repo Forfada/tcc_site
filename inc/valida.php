@@ -42,24 +42,32 @@ try {
             'remember' => (isset($_POST['remember']) && $_POST['remember'] == '1') ? 1 : 0
         ];
 
-        // enviar email com o código (simulação se mail() não funcionar)
+        // enviar email com o código usando helper (PHPMailer)
         $subject = 'Código de acesso';
         $message = "Olá {$dados['u_user']},\n\nSeu código de acesso é: {$codigo}\n\nSe não foi você, ignore esta mensagem.";
-        $headers = 'From: no-reply@localhost' . "\r\n" . 'Content-Type: text/plain; charset=UTF-8';
-        
-        // prefer helper which uses PHPMailer and falls back to mail() if necessary
-        $sent = send_email($dados['u_email'], $subject, $message, $headers);
-        if (!$sent) {
-            // fallback behavior, por ex.: guardar o token na sessão para testes
-            $_SESSION['message'] = "E-mail não enviado via SMTP; verifique a configuração (simulated).";
-            $_SESSION['type'] = 'info';
-        } else {
-            $_SESSION['message'] = "Código enviado para o seu email.";
-        }
-        $_SESSION['type'] = 'info';
+        $alt = strip_tags($message);
 
-        header('Location: verificar_login.php');
-        exit;
+        $sent = false;
+        try {
+            $sent = send_email($dados['u_email'], $subject, $message, $alt);
+        } catch (Exception $e) {
+            $sent = false;
+            error_log("send_email() exception: " . $e->getMessage());
+        }
+
+        if ($sent) {
+            $_SESSION['message'] = "Código enviado para o seu email.";
+            $_SESSION['type'] = 'info';
+            header('Location: verificar_login.php');
+            exit;
+        } else {
+            // Em produção, não expor detalhes operacionais. Registrar erro em log e voltar ao login.
+            error_log("send_email() falhou ao enviar código de login para: {$dados['u_email']}");
+            $_SESSION['message'] = "Não foi possível enviar o e-mail de verificação. Tente novamente mais tarde.";
+            $_SESSION['type'] = 'danger';
+            header('Location: login.php');
+            exit;
+        }
     } else {
         $_SESSION['message'] = "Usuário ou senha incorretos.";
         $_SESSION['type'] = "danger";

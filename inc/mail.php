@@ -37,19 +37,38 @@ function send_email($to, $subject, $body, $altBody = '') {
         // Create a new PHPMailer instance
         $mail = new PHPMailer(true);
 
-        // Server settings
-        $mail->isSMTP();
-        $mail->Host = SMTP_HOST;
-        $mail->SMTPAuth = true;
-        $mail->Username = SMTP_USER;
-        $mail->Password = SMTP_PASS;
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = SMTP_PORT;
+        // Server settings — only configure SMTP if constants are defined
         $mail->CharSet = 'UTF-8';
+        if (defined('SMTP_HOST') && SMTP_HOST) {
+            $mail->isSMTP();
+            $mail->Host = SMTP_HOST;
+            $mail->SMTPAuth = true;
+            if (defined('SMTP_USER')) $mail->Username = SMTP_USER;
+            if (defined('SMTP_PASS')) $mail->Password = SMTP_PASS;
+            // SMTPSecure: allow 'tls' or 'ssl' strings in config, default to STARTTLS
+            if (defined('SMTP_SECURE') && SMTP_SECURE) {
+                $secure = strtolower(SMTP_SECURE);
+                if ($secure === 'ssl') {
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                } else {
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                }
+            } else {
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            }
+            $mail->Port = defined('SMTP_PORT') ? SMTP_PORT : 587;
+        } else {
+            // No SMTP configured — PHPMailer will fallback to mail() when send() is called
+            // We intentionally avoid calling isSMTP() so PHPMailer uses the mailer selected at runtime.
+            error_log("mail.php: SMTP_HOST not defined — using mail() fallback for sending to {$to}");
+        }
 
-        // Recipients
-        $mail->setFrom(MAIL_FROM, MAIL_FROM_NAME);
-        $mail->addAddress($to);
+    // Recipients
+    // Use configured MAIL_FROM / MAIL_FROM_NAME when available, otherwise safe defaults
+    $fromEmail = defined('MAIL_FROM') && filter_var(MAIL_FROM, FILTER_VALIDATE_EMAIL) ? MAIL_FROM : 'no-reply@localhost';
+    $fromName = defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : 'Lunaris';
+    $mail->setFrom($fromEmail, $fromName);
+    $mail->addAddress($to);
 
         // Content
         $mail->isHTML(true);
@@ -64,8 +83,8 @@ function send_email($to, $subject, $body, $altBody = '') {
         // Log error if needed
         error_log("Erro ao enviar email via PHPMailer: " . $e->getMessage());
 
-        // Fallback para mail() nativo
-        $headers = "From: " . MAIL_FROM_NAME . " <" . MAIL_FROM . ">\r\n";
+    // Fallback para mail() nativo
+    $headers = "From: " . (defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : $fromName) . " <" . (defined('MAIL_FROM') ? MAIL_FROM : $fromEmail) . ">\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
         return @mail($to, $subject, $body, $headers);

@@ -1,7 +1,9 @@
 <?php
 include("../config.php");
 require_once(DBAPI);
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Verifica se temos dados de cadastro em sessão
 if (empty($_SESSION['cadastro'])) {

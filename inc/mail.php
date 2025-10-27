@@ -1,7 +1,17 @@
 <?php
 // inc/mail.php
-if (!isset($_SESSION)) {
+// ensure session is started (use session_status guard to avoid warnings)
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
+}
+
+// Try to include Composer autoloader so PHPMailer classes are available
+$autoloadA = defined('ABSPATH') ? ABSPATH . 'vendor/autoload.php' : __DIR__ . '/../vendor/autoload.php';
+$autoloadB = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadA)) {
+    require_once $autoloadA;
+} elseif (file_exists($autoloadB)) {
+    require_once $autoloadB;
 }
 
 // Import PHPMailer classes at the top of the file
@@ -47,8 +57,8 @@ function send_email($to, $subject, $body, $altBody = '') {
         $mail->Body = $body;
         $mail->AltBody = $altBody ?: strip_tags($body);
 
-        // Enviar o email
-        return $mail->send();
+    // Enviar o email
+    return $mail->send();
 
     } catch (Exception $e) {
         // Log error if needed

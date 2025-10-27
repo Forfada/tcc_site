@@ -46,4 +46,5 @@ define("INIT", ABSPATH . "inc/init.php");
 if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
     die('Acesso Direto Não Permitido');
 }
+
 ?>

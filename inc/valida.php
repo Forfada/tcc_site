@@ -2,7 +2,10 @@
 include("../config.php");
 require_once(DBAPI);
 require_once("cookie_handler.php");
-session_start();
+// start session only if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once(ABSPATH . 'inc/mail.php');
 
 try {
@@ -43,11 +46,8 @@ try {
         $subject = 'Código de acesso';
         $message = "Olá {$dados['u_user']},\n\nSeu código de acesso é: {$codigo}\n\nSe não foi você, ignore esta mensagem.";
         $headers = 'From: no-reply@localhost' . "\r\n" . 'Content-Type: text/plain; charset=UTF-8';
-        $mail_sent = false;
-        try {
-            if (function_exists('mail')) $mail_sent = mail($dados['u_email'], $subject, $message, $headers);
-        } catch (Exception $e) { $mail_sent = false; }
-
+        
+        // prefer helper which uses PHPMailer and falls back to mail() if necessary
         $sent = send_email($dados['u_email'], $subject, $message, $headers);
         if (!$sent) {
             // fallback behavior, por ex.: guardar o token na sessão para testes

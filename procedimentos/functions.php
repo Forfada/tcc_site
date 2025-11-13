@@ -10,7 +10,8 @@
    function index() {
 		global $procedimentos;
 		if (!empty($_POST['proc'])) {
-			$procedimentos = filter("procedimentos","p_nome like '%" . $_POST['proc'] . "%';");
+			$search = $_POST['proc'];
+			$procedimentos = filter("procedimentos","p_nome like :search", ['search' => "%{$search}%"]);
 		}
 		else {
 			$procedimentos = find_all ("procedimentos");

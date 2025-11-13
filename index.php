@@ -1,15 +1,16 @@
 <?php
+	if (!isset($_SESSION)) session_start();
+	
 	include 'config.php';
 	include(DBAPI);
-	include(HEADER_TEMPLATE);
-	if (!isset($_SESSION)) session_start();
 
 	$proc = null;
 	$procedimentos = null;
 	function index() {
 			global $procedimentos;
 			if (!empty($_POST['proc'])) {
-				$procedimentos = filter("procedimentos","p_nome like '%" . $_POST['proc'] . "%';");
+				$search = $_POST['proc'];
+				$procedimentos = filter("procedimentos","p_nome like :search", ['search' => "%{$search}%"]);
 			}
 			else {
 				$procedimentos = find_all ("procedimentos");
@@ -17,6 +18,8 @@
 		}
 
 	index();
+	
+	include(HEADER_TEMPLATE);
 ?>
 <?php if (!empty($_SESSION['message'])) : ?>
 	<div class="container d-flex justify-content-center" style="margin-top: 120px;">
